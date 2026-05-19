@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1280">
+  <title>Vitrue Research · ניתוח 10 שיחות מכירה · האוניברסיטה העברית</title>
+  <link rel="stylesheet" href="app.css">
+
+  <script src="vendor/react.development.js"></script>
+  <script src="vendor/react-dom.development.js"></script>
+  <script src="vendor/babel.min.js"></script>
+</head>
+<body class="density-regular">
+  <div id="root"></div>
+
+  <script src="data.js"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="Atoms.jsx"></script>
+  <script type="text/babel" src="Sidebar.jsx"></script>
+  <script type="text/babel" src="Header.jsx"></script>
+  <script type="text/babel" src="Calls.jsx"></script>
+  <script type="text/babel" src="Sections.jsx"></script>
+  <script type="text/babel" src="App.jsx"></script>
+  <script type="text/babel">
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
