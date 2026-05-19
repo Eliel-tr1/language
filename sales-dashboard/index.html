@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>דוח מטא-ניתוח אסטרטגי — ניתוח 10 שיחות מכירה</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">📊 דוח אסטרטגי</div>
+      <h1 id="hero-title"></h1>
+      <p class="hero-sub" id="hero-sub"></p>
+      <p class="hero-tag" id="hero-tag"></p>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <main>
+    <section class="panel" data-panel="overview">
+      <h2 class="section-title">תקציר מנהלים</h2>
+      <p class="lead" id="summary"></p>
+      <div class="callout">
+        <span class="callout-icon">💎</span>
+        <div><strong>מסקנה מרכזית:</strong> <span id="conclusion"></span></div>
+      </div>
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <div class="two-col">
+        <div class="card chart-card">
+          <h3>ציוני איכות לפי שיחה</h3>
+          <div class="bar-chart" id="score-chart"></div>
+        </div>
+        <div class="card chart-card">
+          <h3>שיעור ההמרה</h3>
+          <div class="donut-wrap">
+            <svg viewBox="0 0 120 120" class="donut" id="donut"></svg>
+            <div class="donut-center"><span id="conv-pct">20%</span><small>Conversion</small></div>
+          </div>
+          <p class="donut-legend">2 סגירות בפועל מתוך 10 שיחות</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel hidden" data-panel="calls">
+      <h2 class="section-title">חלק 1 · סקירת 10 השיחות</h2>
+      <p class="lead">טבלת סיכום של כל השיחות שנותחו. סננו לפי תוצאה או נציג, או לחצו על כותרת למיון.</p>
+      <div class="filters" id="call-filters"></div>
+      <div class="table-wrap">
+        <table class="calls-table" id="calls-table">
+          <thead>
+            <tr>
+              <th data-sort="id">#</th>
+              <th data-sort="lead">ליד</th>
+              <th data-sort="rep">נציג</th>
+              <th data-sort="score">ציון</th>
+              <th data-sort="outcome">תוצאה</th>
+              <th>הערה מרכזית</th>
+            </tr>
+          </thead>
+          <tbody id="calls-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel hidden" data-panel="winning">
+      <h2 class="section-title">חלק 2 · מה עובד — טכניקות מנצחות</h2>
+      <p class="lead">חמש טכניקות שזוהו כמייצרות סגירות אמיתיות או מקדמות לידים משמעותית קדימה.</p>
+      <div class="cards-grid" id="winning-grid"></div>
+    </section>
+
+    <section class="panel hidden" data-panel="weaknesses">
+      <h2 class="section-title">חלק 3 · מה לא עובד — נקודות חולשה</h2>
+      <p class="lead">שבע נקודות חולשה חוזרות שפוגעות באחוז ההמרה.</p>
+      <div class="cards-grid" id="weak-grid"></div>
+    </section>
+
+    <section class="panel hidden" data-panel="objections">
+      <h2 class="section-title">חלק 4 · דפוסי התנגדויות חוזרות</h2>
+      <p class="lead">שבע התנגדויות שחזרו ב-2 שיחות או יותר — ואיך לטפל בהן.</p>
+      <div class="accordion" id="obj-accordion"></div>
+    </section>
+
+    <section class="panel hidden" data-panel="reps">
+      <h2 class="section-title">חלק 5 · השוואת ביצועי הנציגים</h2>
+      <p class="lead">ניתוח השוואתי של שלושת הנציגים שזוהו.</p>
+      <div class="cards-grid reps-grid" id="reps-grid"></div>
+    </section>
+
+    <section class="panel hidden" data-panel="chatbot">
+      <h2 class="section-title">חלק 6 · תובנות לשיפור הצ'אטבוט</h2>
+      <p class="lead">הצ'אטבוט הוא נקודת המגע הראשונה — 10 שדרוגים קריטיים שצריך לבצע.</p>
+      <div class="upgrades" id="chatbot-list"></div>
+    </section>
+
+    <section class="panel hidden" data-panel="plan">
+      <h2 class="section-title">חלק 7 · תוכנית פעולה — 12 צעדים</h2>
+      <p class="lead">תוכנית פעולה אסטרטגית מחולקת לשלושה אופקי זמן.</p>
+      <div class="timeline" id="plan-timeline"></div>
+      <div class="callout golden">
+        <span class="callout-icon">🏆</span>
+        <div>
+          <strong>הסוד שמתבלט אחרי 10 שיחות:</strong>
+          ההבדל בין נציג מצוין לממוצע הוא ב-3 רגעים — ה-Pivot המקצועי, שמירת המקום האקטיבית, וקביעת מועד המעקב. רז סגר עסקה של 9,850 ש"ח עם 3 משפטים:
+          <ul class="golden-lines" id="golden-lines"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>סוף הדוח · מבוסס על ניתוח 10 שיחות מכירה ייחודיות · האוניברסיטה העברית — קורסי AI</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
