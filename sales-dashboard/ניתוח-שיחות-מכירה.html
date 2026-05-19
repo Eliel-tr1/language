@@ -1,0 +1,2915 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>דוח מטא-ניתוח אסטרטגי — ניתוח 10 שיחות מכירה</title>
+  <style>
+:root {
+  --navy: #1f3864;
+  --navy-light: #2e4f8f;
+  --cream: #fff4e6;
+  --gold: #c89b3c;
+  --green: #2e8b57;
+  --red: #c0392b;
+  --ink: #1a2233;
+  --muted: #5b6577;
+  --line: #e3e7ef;
+  --bg: #f4f6fa;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Segoe UI", "Arial", "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+/* ---- Hero ---- */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: #fff;
+  padding: 56px 20px 48px;
+  text-align: center;
+}
+.hero-inner { max-width: 880px; margin: 0 auto; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(255, 244, 230, 0.16);
+  border: 1px solid rgba(255, 244, 230, 0.4);
+  color: var(--cream);
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+.hero h1 { font-size: 34px; line-height: 1.3; margin-bottom: 12px; }
+.hero-sub { font-size: 18px; color: #d6deef; }
+.hero-tag { font-size: 14px; color: #9fb0d0; margin-top: 8px; }
+
+/* ---- Tabs ---- */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 2px 8px rgba(31, 56, 100, 0.06);
+}
+.tab {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.tab:hover { background: var(--bg); color: var(--navy); }
+.tab.active { background: var(--navy); color: #fff; }
+
+/* ---- Layout ---- */
+main { max-width: 1080px; margin: 0 auto; padding: 36px 20px 60px; }
+.panel.hidden { display: none; }
+.section-title {
+  font-size: 26px;
+  color: var(--navy);
+  border-bottom: 3px solid var(--gold);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+.lead { color: var(--muted); font-size: 16px; margin-bottom: 24px; }
+
+/* ---- Callout ---- */
+.callout {
+  display: flex;
+  gap: 14px;
+  background: var(--cream);
+  border: 1px solid #ecd9bd;
+  border-right: 6px solid var(--gold);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 28px;
+}
+.callout.golden { margin-top: 28px; margin-bottom: 0; }
+.callout-icon { font-size: 26px; flex-shrink: 0; }
+
+/* ---- KPI ---- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.kpi {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(31, 56, 100, 0.05);
+}
+.kpi-icon { font-size: 26px; }
+.kpi-value { font-size: 34px; font-weight: 700; color: var(--navy); margin: 4px 0; }
+.kpi-label { font-size: 13px; color: var(--muted); }
+
+/* ---- Cards / charts ---- */
+.two-col {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 20px;
+}
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 2px 10px rgba(31, 56, 100, 0.05);
+}
+.card h3 { color: var(--navy); font-size: 18px; margin-bottom: 16px; }
+
+/* bar chart */
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.bar-label { width: 140px; font-size: 13px; color: var(--muted); flex-shrink: 0; }
+.bar-track { flex: 1; background: var(--bg); border-radius: 6px; height: 22px; overflow: hidden; }
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-inline-start: 8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  transition: width .6s ease;
+}
+
+/* donut */
+.donut-wrap { position: relative; width: 200px; margin: 0 auto; }
+.donut { width: 200px; height: 200px; transform: rotate(-90deg); }
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.donut-center span { font-size: 38px; font-weight: 700; color: var(--navy); }
+.donut-center small { color: var(--muted); font-size: 13px; }
+.donut-legend { text-align: center; color: var(--muted); font-size: 13px; margin-top: 10px; }
+
+/* ---- Calls table ---- */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.chip {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+.table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--line); }
+.calls-table { width: 100%; border-collapse: collapse; background: #fff; }
+.calls-table th {
+  background: var(--navy);
+  color: #fff;
+  padding: 12px 14px;
+  font-size: 14px;
+  text-align: right;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.calls-table th:hover { background: var(--navy-light); }
+.calls-table td { padding: 12px 14px; font-size: 14px; border-top: 1px solid var(--line); }
+.calls-table tr.closed { background: #eaf6ee; }
+.calls-table tbody tr:hover { background: #f0f3f9; }
+.score-pill {
+  display: inline-block;
+  min-width: 42px;
+  text-align: center;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  color: #fff;
+}
+.outcome-tag { font-size: 13px; font-weight: 600; }
+.outcome-tag.win { color: var(--green); }
+.outcome-tag.lose { color: var(--red); }
+.outcome-tag.mid { color: var(--gold); }
+
+/* ---- Cards grid ---- */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+.tech-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(31, 56, 100, 0.05);
+}
+.tech-card.weak { border-top-color: var(--red); }
+.tech-card.urgent { border-top-color: var(--red); background: #fdf0ee; }
+.tech-card h3 { color: var(--navy); font-size: 17px; margin-bottom: 10px; }
+.tech-card .medal { font-size: 22px; margin-inline-end: 6px; }
+.tech-card p { font-size: 14px; color: var(--ink); margin-bottom: 12px; }
+.action-box {
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+.action-box strong { color: var(--gold); }
+.urgent-badge {
+  display: inline-block;
+  background: var(--red);
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-inline-start: 6px;
+}
+
+/* ---- Accordion ---- */
+.acc-item {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.acc-head {
+  width: 100%;
+  text-align: right;
+  background: #fff;
+  border: none;
+  font: inherit;
+  padding: 16px 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.acc-head:hover { background: var(--bg); }
+.acc-num {
+  background: var(--navy);
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.acc-title { font-weight: 600; color: var(--navy); flex: 1; }
+.acc-arrow { color: var(--muted); transition: transform .2s; }
+.acc-item.open .acc-arrow { transform: rotate(180deg); }
+.acc-body { padding: 0 18px; max-height: 0; overflow: hidden; transition: max-height .25s ease, padding .25s ease; }
+.acc-item.open .acc-body { padding: 0 18px 18px; max-height: 320px; }
+.acc-body .calls-meta { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+.acc-body .fix { font-size: 14px; }
+
+/* ---- Reps ---- */
+.reps-grid { grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+.rep-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 2px 10px rgba(31, 56, 100, 0.05);
+}
+.rep-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.rep-head .rank { font-size: 26px; }
+.rep-head h3 { color: var(--navy); font-size: 20px; }
+.rep-stats { display: flex; gap: 8px; margin-bottom: 14px; }
+.rep-stat {
+  flex: 1;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+.rep-stat b { display: block; font-size: 20px; color: var(--navy); }
+.rep-stat span { font-size: 11px; color: var(--muted); }
+.rep-card .pro { font-size: 13px; margin-bottom: 6px; }
+.rep-card .pro b { color: var(--green); }
+.rep-card .con { font-size: 13px; margin-bottom: 10px; }
+.rep-card .con b { color: var(--red); }
+.rep-note { font-size: 13px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; }
+
+/* ---- Chatbot upgrades ---- */
+.upgrades { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+.upgrade {
+  display: flex;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+}
+.upgrade .un {
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.upgrade h4 { color: var(--navy); font-size: 15px; margin-bottom: 4px; }
+.upgrade p { font-size: 13px; color: var(--muted); }
+
+/* ---- Timeline ---- */
+.timeline { display: flex; flex-direction: column; gap: 24px; }
+.phase-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 19px;
+  color: var(--navy);
+  font-weight: 700;
+}
+.phase-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
+.step {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  position: relative;
+}
+.step .sn {
+  position: absolute;
+  top: -12px;
+  inset-inline-start: 16px;
+  background: var(--gold);
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+.step h4 { color: var(--navy); font-size: 15px; margin: 6px 0 6px; }
+.step p { font-size: 13px; color: var(--muted); }
+
+.golden-lines { margin: 8px 16px 0; }
+.golden-lines li { font-style: italic; color: var(--navy); margin-bottom: 4px; }
+
+/* ---- Footer ---- */
+footer {
+  background: var(--navy);
+  color: #aab8d4;
+  text-align: center;
+  padding: 22px;
+  font-size: 13px;
+}
+
+/* ---- Clickable call rows ---- */
+.calls-table tbody tr.has-detail { cursor: pointer; }
+.calls-table tbody tr.has-detail td:last-child::after {
+  content: " ›";
+  color: var(--gold);
+  font-weight: 700;
+}
+.detail-hint {
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 14px;
+}
+
+/* ---- Modal ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 24, 46, 0.6);
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+  z-index: 100;
+  overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg);
+  width: 100%;
+  max-width: 860px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(15, 24, 46, 0.4);
+}
+.modal-head {
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: #fff;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.modal-head h2 { font-size: 21px; }
+.modal-head p { font-size: 13px; color: #c4cfe6; margin-top: 4px; }
+.modal-head-side { display: flex; align-items: center; gap: 14px; }
+.modal-score {
+  background: #fff;
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 18px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.modal-close {
+  background: rgba(255, 255, 255, 0.16);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.modal-close:hover { background: rgba(255, 255, 255, 0.3); }
+.modal-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.modal-nav button {
+  border: none;
+  background: var(--bg);
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.modal-nav button:hover { background: var(--navy); color: #fff; }
+.modal-body { padding: 20px 24px 32px; max-height: 70vh; overflow-y: auto; }
+
+.sec {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+}
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.sec-num {
+  background: var(--navy);
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.sec-head h3 { color: var(--navy); font-size: 16px; }
+.sec p { font-size: 14px; margin-bottom: 8px; }
+.sec p:last-child { margin-bottom: 0; }
+.sec .kv { font-size: 14px; margin-bottom: 7px; }
+.sec .kv b { color: var(--navy); }
+.sec ol.insights { list-style: none; counter-reset: ins; }
+.sec ol.insights li {
+  counter-increment: ins;
+  position: relative;
+  padding-inline-start: 38px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+.sec ol.insights li::before {
+  content: counter(ins);
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  background: var(--gold);
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+.qa {
+  border-inline-start: 3px solid var(--navy-light);
+  padding-inline-start: 12px;
+  margin-bottom: 14px;
+}
+.qa .q { font-weight: 700; color: var(--navy); font-size: 14px; margin-bottom: 4px; }
+.qa .a { font-size: 14px; color: var(--ink); }
+.obj {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.obj .r { font-weight: 700; color: var(--red); font-size: 14px; margin-bottom: 6px; }
+.obj .lbl { font-size: 12px; font-weight: 700; color: var(--muted); margin-top: 8px; }
+.obj .txt { font-size: 13px; }
+.obj .sol { background: var(--cream); border-radius: 6px; padding: 8px 10px; margin-top: 4px; }
+.score-hero {
+  text-align: center;
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.score-hero b { font-size: 40px; display: block; }
+.score-hero span { font-size: 13px; color: #c4cfe6; }
+
+@media (max-width: 720px) {
+  .two-col { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 26px; }
+  .bar-label { width: 96px; }
+  .modal-body { max-height: 64vh; }
+}
+
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">📊 דוח אסטרטגי</div>
+      <h1 id="hero-title"></h1>
+      <p class="hero-sub" id="hero-sub"></p>
+      <p class="hero-tag" id="hero-tag"></p>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <main>
+    <section class="panel" data-panel="overview">
+      <h2 class="section-title">תקציר מנהלים</h2>
+      <p class="lead" id="summary"></p>
+      <div class="callout">
+        <span class="callout-icon">💎</span>
+        <div><strong>מסקנה מרכזית:</strong> <span id="conclusion"></span></div>
+      </div>
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <div class="two-col">
+        <div class="card chart-card">
+          <h3>ציוני איכות לפי שיחה</h3>
+          <div class="bar-chart" id="score-chart"></div>
+        </div>
+        <div class="card chart-card">
+          <h3>שיעור ההמרה</h3>
+          <div class="donut-wrap">
+            <svg viewBox="0 0 120 120" class="donut" id="donut"></svg>
+            <div class="donut-center"><span id="conv-pct">20%</span><small>Conversion</small></div>
+          </div>
+          <p class="donut-legend">2 סגירות בפועל מתוך 10 שיחות</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel hidden" data-panel="calls">
+      <h2 class="section-title">חלק 1 · סקירת 10 השיחות</h2>
+      <p class="lead">טבלת סיכום של כל השיחות שנותחו. סננו לפי תוצאה או נציג, או לחצו על כותרת למיון.</p>
+      <div class="filters" id="call-filters"></div>
+      <div class="table-wrap">
+        <table class="calls-table" id="calls-table">
+          <thead>
+            <tr>
+              <th data-sort="id">#</th>
+              <th data-sort="lead">ליד</th>
+              <th data-sort="rep">נציג</th>
+              <th data-sort="score">ציון</th>
+              <th data-sort="outcome">תוצאה</th>
+              <th>הערה מרכזית</th>
+            </tr>
+          </thead>
+          <tbody id="calls-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel hidden" data-panel="winning">
+      <h2 class="section-title">חלק 2 · מה עובד — טכניקות מנצחות</h2>
+      <p class="lead">חמש טכניקות שזוהו כמייצרות סגירות אמיתיות או מקדמות לידים משמעותית קדימה.</p>
+      <div class="cards-grid" id="winning-grid"></div>
+    </section>
+
+    <section class="panel hidden" data-panel="weaknesses">
+      <h2 class="section-title">חלק 3 · מה לא עובד — נקודות חולשה</h2>
+      <p class="lead">שבע נקודות חולשה חוזרות שפוגעות באחוז ההמרה.</p>
+      <div class="cards-grid" id="weak-grid"></div>
+    </section>
+
+    <section class="panel hidden" data-panel="objections">
+      <h2 class="section-title">חלק 4 · דפוסי התנגדויות חוזרות</h2>
+      <p class="lead">שבע התנגדויות שחזרו ב-2 שיחות או יותר — ואיך לטפל בהן.</p>
+      <div class="accordion" id="obj-accordion"></div>
+    </section>
+
+    <section class="panel hidden" data-panel="reps">
+      <h2 class="section-title">חלק 5 · השוואת ביצועי הנציגים</h2>
+      <p class="lead">ניתוח השוואתי של שלושת הנציגים שזוהו.</p>
+      <div class="cards-grid reps-grid" id="reps-grid"></div>
+    </section>
+
+    <section class="panel hidden" data-panel="chatbot">
+      <h2 class="section-title">חלק 6 · תובנות לשיפור הצ'אטבוט</h2>
+      <p class="lead">הצ'אטבוט הוא נקודת המגע הראשונה — 10 שדרוגים קריטיים שצריך לבצע.</p>
+      <div class="upgrades" id="chatbot-list"></div>
+    </section>
+
+    <section class="panel hidden" data-panel="plan">
+      <h2 class="section-title">חלק 7 · תוכנית פעולה — 12 צעדים</h2>
+      <p class="lead">תוכנית פעולה אסטרטגית מחולקת לשלושה אופקי זמן.</p>
+      <div class="timeline" id="plan-timeline"></div>
+      <div class="callout golden">
+        <span class="callout-icon">🏆</span>
+        <div>
+          <strong>הסוד שמתבלט אחרי 10 שיחות:</strong>
+          ההבדל בין נציג מצוין לממוצע הוא ב-3 רגעים — ה-Pivot המקצועי, שמירת המקום האקטיבית, וקביעת מועד המעקב. רז סגר עסקה של 9,850 ש"ח עם 3 משפטים:
+          <ul class="golden-lines" id="golden-lines"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>סוף הדוח · מבוסס על ניתוח 10 שיחות מכירה ייחודיות · האוניברסיטה העברית — קורסי AI</p>
+  </footer>
+
+  <div class="modal-overlay" id="modal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <header class="modal-head">
+        <div>
+          <h2 id="modal-title"></h2>
+          <p id="modal-sub"></p>
+        </div>
+        <div class="modal-head-side">
+          <div class="modal-score" id="modal-score"></div>
+          <button class="modal-close" id="modal-close" aria-label="סגור">✕</button>
+        </div>
+      </header>
+      <nav class="modal-nav" id="modal-nav"></nav>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+/* נתוני דוח המטא-ניתוח — ניתוח 10 שיחות מכירה, קורסי AI, האוניברסיטה העברית */
+const REPORT = {
+  meta: {
+    title: "דוח מטא-ניתוח אסטרטגי",
+    subtitle: "ניתוח 10 שיחות מכירה — קורסי AI, האוניברסיטה העברית",
+    tagline: "דפוסים · תובנות · המלצות אסטרטגיות לצוות המכירות ולצוות הצ'אטבוט",
+    summary:
+      "דוח זה מסכם ניתוח של 10 שיחות מכירה ייחודיות מתחום קורסי ה-AI של האוניברסיטה העברית. שתי שיחות הסתיימו בסגירה בפועל (20% Conversion Rate), שמונה נותרו פתוחות במצבים שונים. הדוח מזהה דפוסים חוזרים, נקודות חולשה מערכתיות וטכניקות מנצחות, ומציע 12 פעולות אסטרטגיות לשיפור אחוז ההמרה.",
+    conclusion:
+      "רוב השיחות שלא נסגרו — לא נסגרו בגלל היעדר טכניקות סגירה אקטיביות, לא בגלל איכות התוכן או המחיר. נציג יחיד (רז) הוכיח שאפשר להעלות את אחוז הסגירה דרך 'שמירת מקום אקטיבית' ו'Pivot מקצועי בלי גאווה'.",
+  },
+
+  kpis: [
+    { icon: "📞", value: "10", label: "שיחות ייחודיות שנותחו" },
+    { icon: "✅", value: "2", label: "סגירות בפועל (שיחות 4 ו-9)" },
+    { icon: "👥", value: "3", label: "נציגים שזוהו (רז, שחר, רון)" },
+    { icon: "📊", value: "7.4", label: "ציון איכות ממוצע (מתוך 10)" },
+    { icon: "⚠️", value: "70%", label: "שיחות שהסתיימו ב'אחזור אליך' ללא Soft Commitment" },
+    { icon: "🚨", value: "9+", label: "ימים שבהם בעיית ה-UI חוזרת ('האירוע המפורסם')" },
+  ],
+
+  calls: [
+    { id: 1, lead: "שרון", rep: "רון", score: 6, outcome: "לא נסגר", note: "רקע אינטל/מדיקה, מנהלת מצוינות טיפולית" },
+    { id: 2, lead: "מוטי", rep: "רז", score: 5, outcome: "לא נסגר", note: "מגשר/יוצר תוכן, מונולוג ארוך, התנגדות כלכלית לא טופלה" },
+    { id: 3, lead: "גל", rep: "רז", score: 7.5, outcome: "מעקב", note: "בוגר תלפיות/8200, פרשת דרכים, מוזיקאי" },
+    { id: 4, lead: "שלומית", rep: "שחר", score: 9, outcome: "נסגר", note: "שיחת סליקה אדמיניסטרטיבית — תשלום מלא, חשבונית על שם אם" },
+    { id: 5, lead: "שלומית (שונה)", rep: "שחר", score: 7, outcome: "מעקב", note: "בוגרת פסיכולוגיה, חנות ספרים, הסבה מקצועית" },
+    { id: 6, lead: "מזור (שלומו)", rep: "רז", score: 6.5, outcome: "מעקב", note: "אדריכל מקראסו — מימון ארגוני (שיחה 1)" },
+    { id: 7, lead: "יניב", rep: "רז", score: 8.5, outcome: "שמירת מקום", note: "יזם הייטק + בוגר העברית (שיחה 1)" },
+    { id: 8, lead: "רועי", rep: "רז", score: 7.5, outcome: "מעקב", note: "שיווק דיגיטלי בין עבודות, חששות מזום" },
+    { id: 9, lead: "יניב (שיחה 2)", rep: "רז", score: 9.5, outcome: "נסגר", note: "Pivot מקצועי, סליקה בפועל — תבנית זהב" },
+    { id: 10, lead: "שלומו מזור (שיחה 2)", rep: "רז", score: 7.5, outcome: "סגירה דרך קראסו", note: "מימון ארגוני בפועל — לא נוצל ה-Champion potential" },
+  ],
+
+  winning: [
+    { medal: "🥇", title: "שמירת מקום אקטיבית בזמן השיחה",
+      body: "הטכניקה המוכחת ביותר שזוהתה. רז יישם אותה בשיחת יניב הראשונה ('רק שנייה, אני משריון לך את המקום'), ו-24 שעות לאחר מכן יניב סגר עסקה מלאה. הטכניקה יוצרת התחייבות פסיכולוגית בלי לדרוש מהלקוח לחתום או לשלם.",
+      action: "בכל שיחה שמסתיימת ב'תחזור אליי' — להציע 'אני שומר לך את המקום עד X' לפני סגירת השיחה. חינמי, ויכול להעלות את שיעור הסגירה ב-15%-20%." },
+    { medal: "🥈", title: "Pivot מקצועי בלי גאווה",
+      body: "בשיחת יניב 2, רז זיהה שיניב הוא איש כספים ולא מהנדס, וביצע pivot מקצועי לקורס מפתחי AI במקום מהנדסי AI. ההמלצה לעבור לקורס 'הקל יותר' חיזקה את האמון והובילה לסגירה.",
+      action: "לבנות תרשים החלטה לנציגים — איזה פרופיל מתאים לאיזה קורס. המסר: 'אכפת לי מההצלחה שלך, לא מהמכירה'." },
+    { medal: "🥉", title: "שאלות גילוי צרכים מעמיקות",
+      body: "בשיחות הטובות (גל, יניב, רועי) הנציגים שאלו שאלות discovery עמוקות לפני הצגת המוצר. בשיחות הפחות טובות קפצו מהר ל-pitch ארוך.",
+      action: "לפתח 'גרסת Discovery של 90 שניות' — 6 שאלות חובה שכל נציג שואל בתחילת השיחה, לפני שצולל ל-pitch." },
+    { medal: "🏅", title: "קביעת מועד מעקב ספציפי",
+      body: "שיחות שהסתיימו ב'אחזור אליך' פתוח (שרון, מוטי) לא התקדמו. שיחות עם מועד מעקב מדויק (יניב — מחר ב-10:30, גל — יום שלישי) התקדמו באמת.",
+      action: "לאסור על נציגים לסיים שיחה בלי מועד מעקב מדויק (תאריך + שעה). מטריקה: מבחני שמע פנימיים." },
+    { medal: "🎖️", title: "כנות לגבי מגבלות",
+      body: "בשיחות שלומית-שחר ומזור-רז הנציגים אמרו בכנות 'אין הבטחת השמה' ו'לא מוכר על ידי משרד העבודה'. הלידים הגיבו ב'מצוין, מספיק טוב' — כנות בנתה אמון יותר מבטחות עמומות.",
+      action: "לבנות סקריפט שמתחיל ב'מה אנחנו לא מבטיחים' וממשיך ל'מה כן יוצא לך'. מבדל מתחרים ובונה אמון." },
+  ],
+
+  weaknesses: [
+    { title: "מונולוגים ארוכים בלי בדיקת רלוונטיות",
+      body: "בשיחות מוטי, שלומית 5, רועי — הנציג דיבר 3-4 דקות רצופות בלי לעצור. הליד מתעייף ומאבד מיקוד. פתרון: מקסימום 60 שניות הצגה ואז 'איזה חלק הכי מעניין אותך?'", urgent: false },
+    { title: "הצגת לוז בסוף השיחה במקום בתחילתה",
+      body: "בשיחת רועי, רק בדקה 16 גילה רז את מחזור 29/7 — שהיה פתרון לכל החששות. אם זה היה עולה בדקה 3, שיעור הסגירה היה עולה משמעותית.", urgent: false },
+    { title: "החמצת מימון ארגוני / Champion potential",
+      body: "בשיחות מזור 6 ו-10 הלקוח הזכיר מימון דרך מקום העבודה (קראסו — קבוצה ענקית). לא נוצל ה-potential להפוך את העסקה ל-B2B group deal של 50-100 משתתפים.", urgent: false },
+    { title: "בעיית UI מערכתית — 'האירוע המפורסם'",
+      body: "טופס הרישום מציג 'עמוד לא נמצא' באופן קבוע (גם אם הטופס מתקבל בפועל). הבעיה הופיעה לפחות 3 פעמים על פני 9+ ימים. דרושה התערבות מיידית + מסלול גיבוי ידני.", urgent: true },
+    { title: "חוסר Onboarding אחרי סליקה",
+      body: "גם בשיחת יניב 2 (סגירה מושלמת) וגם בשלומית 4 — אחרי הסליקה השיחה הסתיימה בלי חוויית 'ברוכים הבאים'. הזדמנות זהב לבנות לויאליות.", urgent: false },
+    { title: "חוסר בסיפורי הצלחה מותאמים",
+      body: "לכל ליד היה רקע ייחודי, אך הנציגים השתמשו בסיפורי הצלחה גנריים במקום סיפורים מתחום ספציפי של הליד.", urgent: false },
+    { title: "דחיית מחיר ל-WhatsApp",
+      body: "בשיחת שרון הנציג רון דחה את הצגת המחיר ל-WhatsApp — פוגע בשליטת הנציג בתהליך ומעביר את כל הכוח ללקוח.", urgent: false },
+  ],
+
+  objections: [
+    { n: 1, title: "'אני צריך להתייעץ עם בן/בת הזוג'", calls: "רועי, שלומית 5, יניב 1",
+      fix: "לספק חבילה שהליד יכול לחזור איתה: מסמך PDF 'מה זה אומר עבור המשפחה' (לוז, השפעה כלכלית, ROI), אופציה לשיחה משותפת ב-3, וסרטון הסבר של 5 דקות." },
+    { n: 2, title: "'אני מעדיף פרונטלי, לא זום'", calls: "רועי, שרון",
+      fix: "במקום להגן על הזום — להציע הגעה ל-5 מפגשים פרונטליים, מנטור 1:1 לחודש הראשון, ונקודת ביקורת אחרי שבועיים. הזום הופך לחלק מ-ecosystem." },
+    { n: 3, title: "'השעות 17:30 מוקדמות מדי / מתנגשות עם העבודה'", calls: "רועי, מזור",
+      fix: "יש 2 מחזורים מקבילים — 17/5 (ראשון+שלישי ערב) ו-29/7 (רביעי ערב + שישי בוקר). הנציג חייב להכיר את שניהם ולהציע מוקדם." },
+    { n: 4, title: "'החולייה החלשה תגרור את הכיתה'", calls: "יניב, מוטי, מזור",
+      fix: "מבנה הקורס מטפל בכך עם 2 מפגשים + 2 תרגולים בשבוע. ניתן לחזק: 'אחבר אותך לבוגר ברמתך — תקבל first hand impression'." },
+    { n: 5, title: "'אני יכול ללמוד את זה ביוטיוב לבד'", calls: "יניב",
+      fix: "פרומפט engineering זה רק 30 דקות מהקורס — השאר הוא Python, SQL, אימון מודלים, אג'נטים ופרויקט גמר Full-Stack." },
+    { n: 6, title: "'לא רוצה לתת פרטי אשראי במכשיר ארגוני'", calls: "מזור 10",
+      fix: "להציע אלטרנטיבות: חתימת SMS, אישור קולי בטלפון, מסמך PDF במייל אישי, או חתימה דיגיטלית במייל פרטי." },
+    { n: 7, title: "'אני צריך זמן לחשוב' / 'תן לי יום'", calls: "יניב, רועי, שלומית 5, שרון, מוטי",
+      fix: "(1) שמירת מקום אקטיבית, (2) קביעת מועד מעקב מדויק, (3) שליחת חבילת מידע מסודרת, (4) שאלה ממוקדת — 'איזו פיסת מידע חסרה לך?'" },
+  ],
+
+  reps: [
+    { rank: "🏆", name: "רז", calls: 6, closes: 1, avg: 7.3,
+      strong: "גילוי צרכים מעמיק, גמישות בהצגת מוצר, שמירת מקום אקטיבית, הצעת חלופות.",
+      weak: "לא תמיד חוזר על הטכניקות המנצחות שלו, מונולוגים ארוכים בכמה שיחות.",
+      note: "שיחת יניב 2 (9.5) — תבנית הזהב שצריך ללמד לכל נציג חדש." },
+    { rank: "🥈", name: "שחר", calls: 3, closes: 1, avg: 7.7,
+      strong: "שיחות סגירה אדמיניסטרטיביות, נכונות לתת מספר אישי, הצהרות כנות.",
+      weak: "לא מבצעת Welcome Onboarding אחרי סליקה, לא ניצלה הזדמנויות חיזוק רגשי.",
+      note: "שיעור סגירה גבוה — אך הלידים הגיעו 'מוכנים יותר' לקנייה." },
+    { rank: "🥉", name: "רון", calls: 1, closes: 0, avg: 6.0,
+      strong: "מקצועי ונעים.",
+      weak: "דחיית מחיר ל-WhatsApp, חוסר מסגרת מעקב, חוסר אקטיביות.",
+      note: "ההבדל בין רז לשחר מצביע על כך שרז עובד עם לידים קרים יחסית ומצליח לחמם אותם." },
+  ],
+
+  chatbot: [
+    { n: 1, title: "סיווג פרופיל מקצועי", body: "ב-7 מ-10 שיחות הנציג גילה את מקצוע הלקוח רק תוך כדי שיחה. הבוט חייב לאסוף: תפקיד נוכחי, ניסיון בתחום, רמת ניסיון טכנולוגי." },
+    { n: 2, title: "סיווג סטטוס תעסוקתי", body: "לפחות 3 לידים היו 'בין עבודות' או 'מחפשים הסבה'. הבוט ישאל: עובד שכיר / עצמאי / בין עבודות / פנסיונר." },
+    { n: 3, title: "זיהוי מימון ארגוני", body: "לידים עם מימון ארגוני הם VIP. הבוט חייב לשאול: 'תממן את הקורס עצמאית או דרך מקום העבודה?'" },
+    { n: 4, title: "בוגר האוניברסיטה העברית", body: "יניב קיבל הנחת מלגה של ~5,200 ש\"ח כבוגר. הבוט ישאל ישירות על לימודי עבר בעברית." },
+    { n: 5, title: "העדפת מתכונת (פרונטלי vs זום)", body: "רועי איבד 8 דקות על חששות מזום. שאלה מקדימה הייתה מאפשרת הצעה ישירה של אופציה היברידית." },
+    { n: 6, title: "העדפת לוז שבועי", body: "להציג מראש את 2 המחזורים (29/7 ו-17/5) ולשאול איזה מתאים." },
+    { n: 7, title: "חששות מקדימים", body: "לשאול מראש: 'מה הכי מטריד אותך — קצב, כיתה הטרוגנית, השמה, מחיר?'" },
+    { n: 8, title: "סיווג מי שותף בהחלטה", body: "לשאול אם ההחלטה תתקבל לבד או עם בן/בת זוג." },
+    { n: 9, title: "שליחת חבילת מידע מקדימה", body: "הבוט ישלח אוטומטית סילבוס, מחירים ותעודה — וחוסך 5 דקות בכל שיחה." },
+    { n: 10, title: "זיהוי Champion Potential B2B", body: "לזהות לידים מחברות גדולות ולנתב אותם למסלול B2B Sales." },
+  ],
+
+  plan: [
+    { phase: "מיידי — השבועיים הקרובים", icon: "🚀", items: [
+      { n: "1", t: "תיקון תקלת ה-UI", d: "'האירוע המפורסם' — תקלת 'עמוד לא נמצא' חוזרת. דרושה התערבות מיידית של צוות הפיתוח." },
+      { n: "2", t: "הדרכת 'תבנית הזהב'", d: "פגישת צוות לראיית שיחת יניב 2 — לזהות 5 מהלכים מנצחים ולהפנים." },
+      { n: "3", t: "שדרוג הסקרינינג של הבוט", d: "7 שאלות חובה: תפקיד, מצב תעסוקתי, מימון, בוגר העברית, מתכונת, לוז, חששות." },
+      { n: "4", t: "אכיפת מועד מעקב", d: "כלל ברזל: אסור לסיים שיחה בלי תאריך + שעה למעקב + שמירת מקום." },
+    ]},
+    { phase: "קצר — החודש הקרוב", icon: "📋", items: [
+      { n: "5", t: "מאגר סיפורי הצלחה", d: "15-20 סיפורי הצלחה לפי פרופילי לידים נפוצים, נגיש לכל נציג." },
+      { n: "6", t: "פרוטוקול B2B", d: "ליד שמזכיר מקום עבודה גדול — נציג B2B אחראי + הצעה רשמית תוך 24 שעות." },
+      { n: "7", t: "מסמך לבן/בת זוג", d: "'מה זה אומר עבור המשפחה' (לוז, ROI, השפעה כלכלית) — נשלח אוטומטית." },
+      { n: "8", t: "Welcome Onboarding", d: "מיד אחרי סליקה: קבוצת ווטסאפ, סשן זום של 15 דקות, חבילת ברוכים הבאים." },
+    ]},
+    { phase: "בינוני — 3 חודשים", icon: "🎯", items: [
+      { n: "9", t: "אסטרטגיית Soft Commitment", d: "'Decision Tree' לכל ליד שאינו מוכן לחתום — שמירת מקום, התחייבות רכה, חתימת SMS." },
+      { n: "10", t: "KPI נציגים", d: "דשבורד לכל נציג: אחוז סגירה, זמן ממוצע לסגירה, התנגדויות חוזרות, ציון איכות." },
+      { n: "11", t: "מערך 'דבר עם בוגר'", d: "בוגר שעבר את הקורס נותן 30 דקות ראיון לכל ליד מאותו תחום." },
+      { n: "12", t: "תוכנית הפניות", d: "ליד שנסגר ממליץ על חבר — שניהם מקבלים הנחה. לידים איכותיים בעלות נמוכה." },
+    ]},
+  ],
+
+  goldenLines: [
+    "'כשאני שומע אותך מדבר ככה, ברור לי לאן אנחנו הולכים.'",
+    "'בא לי להחזיק לך מקום במחזור.'",
+    "'איך אנחנו נרשמים?'",
+  ],
+};
+
+</script>
+<script>
+/* ניתוח מלא לכל שיחה — 13 מקטעים. נוצר מקובצי ה-docx. */
+const CALLS_DETAIL = {
+ "2": {
+  "id": 2,
+  "title": "ניתוח שיחת מכירה — מוטי (לא נרשם 2)",
+  "header": "קורס מפתחי AI — האוניברסיטה העברית | נציג: רז",
+  "score": 5.0,
+  "sections": [
+   {
+    "num": 1,
+    "title": "רקע כללי על התמלול",
+    "items": [
+     "שיחת מכירה יוצאת (Outbound) של נציג בשם רז מהאוניברסיטה העברית אל ליד בשם מוטי, לגבי קורס מפתחי AI. השיחה מאופיינת במונולוג ארוך של הנציג שמציג את הקורס בהרחבה, גילוי צרכים קצר בתחילתה, והצעת מחיר עם הנחת 'הרשמה מוקדמת'. הליד מביע התעניינות חיובית אך מציין מגבלת תקציב/אילוץ אישי בלתי ברור (התמלול שיבושי בקטע הסיום). השיחה הסתיימה ללא סגירה ובהודעת מעקב מתוכננת ליום חמישי."
+    ]
+   },
+   {
+    "num": 2,
+    "title": "זיהוי הדוברים",
+    "items": [
+     "שם הנציג: רז (מהאוניברסיטה העברית)",
+     "שם הלקוח/הליד: מוטי"
+    ]
+   },
+   {
+    "num": 3,
+    "title": "הקורס המבוקש",
+    "items": [
+     "קורס מפתחי AI של האוניברסיטה העברית — 4 חודשים, 35 מפגשים, פעמיים בשבוע (ראשון ושלישי 17:30–21:30) בזום בשידור חי, 5 מפגשים היברידיים בתל אביב/רמת גן, פתיחה מ-17/5. תוכן: הנדסת פרומפטים, עבודה עם Cursor ו-Claude Code, Python מ-0, SQL, אוטומציות, צ'אטבוטים, אג'נטים, Machine Learning, אימון מודלים (ענן ולוקליים), פיתוח אפליקציות web (Backend/Frontend/UI/UX). פרויקט גמר ותעודה."
+    ]
+   },
+   {
+    "num": 4,
+    "title": "מבנה השיחה",
+    "items": [
+     "פתיחה קצרה: הנציג מציג את עצמו ובודק זמינות.",
+     "גילוי צרכים קצר: שאלות פתוחות על תחום העיסוק ומטרת הלמידה.",
+     "מונולוג מכירה ארוך: הנציג מציג את כל מבנה הקורס, התכנים והפרויקטים ללא הפסקות (כ-3 דקות רצופות).",
+     "שאלות לוגיסטיקה מהליד: מתכונת, פרונטלי/אונליין, גמישות צפייה בהקלטות.",
+     "הצגת מעטפת תמיכה: תרגולים קבוצתיים, מתרגלים 1-על-1.",
+     "הצעת מחיר עם הנחה: מציג מחיר מלא מול הנחת הרשמה מוקדמת + תשלומים.",
+     "התנגדות חלקית / בעיית תקציב: הליד מסמן קושי לא ברור (תמלול משובש).",
+     "סגירה רכה: שליחת פרטים ב-WhatsApp + הודעת מעקב ליום חמישי."
+    ]
+   },
+   {
+    "num": 5,
+    "title": "שאלות הליד",
+    "items": [
+     "הליד שאל בצורה ממוקדת ולא מעמיקה במיוחד, בעיקר על פן לוגיסטי:",
+     "מתכונת: האם מפגשים פרונטליים? איפה?",
+     "גמישות צפייה: האם אפשר ללמוד את כל הקורס מהקלטות?",
+     "מחיר: האם אפשר לחלק לתשלומים? (משתמע)",
+     "הליד לא שאל שאלות מעמיקות על בידול מול מתחרים, רמת קושי, סיכויי השמה, רקע נדרש, סוג פרויקט גמר, הסמכה, או מי המרצים. זה מעיד על ליד שכבר עשה מחקר מוקדם או שעדיין לא מעמיק בשלב ההחלטה."
+    ]
+   },
+   {
+    "num": 6,
+    "title": "שאלות ותשובות נפוצות (Top 10)",
+    "items": [
+     "\"Question\": \"מה אורך הקורס והאם זה מפגשים פרונטליים?\"",
+     "\"answer\": \"הקורס הוא 4 חודשים, 35 מפגשים, פעמיים בשבוע. הכל מרחוק בזום שידור חי, 5 מפגשים היברידיים שאפשר להגיע פיזית לתל אביב/רמת גן.\"",
+     "\"Question\": \"מתי מתחיל הקורס ובאילו ימים ושעות?\"",
+     "\"answer\": \"מתחיל ב-17/5, ימי ראשון ושלישי בין 17:30 ל-21:30.\"",
+     "\"Question\": \"כמה גמישות יש לי לצפות בהקלטות? אפשר ללמוד את כל הקורס דרך הקלטות?\"",
+     "\"answer\": \"כן, אפשר ללמוד את כל הקורס דרך ההקלטות.\"",
+     "\"Question\": \"מה כולל הקורס מבחינת תוכן?\"",
+     "\"answer\": \"יסודות (הנדסת פרומפטים, Python, SQL), פרויקטים מעשיים (אוטומציות, צ'אטבוטים, אג'נטים, Machine Learning, אימון מודלים בענן ולוקליים), ופרויקט גמר של אפליקציית web מלאה (Backend, Frontend, UI/UX). בסיום — תעודת מפתח AI מהאוניברסיטה העברית.\"",
+     "\"Question\": \"כמה עולה הקורס ויש אפשרות לתשלומים?\"",
+     "\"answer\": \"מחיר רגיל 15,050 ש\"ח + מע\"מ. הרשמה מוקדמת 9,850 ש\"ח + מע\"מ. אפשר לחלק ל-10 תשלומים בלי ריבית בכרטיס אשראי.\"",
+     "\"Question\": \"איזו תמיכה מקבלים מעבר למפגשים?\"",
+     "\"answer\": \"קבוצת WhatsApp, פעמיים בשבוע תרגול קבוצתי בערב בזום (גם זה מוקלט), מתרגלים שאפשר לקיים איתם מפגשים 1 על 1.\"",
+     "(מספר השאלות בתמלול קטן מ-10. רק 6 שאלות אמיתיות נשאלו על ידי הליד.)"
+    ]
+   },
+   {
+    "num": 7,
+    "title": "התנגדויות ותגובות",
+    "items": [
+     "\"Resistance\": \"אני בעיצומו של תהליך כלכלי/אישי לא ברור (התמלול משובש: 'אני כאן עצוב עכשיו... המות הם משלילים עם המות הם עוברים') — נראה כקושי כלכלי או חוסר ודאות תזרימית\"",
+     "\"What did the representative answer\": \"הנציג לא טיפל בהתנגדות לעומק. הוא ציין שינוי טכני (שעכשיו ה-WhatsApp מגיע אליו אישית), אמר שישלח פרטים, ושיעדכן ביום חמישי כי 'הקורס יתמלא בימים הקרובים'. בעצם — לא ענה ישירות להתנגדות אלא עבר לסגירת השיחה.\"",
+     "\"The best solution to the objection\": \"כשליד מסמן קושי כלכלי או חוסר ודאות, הנציג חייב לעצור ולהקשיב במקום למהר לסיים. השאלות הנכונות: 'אני שומע שיש משהו שמטריד אותך — תוכל לשתף יותר?', 'מה הציר המרכזי שמעכב — תזמון, מחיר, או משהו אחר?'. אחרי שיש בהירות, אפשר להציע פתרונות ספציפיים: דחיית התשלום הראשון, תכנית פריסה ל-12-18 תשלומים, מימון חיצוני, מלגות, או רישום למחזור מאוחר יותר. דחיית הטיפול ל-WhatsApp תאבד את ההזדמנות לסגור — אובדן ההקשר הרגשי וההתחייבות שנבנו בשיחה.\"",
+     "\"Resistance\": \"מחיר הקורס גבוה (מרומז — 'אני חושב שזה גם מחיר ממוח נראה לי ביחס ל...')\"",
+     "\"What did the representative answer\": \"הנציג לא נכנס לדיון על ערך מול עלות, פשוט עבר לסגירה ושליחת פרטים.\"",
+     "\"The best solution to the objection\": \"במקום להניח שהמחיר 'הוגן' מספיק, היה צריך לחזק את הערך: 'בוא נשים את זה בפרספקטיבה — בשכר ממוצע של מפתח AI מתחיל של X ש\"ח, הקורס מחזיר את עצמו תוך חודש עבודה'. או 'הקורס כולל מעטפת של X שעות תרגול ו-Y מפגשי 1 על 1 — בנפרד זה היה עולה Z'. בנוסף, להציג את ההנחה כדיל אמיתי עם תאריך תפוגה מוחשי ('ההנחה הזו תקפה עד יום חמישי') ולא כהצהרה כללית.\"",
+     "\"Resistance\": \"לא הוצגה התנגדות לגבי המתכונת או התוכן — הליד נראה מעוניין\"",
+     "\"What did the representative answer\": \"לא רלוונטי.\"",
+     "\"The best solution to the objection\": \"לא רלוונטי.\""
+    ]
+   },
+   {
+    "num": 8,
+    "title": "נקודות נוספות",
+    "items": [
+     "פרופיל ליד מעניין: מוטי הוא מנחה תוכן/הרצאות/יישוב סכסוכים (גישור) שכבר עובד עם AI לפיתוח תכנים ואוטומציות לעסק שלו. יש לו אוריינטציה אוטו-דידקטית והוא מודע לפוטנציאל. זה ליד חם במיוחד — הוא לא צריך להשתכנע בטכנולוגיה, רק במסגרת הנכונה.",
+     "המונולוג ארוך מדי: הנציג דיבר ברצף כ-3 דקות (משעה 01:19 עד 04:30) על תוכן הקורס. גם הוא הודה בסוף 'דיברתי הרבה'. לליד חם זה עלול לאבד עניין או ליצור תחושת לחץ.",
+     "התמלול משובש בקטעי הסיום: קשה להבין במדויק את ההתנגדות של מוטי. נראה שיש משהו עם 'מהמותם' — אולי 'ממומן'? 'ממוטמן'? כדאי להאזין להקלטה המקורית כדי לפענח.",
+     "טיימינג תזמוני: 'מתחיל ב-17/5' + השיחה מ-19/5 = הקורס כבר התחיל לפני יומיים? או שזה תאריך אחר? יש כאן בלבול שדורש הבהרה ללקוח.",
+     "טכניקת דחיפות: הנציג השתמש ב'הקורס יתמלא בימים הקרובים' + 'ההרשמה המוקדמת בעקבות המצב הביטחוני' — סטנדרטי, אך בלי תאריך מדויק לסיום ההטבה.",
+     "המעבר ל-WhatsApp: הנציג הזכיר ש'עכשיו ה-WhatsApp מגיע אליי אישית, זה כבר לא בוט' — נקודה חשובה לאמינות."
+    ]
+   },
+   {
+    "num": 9,
+    "title": "סיום שיחה",
+    "items": [
+     "השיחה הסתיימה ללא סגירה וללא לינק תשלום:",
+     "הנציג הודיע שישלח פרטים מלאים ב-WhatsApp.",
+     "ציין שמ'עכשיו' ה-WhatsApp מגיע אליו אישית (לא בוט).",
+     "הבטיח לשלוח הודעת מעקב ביום חמישי 'להתעדכן'.",
+     "השתמש בלחץ זמן: 'סביר להניח שהקורס יתמלא בימים הקרובים'.",
+     "לא נקבעה שיחה חוזרת ספציפית, לא הוצגה אופציית קביעת תשלום בשיחה הזו."
+    ]
+   },
+   {
+    "num": 10,
+    "title": "תובנות לשיפור השיחה",
+    "items": [
+     "הנציג הציג את הקורס במקצועיות וידע, אך עשה כמה טעויות מבניות שהובילו לאי-סגירה למרות ליד חם:",
+     "המונולוג ארוך מדי — כ-3 דקות רצופות של הצגת תוכן. לליד חם כמו מוטי שכבר עובד עם AI, היה צריך לקצר ולהתאים את ההצגה לתחומיו (הנחיית תוכן, גישור) במקום להציג רשימה גנרית.",
+     "גילוי צרכים שטחי — הנציג שאל 'מה המטרה שלך' אבל לא העמיק. לא בירר מה התקציב, מה מסגרת הזמן, מי שותף בהחלטה, מה הקריטריונים שלו לבחירת קורס.",
+     "טיפול חלש בהתנגדות הכלכלית — הליד סימן קושי, הנציג עבר הלאה. זה הרגע הקריטי שבו שיחה מנוצחת או מפסידה.",
+     "חוסר התאמה לפרופיל הליד — מוטי הוא עצמאי שעובד עם AI, היה אפשר להציע לו פרויקט גמר ספציפי לתחום שלו (צ'אטבוט לגישור? אוטומציה להנחיית סדנאות?) ולהמחיש את ההחזר על ההשקעה.",
+     "לא נסגרה התחייבות כלשהי — אפילו לא הוצעה ישיבת זום נוספת או שמירת מקום עם דמי רישום סמליים.",
+     "מסגור המחיר חלש — הנציג הציג את ההנחה כ'בעקבות המצב הביטחוני' שזה הסבר חלש. עדיף 'הרשמה מוקדמת למחזור הנוכחי' עם תאריך תפוגה מוגדר."
+    ]
+   },
+   {
+    "num": 11,
+    "title": "תובנות לשיפור הצ'אט בוט",
+    "items": [
+     "הבוט לא איתר שהליד כבר עובד עם AI — מידע חיוני שהיה צריך להגיע לנציג מראש. ליד שכבר משתמש ב-AI דורש pitch שונה לחלוטין מליד מתחיל.",
+     "הבוט לא איתר את תחום העיסוק (הנחיית תוכן, גישור) — מידע שמאפשר התאמה אישית של דוגמאות פרויקטים בשיחה.",
+     "הבוט לא איתר תקציב/מסגרת תשלום — שאלת הסקרינינג הכי חשובה. אם היה ידוע שלמוטי יש קושי תזרימי, הנציג היה יכול להתכונן עם פתרונות מימון מראש.",
+     "הבוט לא איתר אילוץ זמני — אם מוטי לא יכול להירשם עכשיו מסיבות אישיות/כלכליות, אפשר היה לנתב אותו ישירות למחזור הבא במקום לבזבז שיחת מכירה.",
+     "הבוט לא שלח סילבוס + מחיר מראש — מוטי הגיע לשיחה בלי לראות תוכן מפורט. לו היה רואה את הסילבוס מראש, השאלות שלו היו ממוקדות יותר והשיחה הייתה יעילה יותר.",
+     "הבוט לא תיעד צריכת תוכן קודמת — מוטי אמר 'כבר ראיתי את החומרים שלכם'. הבוט צריך לתעד אילו עמודים/חומרים הלקוח כבר צרך, כדי לאפשר לנציג לדלג על מה שכבר ידוע."
+    ]
+   },
+   {
+    "num": 12,
+    "title": "דירוג השיחה (Sales Pitch Rating)",
+    "items": [
+     "ציון: 5/10",
+     "השיחה הייתה הזדמנות מבוזבזת. מוטי הוא ליד חם במיוחד — הוא כבר עובד עם AI, יש לו עסק עצמאי, יש לו אוריינטציה טכנולוגית והוא מודע לפוטנציאל. הנציג רז העביר מידע מקצועי על הקורס, אבל איבד את ההזדמנות בשני מקומות קריטיים: (1) מונולוג גנרי במקום התאמה אישית לתחום הגישור והנחיית התוכן של הליד, (2) חוסר טיפול בהתנגדות הכלכלית/אישית שעלתה בסוף. השיחה הסתיימה בלי קביעת שיחת המשך ספציפית, בלי לינק תשלום, ובלי מחויבות כלשהי מצד הלקוח — רק 'אעדכן ביום חמישי'. עבור ליד באיכות כזו, זה תוצאה חלשה."
+    ]
+   },
+   {
+    "num": 13,
+    "title": "5 תובנות מפתח לשיפור (5 Key Insights)",
+    "items": [
+     "1. טיפול בהתנגדות במקום בריחה ממנה — ברגע שהליד מסמן קושי כלכלי או אישי — לעצור הכל. לשאול שאלות פתוחות, להבין מה בדיוק העניין, ורק אז להציע פתרונות (פריסה ארוכה יותר, דחיית תשלום ראשון, מימון, מחזור הבא). אסור לעבור הלאה לסגירה בלי לטפל בקושי.",
+     "2. קיצור המונולוג והפיכתו לדיאלוג — במקום מונולוג של 3 דקות, להציג בקצרה (60 שניות) את עמודי הקורס, ואז לעצור: 'מה מהדברים האלה הכי מעניין אותך?' זה הופך מונולוג לדיאלוג ומגביר עניין.",
+     "3. התאמה אישית מיידית לפרופיל הליד — ברגע שמתגלה שמוטי הוא מנחה/מגשר שעובד עם AI, להציע מיד דוגמת פרויקט גמר שמתאימה לו: 'דמיין שאתה בונה מערכת אוטומציה שמכינה לך תיק גישור מלא מהשיחה הראשונה'. ככה הקורס הופך מקורס גנרי לפתרון לעסק שלו.",
+     "4. קביעת שיחת המשך ספציפית עם תאריך ושעה — 'אעדכן ביום חמישי' זה לא סגירה. צריך לקבוע יחד: 'מוטי, יום חמישי ב-15:00 אני מתקשר אליך, נדבר 10 דקות ונסגור החלטה — מתאים?'. כשיש מועד ספציפי, רמת המחויבות עולה משמעותית.",
+     "5. מסגור הנחה עם תאריך תפוגה מדויק — במקום 'ההנחה בעקבות המצב הביטחוני' (הסבר חלש שמעורר חוסר אמון), עדיף 'מחיר הרשמה מוקדמת שתקף עד 23/5 בלבד, אחרי זה המחיר עולה ב-5,200 שקל'. מספרים, תאריכים והסבר רציונלי מייצרים דחיפות אמיתית."
+    ]
+   }
+  ]
+ },
+ "6": {
+  "id": 6,
+  "title": "ניתוח שיחת מכירה — מזור (לא נרשם 6)",
+  "header": "קורס מפתחי AI — האוניברסיטה העברית | נציג: רז",
+  "score": 6.5,
+  "sections": [
+   {
+    "num": 1,
+    "title": "רקע כללי על התמלול",
+    "items": [
+     "שיחת מכירה יוצאת של רז מהאוניברסיטה העברית אל ליד בשם מזור (ייתכן ששמו אחר אך המייל הוא mazor.iesh), מנהל פרויקטים אדריכל. השיחה קצרה במיוחד (כ-6.5 דקות) ועניינית מאוד. הליד הוביל את השיחה לדרישת מידע ספציפי ('נתונים, מספרים') במקום לאפשר לרז להיכנס למונולוג ארוך על תכני הקורס. הליד הביע התעניינות אמיתית עם הקשר ספציפי (אדריכלות + ניהול פרויקטים + AI), והעלה הזדמנות מעניינת: מימון לימודים דרך מקום העבודה. השיחה הסתיימה עם הסכמה לקבל פרטים במייל ומעקב ביום שלישי. חשוב לציין: התמלול חתוך בקטעים — סיום השיחה לא נשמע סופי לחלוטין ('טוב, תודה רבה לכם')."
+    ]
+   },
+   {
+    "num": 2,
+    "title": "זיהוי הדוברים",
+    "items": [
+     "שם הנציג: רז / שלומי (לא ברור לחלוטין — בפתיחה הנציג אמר 'שלומי מדבר' אבל ייתכן שזה שיבוש תמלול של 'שלום, מדבר רז'. מהקונטקסט נראה שזה רז)",
+     "שם הלקוח/הליד: מזור (לפי המייל — mazor.iesh@gmail.com). שמו המלא לא נאמר במפורש בשיחה."
+    ]
+   },
+   {
+    "num": 3,
+    "title": "הקורס המבוקש",
+    "items": [
+     "קורס מפתחי AI של האוניברסיטה העברית — מחזור פתיחה 17/5, ימי ראשון ושלישי 17:30–21:30, 35 מפגשים פעמיים בשבוע, כל המפגשים בזום בשידור חי, 5 מפגשים היברידיים בתל אביב (לא רלוונטי לליד שבחר אונליין בלבד). תוכן: הנדסת פרומפטים, Cursor ו-Claude Code, Python, SQL, אוטומציות, צ'אטבוטים, אג'נטים ורשתות סוכנים, Machine Learning, אימון מודלים מקומיים וענן, פרויקט גמר של אפליקציית web Full-Stack."
+    ]
+   },
+   {
+    "num": 4,
+    "title": "מבנה השיחה",
+    "items": [
+     "פתיחה קצרה: אישור רלוונטיות מצד הליד.",
+     "גילוי צרכים קצר: שאלה אחת על רקע ומטרה.",
+     "תשובת הליד: אדריכל, מנהל פרויקטים, רקע בתכנות (פייטון, ג'אבה), מתעניין באוריינטציה של בנייה וגם בהקשר של ניהול פרויקטים.",
+     "מונולוג קצר על הקורס: רז מתחיל להציג את התוכן.",
+     "קטיעה אסרטיבית מצד הליד: 'תסלח לי שאני קוטע אותך, אני רוצה לשמוע נתונים, מספרים' — מהלך חזק של הליד.",
+     "תשובה ממוקדת על נתונים: 35 מפגשים, פעמיים בשבוע, מחיר.",
+     "הצהרה על העדפת אונליין: הליד אומר שיהיה במשרד ולא יוכל להגיע פיזית.",
+     "שאלות תעודה והכרה: האם מוכר על ידי משרד העבודה.",
+     "הזדמנות מימון דרך מקום העבודה: נקודה קריטית שהליד חשף.",
+     "קביעת מעקב: שליחת פרטים במייל + מעקב ביום שלישי."
+    ]
+   },
+   {
+    "num": 5,
+    "title": "שאלות הליד",
+    "items": [
+     "הליד שאל שאלות ענייניות ומכוונות מטרה, מבלי לאבד זמן:",
+     "מבנה ולוגיסטיקה: כמה פעמים בשבוע, כמה שעות, איפה, אונליין/פרונטלי, שעות השיעורים, מתי מתחיל.",
+     "מחיר: כמה עולה.",
+     "תוכן: הזכיר את פייטון מהסילבוס שראה מראש.",
+     "תעודה והסמכה: האם יש תעודה, האם מוכרת על ידי משרד העבודה.",
+     "דדליין: מתי ההרשמה המוקדמת פתוחה (לאור מימון ארגוני).",
+     "מימון: ציין שיש לו מימון דרך מקום העבודה (לימודים, תארים)."
+    ]
+   },
+   {
+    "num": 6,
+    "title": "שאלות ותשובות נפוצות (Top 10)",
+    "items": [
+     "\"Question\": \"כמה זה עולה, כמה פעמים בשבוע, כמה שעות, ואיפה — אונליין או פיזי?\"",
+     "\"answer\": \"35 מפגשים, פעמיים בשבוע. כל המפגשים בזום בשידור חי. 5 מפגשים מועברים גם פרונטלית בתל אביב (אופציונלי). מחיר רגיל 15,050 ש\"ח + מע\"מ, הרשמה מוקדמת 9,850 ש\"ח + מע\"מ.\"",
+     "\"Question\": \"מה השעות והימים?\"",
+     "\"answer\": \"מחזור 17/5, ימי ראשון ושלישי, 17:30–21:30.\"",
+     "\"Question\": \"מה התוכן של הקורס?\"",
+     "\"answer\": \"התחלה עם יסודות: הנדסת פרומפטים, Cursor ו-Claude Code, Python ו-SQL. אחר כך פיתוח: אוטומציות, צ'אטבוטים, אג'נטים, רשתות סוכנים, Machine Learning, אימון מודלים. פרויקט גמר אפליקציית web Full-Stack.\"",
+     "\"Question\": \"האם יש חובת נוכחות? מה אם אני מפספס שיעור?\"",
+     "\"answer\": \"אין חובת נוכחות. כל המפגשים מוקלטים — אם פספסת משהו, הכל בסדר, יש הקלטות.\"",
+     "\"Question\": \"האם מקבלים תעודה?\"",
+     "\"answer\": \"כן, תעודה של 'מפתח AI' מהאוניברסיטה העברית.\"",
+     "\"Question\": \"האם התעודה מוכרת על ידי משרד העבודה?\"",
+     "\"answer\": \"לא, אין לנו הכרה ממשרד העבודה.\"",
+     "\"Question\": \"עד מתי המחיר המוקדם תקף?\"",
+     "\"answer\": \"באופן עקרוני עד חודש לפני המחזור (17 באפריל), אבל לאור מימון דרך מקום העבודה — כל עוד זה קורה בשבוע הבא יש גמישות.\"",
+     "\"Question\": \"האם אפשר לקבל את כל הפרטים במייל (סילבוס, מחירים, תעודה)?\"",
+     "\"answer\": \"כן, נשלח במייל.\"",
+     "(מספר השאלות בתמלול קטן מ-10 — רק 8 שאלות אמיתיות. השיחה הייתה קצרה ומכוונת.)"
+    ]
+   },
+   {
+    "num": 7,
+    "title": "התנגדויות ותגובות",
+    "items": [
+     "\"Resistance\": \"אני רוצה אונליין בלבד, אני יושב במשרד ניהול עם המון שעות ביום, לא אצלח לשלב פגישות פרונטליות\"",
+     "\"What did the representative answer\": \"רז הגיב מצוין: 'אנחנו גם מקליטים את הכל ואין חובת נוכחות. אם פספסת משהו, הכל בסדר. יש הקלטות'. תשובה רגועה ומקצועית שלא ניסתה לדחוף את הפרונטלי.\"",
+     "\"The best solution to the objection\": \"התשובה הייתה נכונה. אפשר לחזק עוד: 'מזור, רוב הסטודנטים שלנו עובדים במקביל ללימודים — בדיוק כמוך. יש לנו תכנית מסודרת שבנויה לזה: הקלטות מיידיות, תרגול קבוצתי, ומתרגלים 1 על 1 אם צריך. אני יכול לחבר אותך לבוגר אדריכל ששילב את הקורס תוך כדי עבודה'. שימוש בסיפור הצלחה מרקע דומה מחזק את ההסרה של ההתנגדות.\"",
+     "\"Resistance\": \"האם התעודה מוכרת על ידי משרד העבודה?\"",
+     "\"What did the representative answer\": \"רז ענה ישירות וכנה: 'לא, אין לנו משרד עבודה'. הליד הגיב 'אוקיי, מצוין. מספיק טוב'.\"",
+     "\"The best solution to the objection\": \"הכנות הייתה חכמה — שקר היה נתפס מיד והורס אמון. אבל היה אפשר לעטוף את התשובה: 'לא מוכר על ידי משרד העבודה, אבל יש דבר חשוב יותר עבור מימון ארגוני — תעודת אוניברסיטה עברית. רוב מחלקות ההדרכה בארגונים מכבדות תעודה אוניברסיטאית יותר מאשר הסמכת משרד העבודה. אם רוצה, אני יכול לשלוח לך אישור מאוניברסיטה רשמי שאתה יכול להגיש למחלקת ההדרכה'. זה הופך 'לא' לערך מוסף.\"",
+     "\"Resistance\": \"אני צריך מימון ממקום העבודה — זה ייקח זמן וצריך אישורים\"",
+     "\"What did the representative answer\": \"רז הגיב בצורה גמישה ומקצועית: 'אני לא רוצה סתם להלחיץ אותך — כל עוד זה קורה בשבוע הבא, יש לי גמישות עם המחיר ההרשמה המוקדמת'. הליד אמר שיוכל לקבל תשובה עד יום שלישי.\"",
+     "\"The best solution to the objection\": \"הגמישות הייתה אלגנטית. אבל היה אפשר להוסיף ערך משמעותי: (1) להציע לשלוח טופס/מסמך מוכן לחברה: 'אני אכין לך הצעת מחיר רשמית עם כל הפרטים שמחלקת ההדרכה צריכה — חתימת אוניברסיטה, סילבוס, מטרת הקורס, היעדים המקצועיים — תוך 24 שעות'. (2) להציע 'בא לי לעזור — אם מחלקת ההדרכה תרצה לדבר איתי, אני זמין לעזור עם השאלות שלהם'. ככה ההצעה הופכת מצריכת מאמץ של הליד למאמץ של הנציג.\""
+    ]
+   },
+   {
+    "num": 8,
+    "title": "נקודות נוספות",
+    "items": [
+     "ליד מתוחכם וממוקד: מזור הוא ליד מסוג שמכיר את עצמו — קוטע את רז, מבקש 'נתונים מספרים', ולא נופל ל-pitch. זה דורש סגנון מכירה ישיר וקצר.",
+     "פרופיל מקצועי משולב: אדריכל + מנהל פרויקטים + רקע תכנותי = פרופיל שיכול ליצור value אמיתי מהקורס. כדאי להציע לו דוגמאות פרויקטים מותאמות (AI לתכנון עירוני, אוטומציה לחברות אדריכלות, וכו').",
+     "מימון ארגוני — הזדמנות זהב! זה ה-take של השיחה. ליד שמודיע שיש לו מימון דרך מקום העבודה הוא ליד באיכות יוצאת דופן — סבירות סגירה גבוהה במיוחד אם הנציג תומך בתהליך מול הארגון.",
+     "רז נשמע פחות חד מהשיחות הקודמות: בשיחה זו רז היה פחות 'אסרטיבי' לעומת שיחות גל ומוטי. הוא נתן לליד להוביל. זה לא רע — תיאמתי לטיפוס הלקוח — אבל החמיץ הזדמנויות.",
+     "שיבושי תמלול: 'שלומי מדבר' בפתיחה ככל הנראה הוא שיבוש של 'שלום, מדבר רז'. גם בכמה מקומות יש בלבול קל ('מבחינת תלויות' במקום 'עלויות').",
+     "המייל הוא mazor.iesh@gmail.com — לא ברור איזה שם זה (אולי 'Mazor Yesh'). כדאי לוודא ב-CRM.",
+     "הליד אמר 'אני אצלח לשלב את זה' — כוונה חיובית — סימן אמון."
+    ]
+   },
+   {
+    "num": 9,
+    "title": "סיום שיחה",
+    "items": [
+     "השיחה הסתיימה בצורה מסודרת אך ללא סגירה ועם מעקב מוגדר:",
+     "רז ישלח במייל: סילבוס, פירוט מחירים, פרטי תעודה.",
+     "נקבע מועד מעקב: יום שלישי.",
+     "הליד הזכיר שיהיה במשרד ביום ראשון וינסה לקדם את המימון מול מקום העבודה.",
+     "הקצב המהיר של סוף השיחה ('100% זה יהיה בקשר. טוב תודה רבה לכם. ביי') מעיד על שיחה יעילה.",
+     "לא הוצע מסמך הצעת מחיר רשמי למחלקת ההדרכה — החמצה משמעותית.",
+     "לא נשלח לינק תשלום או הצעה להתחייבות רכה."
+    ]
+   },
+   {
+    "num": 10,
+    "title": "תובנות לשיפור השיחה",
+    "items": [
+     "זוהי שיחה קצרה ויעילה עם ליד מתוחכם. רז התאים את עצמו לסגנון הליד והעניק מידע ממוקד. שיפורים מומלצים:",
+     "טיפול בהזדמנות המימון הארגוני — זוהי הנקודה הקריטית של השיחה. רז היה צריך לעצור ולהציע: 'מעולה! יש לנו ניסיון רב במימון ארגוני — אני יכול להכין לך מסמך הצעה רשמי מוכן למחלקת ההדרכה תוך 24 שעות, עם כל החותמות והאישורים שהם צריכים'. זה גם מקטין חיכוך וגם מעלה דחיפות.",
+     "חיבור אישי לתחום האדריכלות — היה אפשר להציע פרויקט גמר ספציפי: 'מזור, חשוב לי להגיד — היה לנו בוגר אדריכל שעשה פרויקט גמר על אג'נט שמתכנן חזיתות, וזה הפך לכלי עבודה אצלו במשרד'. זה היה מחבר את הקורס לעולמו ולא משאיר אותו כמשהו טכני גנרי.",
+     "שאלת ההתחייבות הרכה — לפני סיום, להציע: 'מזור, יש לי מקומות מצומצמים — בא לי להציע: שמור את מקומך ב-850 ש\"ח דמי רישום, יוחזר אם המימון לא יאושר. ככה אתה גם שומר על המחיר וגם על המקום'.",
+     "הצגת ערך לא רק מחיר — הצגת המחיר היחידה הייתה אופציה אחת (9,850 ש\"ח + מע\"מ) — היה אפשר להציע גם מסלולים חלופיים (תשלומים, מסלול VIP, וכו').",
+     "שאלת ציפיות — 'מזור, איפה אתה רואה את עצמך משתמש בידע מהקורס בשנה הקרובה?' — שאלה זו מאפשרת התאמה רגשית ומסייעת לשיחה ביום שלישי."
+    ]
+   },
+   {
+    "num": 11,
+    "title": "תובנות לשיפור הצ'אט בוט",
+    "items": [
+     "הבוט לא איתר שמדובר באדריכל מנהל פרויקטים — מידע חשוב שעלה רק ב-discovery. הבוט צריך לשאול 'מה התפקיד הנוכחי שלך?' כדי לחסוך זמן בשיחה.",
+     "הבוט לא איתר אפשרות מימון ארגוני — שאלה קריטית: 'האם תממן את הקורס עצמאית או דרך מקום עבודה?' — מעבירה את הליד למסלול מותאם.",
+     "הבוט לא העביר סילבוס מראש — מזור הזכיר ש'ראיתי את הסילבוס ויש פייטון' — כלומר הוא כן ראה משהו. אבל ביקש סילבוס שוב, מה שמעיד שזה לא היה מספיק. הבוט יכול לשלוח סילבוס מפורט אוטומטית.",
+     "הבוט יכול להציג מסמך מוכן לחברה — אם הליד מזכיר מימון דרך מקום העבודה, הבוט יכול אוטומטית להציע 'בא לך אני שולח לך עכשיו מסמך מוכן למחלקת ההדרכה שלך?' — מהלך שמקטין משמעותית את זמן ההחלטה.",
+     "הבוט יכול לחבר את הליד לבוגר מתחום זהה — אם הוא מזהה אדריכל/מהנדס/מנהל פרויקטים, להציע 'רוצה לדבר עם בוגר מתחום זהה?' — חיזוק אמון משמעותי.",
+     "הבוט יכול לאסוף אילוצים מראש — מזור הבהיר שהוא רק אונליין. שאלה זו ('האם תוכל להגיע פיזית?') יכולה להישאל מראש ולחסוך זמן.",
+     "הבוט יכול לזהות לידים שצריכים מסלול מימון מיוחד — לידים עם מימון ארגוני זקוקים ל-funnel שונה ולתיעוד מיוחד."
+    ]
+   },
+   {
+    "num": 12,
+    "title": "דירוג השיחה (Sales Pitch Rating)",
+    "items": [
+     "ציון: 6.5/10",
+     "שיחה קצרה, ממוקדת ומקצועית, אך חסרה את הניצול של ההזדמנויות שעלו. הציון לא גבוה יותר משתי סיבות עיקריות: ראשית, רז לא ניצל את ההזדמנות של המימון הארגוני — זוהי 'זהב' במכירות B2B/B2C: ליד עם תקציב מאושר ארגונית. במקום להציע תמיכה אקטיבית (מסמך מוכן, שיחה עם מחלקת ההדרכה), השיחה נסחפה ל'אני אחזור אליך ביום שלישי'. שנית, רז לא הפך את הליד למעורב רגשית — לא הוצע פרויקט גמר מותאם, לא הוצג סיפור הצלחה רלוונטי, לא נשאלה שאלה רגשית. עם זאת — השיחה הייתה הוגנת, מקצועית, עניינית, ונקבע מועד מעקב ספציפי. הסיכוי לסגירה תלוי לחלוטין בהתקדמות המימון מול הארגון של הליד."
+    ]
+   },
+   {
+    "num": 13,
+    "title": "5 תובנות מפתח לשיפור (5 Key Insights)",
+    "items": [
+     "1. מימון ארגוני = ליד באיכות יוצאת דופן — כשליד מזכיר מימון דרך מקום העבודה, חייבים להפעיל פרוטוקול מיוחד: הצעה לשלוח מסמך רשמי תוך 24 שעות, נכונות לדבר ישירות עם מחלקת ההדרכה, חתימות מוכנות. זה מקטין את החיכוך הארגוני ב-70% ומעלה את אחוזי הסגירה דרמטית.",
+     "2. סיפור הצלחה מהתחום של הליד — לאדריכל, להחזיק נתון/סיפור: 'היה לנו בוגר אדריכל שבנה כלי תכנון חזיתות עם AI, וזה הפך לתהליך עבודה אצלו במשרד'. בלי זה, הקורס נשמע מופשט. עם זה, הוא הופך לפתרון.",
+     "3. שאלת 'איפה תיישם את הידע בשנה הקרובה?' — שאלה זו פותחת חלון לחזון של הליד. כשהוא משיב, הוא מתחבר רגשית, ואפשר להציע פרויקט גמר מותאם לתחום שלו.",
+     "4. הצעת התחייבות רכה מותאמת למצב — לליד עם מימון ארגוני: 'שמור מקום ב-850 ש\"ח דמי רישום מוחזרים אם המימון לא יאושר'. זה מאפשר לליד להתקדם בלי סיכון פיננסי, ולנציג להבטיח מקום במחזור.",
+     "5. תמיכה ב-Sales Enablement Material לארגונים — צוות המכירות צריך מארז מוכן: מסמך הצעת מחיר רשמי, אישור אוניברסיטה, סילבוס לארגונים, מתודולוגיית קורס למחלקת הדרכה. ככה הנציג יכול להגיב מיד ולא לחכות 'אבדוק עם המשרד'."
+    ]
+   }
+  ]
+ },
+ "5": {
+  "id": 5,
+  "title": "ניתוח שיחת מכירה — שלומית (לא נרשם 5)",
+  "header": "קורס מפתחי AI — האוניברסיטה העברית | נציגה: שחר",
+  "score": 7.0,
+  "sections": [
+   {
+    "num": 1,
+    "title": "רקע כללי על התמלול",
+    "items": [
+     "שיחת מכירה יוצאת של הנציגה שחר מהאוניברסיטה העברית אל ליד בשם שלומית, לקורס מפתחי AI. הליד היא בוגרת תואר בפסיכולוגיה, מנהלת בחנות ספרים, שמתעניינת בהסבה מקצועית לתחום ה-AI ובדקה כלים בסיסיים (ChatGPT, Gemini). השיחה ארכה כ-11 דקות ועברה את כל שלבי המכירה — discovery, הצגת תוכן, סקירת שוק העבודה, גובה שכר, מתכונת הקורס, מחיר ומסלולי תשלום. הלקוחה הביעה התעניינות חיובית אך אמרה שתתייעץ ותחזור. נקבעה שיחת המשך ליום ראשון אחר הצהריים. חשוב לציין: הלידה כאן היא שלומית — שם זהה לליד מהשיחה הקודמת (שיחה 4) שכבר נרשמה. ייתכן מדובר באותה לקוחה בשלב מוקדם יותר של תהליך, או בליד אחר עם אותו שם."
+    ]
+   },
+   {
+    "num": 2,
+    "title": "זיהוי הדוברים",
+    "items": [
+     "שם הנציג: שחר (מהאוניברסיטה העברית) — נציגה (Speaker 1)",
+     "שם הלקוח/הליד: שלומית — בוגרת פסיכולוגיה, מנהלת חנות ספרים (Speaker 2)",
+     "גורם נוסף שהוזכר: אור — מגייסת בכירה בגוגל שמגיעה לקורס ללוות בחיפוש עבודה"
+    ]
+   },
+   {
+    "num": 3,
+    "title": "הקורס המבוקש",
+    "items": [
+     "קורס מפתחי AI של האוניברסיטה העברית — מחזור 17/5 עד 9/5 (4 חודשים וחצי), 35 מפגשים סה\"כ, 250 שעות אקדמיות, ימי ראשון ושלישי 17:30–21:30. מתוך 35 המפגשים — 6 פרונטליים בתל אביב (אחת לכשבועיים וחצי). תוכן: Python, הנדסת פרומפטים, יצירת אפליקציות, אתרים, מערכות מתקדמות, צ'אטבוטים, אג'נטים, עיבוד תמונה ווידאו, ייעול מערכות קיימות, בניית מודלי שפה ואוטומציה. עבודה דרך ענן של האוניברסיטה (Claude Code וכלים נוספים) — לא דורש משאבי מחשב מקומי."
+    ]
+   },
+   {
+    "num": 4,
+    "title": "מבנה השיחה",
+    "items": [
+     "פתיחה והתנצלות על תקלה בקו: שחר ציינה תקלה טכנית שגרמה לעיכוב.",
+     "גילוי צרכים מהיר על בסיס נתוני בוט: שחר הזכירה רקע פסיכולוגיה, חנות ספרים, התנסות ב-AI.",
+     "אימות מטרה: האם הלקוחה רוצה הסבה מקצועית? (קיבלה אישור).",
+     "הצגת מבנה הקורס: שיטה ייחודית של פיתוח עם AI, לימוד Python, תוכן רחב.",
+     "שאלת הליד הראשונה — שוק עבודה: שלומית מבקשת לדבר על שוק העבודה ותפקידים.",
+     "הצגת אופציות תפקידים ושכר: מתחיל מ-17,000 ש\"ח.",
+     "שאלת ליווי השמה: Disclaimer של 'אין הבטחת השמה' + פגישה עם אור מגוגל.",
+     "שאלות לוגיסטיקה: פרונטלי/אונליין, אורך, ציוד נדרש.",
+     "הצגת מחיר ומסלולי תשלום: כולל אופציית מקדמה.",
+     "התנגדות עדינה — צריכה להתייעץ: שלומית מבקשת זמן.",
+     "קביעת שיחת המשך: יום ראשון אחר הצהריים."
+    ]
+   },
+   {
+    "num": 5,
+    "title": "שאלות הליד",
+    "items": [
+     "הליד הייתה ממוקדת ושאלה שאלות מעשיות וכלכליות:",
+     "תוכן הקורס וסילבוס — ביקשה לקבל סילבוס לעיון.",
+     "שוק העבודה — מה השוק מחפש, איזה תפקידים יש.",
+     "ליווי השמה — האם יש מנגנון לעזור למצוא עבודה.",
+     "מתכונת — איך מתחלקים המפגשים בין זום ופרונטלי.",
+     "משך הקורס — כמה זמן בסך הכל.",
+     "דרישות טכניות — מה הציוד שצריך.",
+     "גובה שכר — מתי וכמה אפשר להרוויח בתחום.",
+     "מחיר — כמה עולה הקורס.",
+     "מקדמה — האם אפשר לפרוס תשלומים, אופציות מקדמה.",
+     "לייב או הקלטה — האם השיעורים בשידור חי.",
+     "גישה להקלטות לאחר הקורס — כמה זמן ההקלטות זמינות."
+    ]
+   },
+   {
+    "num": 6,
+    "title": "שאלות ותשובות נפוצות (Top 10)",
+    "items": [
+     "\"Question\": \"מה הקורס מציע מבחינת תפקידים בשוק העבודה?\"",
+     "\"answer\": \"תחת ה-TITLE 'מפתחת AI' יש המון תתי תפקידים: מפתחת אפליקציות ללא קוד, מומחית לבינה מלאכותית יישומית, מומחית לאג'נטים, מומחית לפרומפטים, מטמיעת AI בארגונים. כל התפקידים מבוקשים מאוד עם שכר גבוה.\"",
+     "\"Question\": \"האם יש ליווי לחיפוש עבודה אחרי הקורס?\"",
+     "\"answer\": \"אין הבטחת השמה. במהלך הקורס מגיעה אור, מגייסת בכירה בגוגל — היא מדברת על חיפוש עבודה, משפרת קורות חיים, עוזרת ליצור פרופיל לינקדאין מרשים, ומסבירה איך לגשת לראיונות עבודה.\"",
+     "\"Question\": \"האם הקורס פרונטלי או אונליין?\"",
+     "\"answer\": \"הקורס היברידי. 35 מפגשים סה\"כ, כולם מועברים בזום בשידור חי. במקביל לזום יש 6 מפגשים שמועברים גם פרונטלית בתל אביב (אחד כל שבועיים וחצי). יש 2 כיתות בתל אביב עם חניה ותחבורה ציבורית.\"",
+     "\"Question\": \"כמה זמן בסך הכל הקורס?\"",
+     "\"answer\": \"4 חודשים וחצי, 250 שעות אקדמיות.\"",
+     "\"Question\": \"מה צריך מבחינת ציוד?\"",
+     "\"answer\": \"רק מחשב. כל העבודה היא דרך ענן של האוניברסיטה — Claude Code וכלים נוספים זמינים דרך הענן, לא תופס נפח אחסון במחשב האישי.\"",
+     "\"Question\": \"מה גובה השכר בתחום?\"",
+     "\"answer\": \"שכר התחלתי בתפקידים האלה מתחיל מ-17,000 ש\"ח ומעלה. אפשר להגיע למשכורות גבוהות יותר עם הזמן.\"",
+     "\"Question\": \"כמה עולה הקורס?\"",
+     "\"answer\": \"מחיר מלא 14,200 ש\"ח + מע\"מ + 850 ש\"ח דמי רישום (סה\"כ עם מע\"מ כ-16,000 ש\"ח). הרשמה מוקדמת עד יום שלישי הבא: 9,850 ש\"ח + מע\"מ (סה\"כ 11,623 ש\"ח) — פטור מלא מדמי רישום, חסכון של כ-6,000 ש\"ח.\"",
+     "\"Question\": \"אפשר לחלק תשלומים? יש אופציית מקדמה?\"",
+     "\"answer\": \"כן, אפשר לפרוש עד 10 תשלומים ללא ריבית. אפשר גם לתת מקדמה של 2,000 ש\"ח עכשיו, ושבוע וחצי לפני תחילת הקורס לסלוק את יתר התשלום.\"",
+     "\"Question\": \"השיעורים בלייב או הקלטה?\"",
+     "\"answer\": \"בלייב — מחוברת לזום, יכולה לשאול שאלות ולעבוד יחד. השיעורים גם מוקלטים תוך כדי, ההקלטות זמינות עד חודשיים אחרי סיום הקורס.\"",
+     "\"Question\": \"האם הסילבוס המלא יישלח?\"",
+     "\"answer\": \"כן, ישלח בוואטסאפ אחרי השיחה ביחד עם סיכום של כל הפרטים.\""
+    ]
+   },
+   {
+    "num": 7,
+    "title": "התנגדויות ותגובות",
+    "items": [
+     "\"Resistance\": \"אני רוצה ללמוד פיתוח AI אבל אני בוגרת פסיכולוגיה ולא בעלת רקע טכני — אני יכולה להתמודד עם זה?\"",
+     "\"What did the representative answer\": \"שחר הרגיעה מיד: 'גם אם אין איזשהו רקע טכנולוגי' — והדגישה שהשיטה פותחה במיוחד גם לאנשים שאינם מ-Hi-Tech. ציינה שהיום הרבה ארגונים לא טכנולוגיים רוצים להטמיע AI, ולכן הקורס מתאים גם להסבה מקצועית.\"",
+     "\"The best solution to the objection\": \"התשובה הייתה סבירה אבל יכלה להיות חזקה יותר. עבור ליד עם רקע פסיכולוגיה (לא טכני בכלל), שווה להציג סיפור הצלחה ספציפי של בוגרת מרקע דומה. למשל: 'יש לנו בוגרת בקורס הקודם שבדיוק כמוך — בוגרת פסיכולוגיה, ניהלה עסק קטן, עברה הסבה מלאה ועכשיו עובדת ב-X חברה כמתמחת AI'. בנוסף, לציין נתון מפורש: 'X אחוז מהבוגרים שלנו הגיעו ללא רקע טכני כלל וסיימו בהצלחה'.\"",
+     "\"Resistance\": \"אני שואלת כמה דקות על שוק העבודה — לא ברור אם הקורס באמת מוביל לעבודה\"",
+     "\"What did the representative answer\": \"שחר הציגה רשימת תפקידים אפשריים + Disclaimer 'אין הבטחת השמה' + הציגה את אור מגוגל כליווי. גם אמרה ש'הקורס שובע בעבודות' אבל בלי נתון ספציפי.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה הוגנת אך חסרת ראיות. כדאי להוסיף נתונים קונקרטיים: 'X אחוז מבוגרי הקורס משתלבים בעבודה תוך 6 חודשים', 'בוגרים שלנו עובדים ב-X חברות' (אפילו לוגואים אם מותר), 'ממוצע השכר ההתחלתי של בוגרינו בפועל הוא X'. בנוסף, 'אין הבטחת השמה' זו אמירה הגיונית אבל היא נשמעת מגננתית — עדיף לעטוף אותה ב'אנחנו לא מבטיחים השמה כי זה בלתי אחראי, אבל מה שכן — תיק עבודות + תעודת אוניברסיטה + ליווי של אור מגוגל = X אחוז מבוגרינו מוצאים עבודה'.\"",
+     "\"Resistance\": \"השכר ההתחלתי 17,000 ש\"ח — מרגיש גבוה מדי, צריך לבדוק את זה\"",
+     "\"What did the representative answer\": \"שחר אמרה 'תוכלי לבדוק אותי, לשאול את הצ'אט' — והוסיפה שבכל מקום מתחילים מהתחלה ושכר התחלתי הוא רק נקודת מוצא. גם הוסיפה 'זו חתיכת החלטה, חשוב שתעשי את הבדיקות'.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה חכמה והוגנת מאוד — שחר נתנה לליד אישור לבדוק עצמאית, מה שבונה אמון. אפשר לחזק עוד: להציע ישירות 'בא לי לשלוח לך קישור ל-AllJobs/לינקדאין עם משרות AI בשכר X — כך תוכלי לראות במו עינייך'. או 'תיכנסי לאתר X ותראי שכר ממוצע של מפתחת AI'. הצעת נתון חיצוני ומוכרת מחזקת אמינות פי כמה.\"",
+     "\"Resistance\": \"אני צריכה להתייעץ לפני שאני מחליטה — תני לי זמן\"",
+     "\"What did the representative answer\": \"שחר הגיבה מצוין: שלחה סיכום בוואטסאפ + קבעה שיחת המשך ליום ראשון אחר הצהריים. לא לחצה.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה נכונה — אבל החמיצה הזדמנות לטיפול פסיכולוגי בהתלבטות. שאלה טובה יותר: 'שלומית, ההתייעצות זה דבר חשוב — עם מי תתייעצי ועל מה הציר המרכזי שתבדקי?'. זה עוזר לזהות את החסם האמיתי (תקציב? תזמון? פחד?) וגם להציע פתרונות לפני שהשיחה מסתיימת. בנוסף, היה אפשר להציע גשר ביניים: 'בא לי שתשלחי לי שאלה אחת ספציפית עד מחר בערב — כל מה שעוד צריך הבהרה — ונתחיל את יום ראשון מנקודה ברורה'.\""
+    ]
+   },
+   {
+    "num": 8,
+    "title": "נקודות נוספות",
+    "items": [
+     "ליד עם פוטנציאל הסבה מלאה: שלומית הוא ליד עם רקע אקדמי (פסיכולוגיה) ועיסוק נוכחי לא טכני (מנהלת חנות ספרים). זה דורש pitch שונה לחלוטין מליד טכנולוגי — דגש על 'אתה יכול גם אם אין רקע' ועל סיפורי הצלחה מרקעים דומים.",
+     "שחר מקצועית מאוד באמירת 'אין הבטחת השמה': זה מעיד על הוגנות ומקצועיות — חברות רבות מבטיחות כל מיני דברים שלא קורים. הצהרה ברורה ומעט אמיצה כזו בונה אמון.",
+     "אור מגוגל כ-asset של הקורס: הוזכרה ספציפית כליווי השמה. שווה לבדוק אם אכן מגייסת בכירה בגוגל ולנצל את זה כ-social proof חזק.",
+     "המחיר עלה מאז שיחות קודמות: במחזור הקודם המחיר היה 15,050 ש\"ח, פה זה 14,200 — ייתכן שינוי מחיר או טעות. כדאי לוודא עקביות.",
+     "דמי רישום של 850 ש\"ח: הוזכרו לראשונה — חשוב לציין שזה לא הופיע בשיחות הקודמות. ייתכן זה רק לתשלום מלא ולא להרשמה מוקדמת.",
+     "התנהלות מקצועית: שחר הזכירה שמולה כבר ייצרה איתה קשר בוואטסאפ הבוט, וברגע שהיא תשלח הודעה — הלקוחה תעבוד מולה ולא מול הבוט. זה ברור ומקצועי.",
+     "שיבושי תמלול: קיימים כמה שיבושים (למשל 'אנחנו קודמתי' במקום 'אני התקדמתי', 'ושיהיה איזה 6 שאת מעדיפה' במקום 'איזו שעה'). לא מפריעים להבנה.",
+     "קביעת מועד מעקב ספציפי: ליום ראשון אחר הצהריים — נקודה חזקה במיוחד! זה השונה הגדול בין השיחה הזו לקודמות שלא קבעו תאריך מדויק."
+    ]
+   },
+   {
+    "num": 9,
+    "title": "סיום שיחה",
+    "items": [
+     "השיחה הסתיימה בצורה חיובית ומקצועית עם שיחת המשך מתואמת אך ללא סגירה:",
+     "שחר תשלח בוואטסאפ סיכום מלא של כל הפרטים שדיברו עליהם.",
+     "נקבעה שיחת המשך ספציפית ליום ראשון אחר הצהריים.",
+     "שחר ציינה שהיא זמינה לשאלות בוואטסאפ עד אז.",
+     "שלומית הביעה כוונה אמיתית לבדוק ולחזור.",
+     "לא הוצע לינק תשלום, לא נשלח לינק רישום, ולא ניתן Anchor של 'שמירת מקום'."
+    ]
+   },
+   {
+    "num": 10,
+    "title": "תובנות לשיפור השיחה",
+    "items": [
+     "זוהי שיחה איכותית עם נציגה מקצועית שמתנהלת בנעימות וברגישות מתאימה לליד שלא ב-comfort zone הטכנולוגי. שיפורים מומלצים:",
+     "שיתוף סיפור הצלחה ספציפי מרקע פסיכולוגיה/לא-טכני — זה היה ממקם את שלומית בקבוצת ההצלחה באופן מיידי. במקום אמירה כללית 'מתאים גם בלי רקע', להגיד 'יש לנו בוגרת אחת בדיוק כמוך — בוגרת פסיכולוגיה שעבדה בחנות, עברה הסבה ב-4 חודשים וכיום עובדת ב-X'.",
+     "חיזוק נתון השכר עם הוכחה חיצונית — במקום 'תוכלי לבדוק אותי', להציע אקטיבית קישור ל-AllJobs או דוח שוק עבודה רלוונטי.",
+     "אזכור Anchor למקומות פנויים — לא הוזכר שיש מספר מוגבל של מקומות, מה שמוריד דחיפות. כדאי לציין 'נשארו לי X מקומות במחזור הזה'.",
+     "חיבור הפסיכולוגיה לפרויקט גמר — היה אפשר להציע ספציפית: 'תוכלי בפרויקט גמר לבנות אג'נט שמטפל בלידים פסיכולוגיים, או בוט מותאם רגשית — זה ייחודי כי יש לך את שני העולמות'.",
+     "טיפול עדין יותר בהתלבטות — לפני סיום השיחה, לבדוק: 'שלומית, יש משהו אחד שאני יכולה להבהיר לך כרגע שיעזור לך בהחלטה?' — זה פותח את הדלת לעוד חסם פוטנציאלי שלא עלה.",
+     "הצעת התחייבות רכה — היה אפשר להציע: 'בא לך לתת 850 ש\"ח דמי רישום עכשיו (מוחזרים תוך 14 יום) כדי לשמור את הזכאות למחיר ההנחה גם אם תחליטי ביום שלישי?'."
+    ]
+   },
+   {
+    "num": 11,
+    "title": "תובנות לשיפור הצ'אט בוט",
+    "items": [
+     "הבוט תיעד היטב את הרקע! שחר ידעה מראש: בוגרת פסיכולוגיה, מנהלת חנות ספרים, התנסתה בכלי AI. זה נקודה חזקה בעבודת הבוט. כדאי לשמור על זה.",
+     "הבוט יכול לתת סילבוס וטווח מחירים מראש — שלומית ביקשה סילבוס במהלך השיחה, מה שיכל להישלח מראש על ידי הבוט. זה היה משפר את איכות השיחה.",
+     "הבוט יכול לזהות צורך בהסבה מקצועית — שאלה ממוקדת כמו 'מה המצב המקצועי שלך כיום ולמה אתה רוצה להסב?' הייתה חוסכת זמן בשיחה ומכוונת את הנציג מראש לאמירה הנכונה.",
+     "הבוט יכול לאסוף שאלות מקדימות — 'מה השאלה הכי חשובה שלך לפני השיחה?' — זה היה מאפשר לשחר להגיע מוכנה עם נתוני שכר/השמה ספציפיים ולא להתבסס על מה שעולה ספונטנית.",
+     "הבוט יכול לזהות חשש כלכלי או צורך בהתייעצות — שאלת prequalification כמו 'האם תוכל לקבל החלטה לבד או יש מישהו שתתייעץ איתו?' הייתה מכינה את הנציג לטפל בהתלבטות מראש.",
+     "הבוט יכול להציע מפגש מבוא חינמי או טעימה — לפני שיחת מכירה ארוכה, אם הליד חוששת מקושי הקורס, אפשר להפנותה לסרטון מבוא או יום פתוח. זה מעלה משמעותית את אחוז ההמרה."
+    ]
+   },
+   {
+    "num": 12,
+    "title": "דירוג השיחה (Sales Pitch Rating)",
+    "items": [
+     "ציון: 7/10",
+     "זוהי שיחה איכותית של נציגה מנוסה שביצעה discovery מהיר אך אפקטיבי, הציגה את הקורס בצורה ברורה, וטיפלה היטב בלידה לא טכנית. למה לא 8-9? כי השיחה החמיצה כמה הזדמנויות קריטיות: לא הוצגו סיפורי הצלחה ספציפיים (חיוני עבור ליד לא טכני), לא ניתנו נתוני השמה קונקרטיים, לא נוצרה דחיפות (כמות מקומות, מועד אחרון), ולא הוצעה התחייבות רכה. עם זאת — המקצועיות בשיחה גבוהה (כולל ההצהרה הכנה על אי-הבטחת השמה), קביעת מועד שיחת המשך ספציפי היא נכס משמעותי, והליד יצאה עם מידע מלא והבטחה ברורה לחזור. עבור שיחה ראשונה עם ליד בתחילת תהליך, זוהי תוצאה סבירה — אבל הסיכוי לסגירה נשען עכשיו לחלוטין על שיחת המעקב ביום ראשון."
+    ]
+   },
+   {
+    "num": 13,
+    "title": "5 תובנות מפתח לשיפור (5 Key Insights)",
+    "items": [
+     "1. סיפורי הצלחה מותאמים לפרופיל הליד — לליד מרקע לא טכני (פסיכולוגיה, חנות ספרים), חובה להחזיק לפחות סיפור הצלחה אחד של בוגרת מרקע דומה. במקום 'מתאים גם בלי רקע' (גנרי), להציג 'שרה, בדיוק כמוך — בוגרת פסיכולוגיה, עבדה בחנות, עכשיו עובדת בחברה X'. זה ממיר ספקנות לוודאות.",
+     "2. הוכחת השכר עם מקור חיצוני — במקום 'אפשר לבדוק אותי', להציע פעיל קישור ל-AllJobs או נתוני לשכת התמיכה לתפקידי AI. נתון חיצוני מ-3rd party עובד פי 10 מאשר אמירה של נציגת מכירות.",
+     "3. יצירת דחיפות עם מקומות פנויים — 'הרשמה מוקדמת עד יום שלישי' זה תאריך, אבל לא דחיפות. 'במחזור הזה נשארו X מקומות' — זה דחיפות שמיידית מעלה את ערך ההחלטה.",
+     "4. שאלת ההתייעצות ממוקדת — 'עם מי תתייעצי ועל מה הציר המרכזי?' — שאלה זו חושפת את החסם האמיתי (כסף? בני זוג? פחד מהקורס?) ומאפשרת טיפול ישיר. גם להציע 'תשלחי לי שאלה אחת עד מחר ערב — אני אענה לפני שיחת ההמשך'.",
+     "5. הצעת התחייבות רכה — Soft Commitment — לפני סיום השיחה, להציע אופציית 'שמירת מקום' עם דמי רישום מוחזרים (850 ש\"ח). זה ממיר ליד 'אחזור אליך' לליד 'כבר התחילה להירשם' — שיפור דרמטי בהמרה הסופית."
+    ]
+   }
+  ]
+ },
+ "10": {
+  "id": 10,
+  "title": "ניתוח שיחת המשך — שלומו מזור (שיחה 2)",
+  "header": "קורס מפתחי AI — האוניברסיטה העברית | נציג: רז | מימון ארגוני דרך קראסו",
+  "score": 7.5,
+  "sections": [
+   {
+    "num": 1,
+    "title": "רקע כללי על התמלול",
+    "items": [
+     "זוהי שיחת המשך של מזור (כעת מתגלה גם כ'שלומי' / 'שלומו' — ככל הנראה השם הפרטי המלא הוא שלומו מזור), מהשיחה הראשונה לפני 9 ימים (שיחה 6). השיחה קצרה (כ-11 דקות) ועניינית: הלקוח כבר החליט שהוא רוצה את הקורס, מקום העבודה שלו (חברת קראסו) מטפל במימון, והוא מבקש מרז לשלוח את פרטי ההתקשרות למייל הארגוני שלו כדי שמחלקת הרכש/מימון תתחיל בתהליך התשלום. השיחה ייחודית כי זוהי המחשה ברורה של מימון ארגוני בפועל — הסגירה הולכת להתבצע אבל לא דרך הלקוח אלא דרך מחלקת התשלומים. רז מנסה להשיג חתימה על טופס הרישום לאישור מלא, אך הלקוח מסרב מטעמי אבטחה (חושש למלא טופס במכשיר העבודה). השיחה כוללת גם שאלות עומק מקצועיות נוספות: מתי הקורס פתוח לצפייה, מי המרצים, רוחב הפלטפורמות. הסתיימה בהסכמה: רז ישלח פרטים למייל הארגוני, מזור ימלא את הטופס מחר ממחשב פרטי, וייתן את התשלום דרך מקום העבודה."
+    ]
+   },
+   {
+    "num": 2,
+    "title": "זיהוי הדוברים",
+    "items": [
+     "שם הנציג: רז (מהאוניברסיטה העברית, Speaker 1)",
+     "שם הלקוח/הליד: שלומו מזור (Speaker 2) — מייל אישי: mazor.iesh@gmail.com (מהשיחה הקודמת), מייל ארגוני: shlomo.ma@carasso.co.il (או .com). מקום עבודה: חברת קראסו (Carasso) — קבוצת רכב/מימון/הייטק ישראלית גדולה."
+    ]
+   },
+   {
+    "num": 3,
+    "title": "הקורס המבוקש",
+    "items": [
+     "קורס מפתחי AI במחזור 17/5 — ימי ראשון ושלישי 17:30–21:30, 35 מפגשים סה\"כ, מתוכם 5 היברידיים (פרונטלי בתל אביב/רמת גן או בזום), 4 שעות למפגש, הקלטות זמינות עד 40 יום לאחר סיום הקורס. המימון יבוצע על ידי קבוצת קראסו (מקום העבודה)."
+    ]
+   },
+   {
+    "num": 4,
+    "title": "מבנה השיחה",
+    "items": [
+     "פתיחה קצרה ושינוי תוכנית: מזור פותח בהודעה ברורה: התשלום יבוצע דרך מקום העבודה, רז שולח פרטים למייל הארגוני.",
+     "בקשת מייל ארגוני: הליד נותן את shlomo.ma@carasso.",
+     "רז מנסה להתקדם בטופס רישום: שולח טופס בוואטסאפ לחתימה.",
+     "התנגדות אבטחה: מזור מסרב למלא טופס דרך מכשיר העבודה.",
+     "רז גמיש ומציע פתרון: לעשות זאת בערב או מחר ממכשיר פרטי.",
+     "הזהרה מקדימה על באג: רז מציין שהטופס עלול להציג 'עמוד לא נמצא' אבל זה רושם כן.",
+     "שאלת פתיחת הקורס: האם הוא נפתח בוודאות? 'כן, בוודאות'.",
+     "תהליך והבנת התופס: מזור שואל למה זה ומה זה כולל.",
+     "תנאי ביטולים: מזור שואל אם הרישום הוא מחויב, רז מסביר.",
+     "בירור מתכונת המפגשים: שאלה ספציפית על פרונטליות וחובה.",
+     "שאלת אורך מפגשים והגמישות: 4 שעות, אפשר לחזור פעמיים.",
+     "שאלת גישה להקלטות: 40 יום אחרי סיום הקורס.",
+     "שאלת המנחים: מי מנחים? רז ישלח בריף.",
+     "שאלת מעמד אקדמי: מה הקשר בין הקורס לאוניברסיטה? לא תואר.",
+     "כוונת שימוש פרקטית: מזור מבהיר שהמטרה היא הטמעת AI בקראסו.",
+     "שאלת רוחב פלטפורמות: האם הקורס מתמקד ב-Claude או רחב יותר?",
+     "סיכום וסיום: מזור יטפל בטופס מחר, רז ישלח פרטים למייל הארגוני."
+    ]
+   },
+   {
+    "num": 5,
+    "title": "שאלות הליד",
+    "items": [
+     "מזור שאל שאלות לוגיסטיות, חוזיות וטכניות:",
+     "תהליך התשלום: איך עובד תהליך תשלום דרך חברה?",
+     "טופס רישום: מה זה כולל? האם זה מחויב? האם נדרשים פרטי אשראי?",
+     "תנאי ביטולים: האם הרישום הוא מחייב? תנאי החזר?",
+     "פתיחת הקורס: האם הוא בוודאות נפתח?",
+     "מתכונת: אילו מפגשים פרונטליים? האם חובה? האם אפשר זום?",
+     "אורך מפגשים: כמה שעות? אפשר להפסיק באמצע?",
+     "גישה לחומר: עד מתי ההקלטות זמינות? אפשר לראות פעמיים?",
+     "מנחים: מי המנחים?",
+     "מעמד אקדמי: הקשר בין הקורס לאוניברסיטה — תואר או תעודה?",
+     "שימוש בפרויקטים אמיתיים: האם אפשר לקחת פרויקטים מהעבודה?",
+     "רוחב פלטפורמות: האם הקורס נטוע ב-Claude/Anthropic או רחב?"
+    ]
+   },
+   {
+    "num": 6,
+    "title": "שאלות ותשובות נפוצות (Top 10)",
+    "items": [
+     "\"Question\": \"איך עובד התשלום דרך מקום העבודה?\"",
+     "\"answer\": \"רז ישלח את פרטי ההתקשרות (פרטי חשבונית, פרטים בנקאיים) למייל הארגוני של מזור. מחלקת הרכש/הנהלת חשבונות של קראסו תיצור קשר ישיר לרז לטיפול בתשלום. החשבונית תוצא על שם מקום העבודה.\"",
+     "\"Question\": \"האם הקורס נפתח בוודאות?\"",
+     "\"answer\": \"כן, בוודאות. אין שאלה לגבי זה.\"",
+     "\"Question\": \"מה הטופס רישום מכיל ולמה הוא נחוץ?\"",
+     "\"answer\": \"טופס מקוון קצר עם פרטים אישיים. בסוף הטופס יש הצהרה שמסבירה את תנאי הביטול. הטופס לא דורש פרטי תשלום, רק אישור התחייבות. אם תרצה אסביר את התנאים — מבטלים עד שבועיים לפני הקורס: השארה אצל האוניברסיטה.\"",
+     "\"Question\": \"האם הרישום מחייב אותי לתשלום?\"",
+     "\"answer\": \"כן, הוא יוצר התחייבות עם תנאי ביטולים: עד שבועיים לפני הקורס — אפשר לבטל ולקבל החזר חלקי. אחרי תחילת הקורס — אין ביטול.\"",
+     "\"Question\": \"אילו מפגשים פרונטליים? האם חובה?\"",
+     "\"answer\": \"5 מתוך 35 המפגשים הם היברידיים — אפשר להגיע פיזית או להתחבר בזום. אין חובת נוכחות, לא פרונטלי ולא בזום. הכל מוקלט. הפרונטליים בתל אביב/רמת גן (לא בירושלים).\"",
+     "\"Question\": \"מה אורך כל מפגש? אפשר להפסיק באמצע?\"",
+     "\"answer\": \"כל מפגש הוא 4 שעות (17:30–21:30). אפשר לצפות שעה ולחזור אחר כך. אפשר ללמוד דרך הקלטות בלבד, וגם לראות מספר פעמים.\"",
+     "\"Question\": \"כמה זמן ההקלטות זמינות?\"",
+     "\"answer\": \"ההקלטות פתוחות עד 40 יום אחרי סיום הקורס.\"",
+     "\"Question\": \"מי המנחים בקורס?\"",
+     "\"answer\": \"רז ישלח בריף עם פרטי המרצים בוואטסאפ/מייל.\"",
+     "\"Question\": \"האם זה תואר אקדמי?\"",
+     "\"answer\": \"לא. זה תחת הפקולטה למינהל עסקים של האוניברסיטה העברית. אלה הכשרות מקצועיות, לא חלק מתואר. חלק מהמרצים מהאוניברסיטה + חלק מהתעשייה. תעודה ניתנת מהאוניברסיטה העברית. הפוקוס הוא עשייה פרקטית.\"",
+     "\"Question\": \"האם אפשר להשתמש בפלטפורמה X (Claude/OpenAI/Gemini)?\"",
+     "\"answer\": \"הגישה רוחבית. נלמדים כלים ספציפיים שהמרצים בוחרים (לדוגמה: Cursor, Claude Code) כי הם הכי יעילים, אבל היסודות והלוגיקה ילכו איתך עם כל כלי. אם בחברה אסור לך לעבוד עם כלי X — תוכל להשתמש בכלי אחר.\""
+    ]
+   },
+   {
+    "num": 7,
+    "title": "התנגדויות ותגובות",
+    "items": [
+     "\"Resistance\": \"אני לא רוצה למלא את הטופס דרך מכשיר העבודה — יש פה אילוצי אבטחה, חוששים שאני יכניס פרטים כאלה במכשיר ארגוני\"",
+     "\"What did the representative answer\": \"רז הגיב מצוין: 'אני מבין אותך, אין לי מה לעשות לגבי זה. אתה לא יודע מי אתה מדבר בטלפון בסופו של דבר, אז אני מבין את הזווית שלך'. הציע למלא את הטופס בערב מהבית או טלפון של האישה. הדגיש שזה לא דחוף — 'לא יקרה שום דבר אם תעשה את זה בערב או מחר'.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה מקצועית ואמפתית, אבל החמיצה הזדמנות לאבטחת המקום. כשליד מסכים לקנות אבל לא רוצה לחתום עכשיו, יש סיכון שהוא יתחרט או שמשהו יקרה במקום העבודה. הפתרון הטוב יותר: (1) שמירת מקום אקטיבית בזמן השיחה — 'מזור, אני שומר לך את המקום במחזור עד מחר ב-20:00. תספיק למלא בערב'. (2) להציע אלטרנטיבה: 'אם זה נוח לך — אני אקריא לך את התנאים בטלפון ואתה אומר אני מאשר תוך שיחה — לוקח 3 דקות, וזה גם נחשב כהתחייבות שעובדת בבית משפט'. (3) להציע דרכי חתימה אחרות: לינק SMS לטלפון האישי, חתימה דיגיטלית במייל אישי. הליד נשאר עם 'מחר אטפל' שיכול להידחות שוב.\"",
+     "\"Resistance\": \"האם הקורס בוודאות נפתח? אני לא רוצה להשקיע במקום עבודה ולגלות שהוא מתבטל\"",
+     "\"What did the representative answer\": \"רז ענה בביטחון: 'הקורס בוודאות נפתח. אין שאלה לגבי זה'.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה ישירה ובטוחה — נכונה. אפשר לחזק את ההצהרה: 'בוודאות נפתח — יש לנו כבר X משתתפים רשומים, וזה המחזור ה-11 שלנו. בנוסף, אם משהו ישתנה — תקבל מיד מייל ואופציה להעביר את הכסף למחזור הבא בלי שאלות'. נתון + רשת ביטחון מחזקים את הביטחון.\"",
+     "\"Resistance\": \"האם הטופס רישום דורש פרטי אשראי? אני לא רוצה למלא אם זה ככה\"",
+     "\"What did the representative answer\": \"רז הגיב ישירות: 'לא, לא, לא. זה מול הנהלת חשבונות שלך'. הסביר שהטופס לא דורש פרטי תשלום.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה מצוינת ומדויקת. הליד היה צריך לשמוע שזה נפרד מהתשלום — תופס הוא הצהרת כוונה, התשלום דרך החברה. זה מסיר חשש אבטחה משמעותי.\""
+    ]
+   },
+   {
+    "num": 8,
+    "title": "נקודות נוספות",
+    "items": [
+     "גילוי קריטי בשיחה: שם מלא של הלקוח הוא שלומו מזור (Shlomo Mazor) — בשיחה הקודמת (6) רק 'מזור' הופיע. עכשיו מתגלה השם הפרטי שלו ומקום העבודה שלו (קראסו). מידע חיוני ל-CRM.",
+     "קראסו = קבוצה ענקית בישראל: קבוצת רכב ישראלית גדולה (UMI, ספיד, וכו'). זה ליד באיכות יוצאת דופן — לא רק שיש מימון ארגוני, אלא יכול להוביל לעוד עסקאות B2B. כדאי לסמן את זה לטיפול VIP.",
+     "טכניקת רז במניעת בלבול: רז הזהיר את מזור מראש שהטופס עלול להראות 'עמוד לא נמצא' — וזה אומר שהבעיה ב-UI ('האירוע המפורסם' משיחה 9) עדיין לא תוקנה ב-9 ימים שעברו. רז מטפל בה בהפעלת ציפיות מקדימה, אבל זו עדיין בעיה מערכתית.",
+     "מזור הוא ליד זהיר מאוד: שאל שאלות תפעוליות רבות (אם הקורס נפתח, אם מחויב, אם דורש פרטי תשלום, האם פתוח כמה זמן). זה ליד אנליטי שצריך כל פרט.",
+     "שאלת הפרויקטים מהעבודה: מזור הצהיר במפורש שהוא רוצה לקחת פרויקטים אמיתיים של קראסו — כלומר המטרה היא הטמעת AI בקבוצה. זה ערך עצום שיכול להפוך אותו ל-Champion פנימי בקראסו.",
+     "חשש אבטחה אמיתי במקום העבודה: מזור לא רצה למלא טופס דרך מכשיר העבודה. זה רומז על מדיניות אבטחת מידע חמורה — חברה מסוג קראסו תקפיד מאוד על כך.",
+     "המעמד האקדמי: מזור הבחין נכון בין 'תואר' ל'תעודה'. הוא לא צריך תואר, רק ידע. רז הגיב מצוין — הסביר את הערך של התעודה מבחינת ראיונות עבודה ומיצוב.",
+     "שיבושי תמלול: 'הוא יפלם' (כנראה 'הוא יטפל'), 'כרון' (כנראה 'אכן'), 'אסור לך' (אסור לכם), 'המודרן' (modal) — חוזרים מהשיחות הקודמות."
+    ]
+   },
+   {
+    "num": 9,
+    "title": "סיום שיחה",
+    "items": [
+     "השיחה הסתיימה בצורה מסודרת עם החלטה ברורה לסגירה אך ללא חתימה אקטיבית:",
+     "רז ישלח פרטים מלאים למייל הארגוני (shlomo.ma@carasso) — לרכש/הנהלת חשבונות של קראסו.",
+     "מזור ימלא טופס רישום מחר ממכשיר פרטי.",
+     "מחלקת הרכש של קראסו תיצור קשר עם רז לטיפול בתשלום.",
+     "חשבונית תוצא על שם קראסו.",
+     "לא הוצעה שמירת מקום אקטיבית — בניגוד לשיחות יניב, רז לא הציע 'אני שומר לך מקום עד שמחר תמלא'.",
+     "לא הוצע אלטרנטיבה לחתימה דיגיטלית — היה אפשר לקבל אישור בטלפון או דרך SMS.",
+     "המעבר מ-Lead Hot ל-Customer עוד לא הושלם — תלוי בשני אירועים שיתקיימו 'מחר'."
+    ]
+   },
+   {
+    "num": 10,
+    "title": "תובנות לשיפור השיחה",
+    "items": [
+     "זוהי שיחה הוגנת, ידידותית, ומקצועית מצד רז — אבל יש כאן הזדמנות לסגירה הרבה יותר חזקה. שיפורים מומלצים:",
+     "חוסר בשמירת מקום אקטיבית — אחרי שראינו את הטכניקה הזו בשיחת יניב, ברור שזה הדבר הקריטי ביותר. רז יכל להגיד: 'מזור, אני שומר לך מקום עכשיו במחזור 17/5. מחר שתסגור את הטופס — המקום מובטח'. זה היה מצמצם את הסיכון של אובדן ההזדמנות.",
+     "חוסר ב-soft commitment קולי — היה אפשר להציע 'מזור, בא לי להקריא לך את תנאי הביטולים בטלפון. אם אתה מאשר בטלפון — אני יכול להוסיף את זה למסמכי הרישום כאישור ב-Voice. זה עובד גם משפטית'. זה היה ממיר את ההסכמה הקולית להתחייבות אקטיבית.",
+     "טיפול חלש בבעיית ה-UI החוזרת — 'האירוע המפורסם' של 'עמוד לא נמצא' עדיין לא נפתר. רז מתמודד איתו רק על ידי הפעלת ציפיות. צריך לטפל בבעיה הזו ברמת הפיתוח, או לפחות להציע לינק אלטרנטיבי לדוא\"ל.",
+     "חוסר באיתור Champion potential בקראסו — מזור הוא בכיר בחברה מסוג קראסו שמחפש להטמיע AI. הוא יכול להיות champion שיביא עוד 10-50 עובדים לקורסים. רז יכל להציע: 'מזור, יש לנו תוכניות גם לחברות עם כמה משתתפים — אם תרצה, אני יכול להציג לך גם תוכנית קבוצתית לקראסו, או לחבר אותך לעוד מישהו שכבר עשה את הקורס שם'. זה היה הופך את ההזדמנות מ-1 ל-N.",
+     "חוסר ב-Onboarding מובנה — הקורס מתחיל בעוד ימים ספורים, אבל לא הוצע סשן זום של 15 דקות לפני המפגש הראשון, לא הוצעה גישה מוקדמת לקבוצת הוואטסאפ. זה יכול היה לחזק את החיבור הרגשי לפני המפגש הראשון."
+    ]
+   },
+   {
+    "num": 11,
+    "title": "תובנות לשיפור הצ'אט בוט",
+    "items": [
+     "הבוט לא תיעד את מקום העבודה (קראסו) — מידע קריטי שעלה רק בשיחה השנייה. הבוט יכול לשאול: 'באיזה ארגון אתה עובד? (אופציונלי)'.",
+     "הבוט לא תיעד שיש אילוצי אבטחה ארגונית — אם הליד לא יכול למלא טפסים מהמכשיר הארגוני, הבוט יכול לשלוח את הטופס למייל אישי מראש.",
+     "הבוט לא העלה אופציה של מימון ארגוני בכלל — מזור הוא הליד השני שהזכיר מימון ארגוני (אחרי שיחה 6). הבוט צריך לזהות שאלה זו כסיגנל חזק ולנתב מסלול מותאם.",
+     "הבוט יכול לזהות B2B Potential — אם הליד בא מחברה מסוג קראסו, הבוט יכול לסמן זאת כפוטנציאל לעסקת קבוצה ולהפעיל פרוטוקול VIP.",
+     "בעיית ה-UI ('עמוד לא נמצא') — חייבת להיפתר ברמת הפיתוח. כל פעם שזה קורה, יש סיכוי לאבד ליד. הבוט יכול לשלוח טופס אחר/לינק חלופי אם המערכת מזהה את הבעיה.",
+     "הבוט יכול להציע אלטרנטיבות לחתימה — לידים עם מגבלות אבטחה צריכים אפשרויות: חתימה SMS, חתימה בקול מוקלט, או חתימה דיגיטלית במייל. הבוט יכול לאסוף העדפה.",
+     "הבוט יכול לתעד שזו שיחה שנייה — עם המידע מהשיחה הראשונה, הבוט יכול לקצר משמעותית את הסקרינינג בשיחה השנייה."
+    ]
+   },
+   {
+    "num": 12,
+    "title": "דירוג השיחה (Sales Pitch Rating)",
+    "items": [
+     "ציון: 7.5/10",
+     "זוהי שיחה איכותית עם ליד בכיר מקראסו שמעניין במיוחד את ה-CRM. רז ניהל את השיחה בידידות, גמישות וכבוד למגבלות הליד. למה לא 9? ראשית, חסרה שמירת מקום אקטיבית — לאחר ההצלחה של שיחת יניב, לא ברור למה רז לא חזר על הפרקטיקה. שנית, השיחה הסתיימה ב'מחר' — שאם משהו ישתנה בארגון של מזור, העסקה הולכת לאיבוד. שלישית, פוטנציאל ה-Champion לא נוצל — לא הוצעה אפילו אופציה לפגישה עם מחלקת ההדרכה של קראסו לתוכנית קבוצתית. עם זאת — הליד נסגר בפועל מבחינת רוח (יוצא חשבונית למקום העבודה, מימון מאושר). הסיכוי לסגירה הסופית גבוה מאוד, וזו עסקה שעוד יכולה להוביל לעסקאות נוספות בקראסו."
+    ]
+   },
+   {
+    "num": 13,
+    "title": "5 תובנות מפתח לשיפור (5 Key Insights)",
+    "items": [
+     "1. שמירת מקום אקטיבית חייבת להפוך לפרקטיקה אוטומטית — אחרי שראינו פעמיים את הטכניקה בשיחות יניב, ברור שזו צריכה להיות שאלה אוטומטית בכל שיחה שמסתיימת ב'מחר': 'האם אתה רוצה שאני אשמור לך מקום עד מחר ב-X?'. בלי זה, יש סיכון אמיתי לאובדן עסקה.",
+     "2. אלטרנטיבות חתימה ללידים B2B — לידים עם אילוצי אבטחה ארגונית זקוקים לאופציות שאינן טופס מקוון: חתימה SMS, אישור קולי בטלפון, מסמך PDF לחתימה אישית, או אפילו ייפוי כוח לחתימה מטעם הליד. כדאי להכין ארגז כלים B2B מותאם.",
+     "3. בעיית ה-UI חייבת להיפתר ברמת הפיתוח — אחרי שראינו 'האירוע המפורסם' 2 פעמים ב-9 ימים, ברור שזה תקלה שנמצאת בשטח כל יום. כל ליד שמגיע לרגע הסליקה אבל לא משלים — הולך לאיבוד. דרושה התערבות מיידית של צוות הפיתוח, ובמקביל — מסלול גיבוי לנציגים.",
+     "4. זיהוי Champion potential בארגון — מזור הוא בכיר בקראסו שמחפש להטמיע AI. הוא יכול להיות שגריר שיביא 10-50 עוד עובדים לקורסים. ראוי להציע מיד: 'אם תרצה, אני יכול להציע גם תוכנית קבוצתית לקראסו'. זה ממיר עסקה של 10K ל-100K+.",
+     "5. Onboarding בזמן הסליקה — הסליקה היא רגע אופטימלי לחיזוק חוויה: לינק לקבוצת ווטסאפ של הקורס, סשן זום אישי, חבילת ברוכים הבאים. רז לא ניצל את זה בשיחת מזור (וגם לא בשיחת יניב 2). זו הזדמנות זהובה לבנות לויאליות עוד לפני המפגש הראשון."
+    ]
+   }
+  ]
+ },
+ "7": {
+  "id": 7,
+  "title": "ניתוח שיחת מכירה — יניב (נרשם)",
+  "header": "קורסי מהנדסי/מפתחי AI — האוניברסיטה העברית | נציג: רז",
+  "score": 8.5,
+  "sections": [
+   {
+    "num": 1,
+    "title": "רקע כללי על התמלול",
+    "items": [
+     "שיחת מכירה יוצאת של רז מהאוניברסיטה העברית אל ליד בשם יניב, יזם הייטק לשעבר ומנהל מוצר, לגבי קורסי AI של האוניברסיטה. השיחה ייחודית כי הליד עצמו מנהל את השיחה ברמה גבוהה — שואל שאלות טכניות מעמיקות (LangGraph, LangChain, וקטורים, סטייטים, גארדריילס, security considerations), מסמן אינטליגנציה גבוהה, ועוצר את הנציג כדי להבין בדיוק לאיזה מ-2 הקורסים הוא מתאים. רז מבצע התאמת מוצר אסטרטגית ומציע מסלול ביניים מקצועי: התחלה במהנדסי AI עם דלת פתוחה למעבר למפתחי AI אחרי 2 מפגשים. השיחה הסתיימה בקביעת מעקב למחר ב-10:30 ושמירת מקום פעילה במחזור המהנדסים. הערה חשובה: ציינת שהליד 'נרשם' — בתוך השיחה הזו לא בוצעה סגירה פיננסית, אבל יש שמירת מקום אקטיבית ומועד מעקב מוגדר ל-24 שעות. כנראה הסגירה בוצעה בשיחה הבאה."
+    ]
+   },
+   {
+    "num": 2,
+    "title": "זיהוי הדוברים",
+    "items": [
+     "שם הנציג: רז (מהאוניברסיטה העברית) — Speaker 1. הנציג ציין את עצמו כ'עדמון' (כנראה שיבוש תמלול של 'מדבר עכשיו' או 'מהאוניברסיטה').",
+     "שם הלקוח/הליד: יניב (Speaker 2) — מייל yanivL76G@ (חתוך בתמלול). פרופיל: מייסד חברת הייטק לשעבר, מנהל מוצר, יזם, בוגר האוניברסיטה העברית."
+    ]
+   },
+   {
+    "num": 3,
+    "title": "הקורס המבוקש",
+    "items": [
+     "שני קורסים נדונו במקביל — קורס 'מהנדסי AI' (29/4, ראשון ושלישי 17:30–21:30, מיועד למתכנתים פעילים) וקורס 'מפתחי AI' (17/5, ראשון ושלישי 17:30–21:30, מיועד לאנשים עם אוריינטציה טכנולוגית אך לאו דווקא מתכנתים). שניהם 35 מפגשים, 80-90% תוכן זהה, ההבדל הוא בעומק ובקצב. הקורסים כוללים: Python (מכינה 4-5 ימים במהנדסים / 8 מפגשים במפתחים), SQL, LangChain, ניהול קוד עם Cursor ו-Claude Code, אג'נטים, רשתות סוכנים, Machine Learning, אימון מודלים מקומיים וענן, פרויקט גמר אפליקציית web Full-Stack."
+    ]
+   },
+   {
+    "num": 4,
+    "title": "מבנה השיחה",
+    "items": [
+     "פתיחה ובדיקת רלוונטיות: שיחה לגבי מהנדסי AI.",
+     "גילוי צרכים מהיר וחכם: רז שואל מיד על רקע טכנולוגי כדי לסווג לאיזה קורס מתאים.",
+     "יניב מציג את עצמו: יזם הייטק, מנהל מוצר, מכיר מונחים אבל לא מתכנת פעיל.",
+     "שאלה אסטרטגית של יניב: מבקש להבין את ההבדל בין הקורסים, לא רוצה ללמוד דברים שיוטיוב מעלים.",
+     "הצגת ההבדל בין הקורסים: רז מסביר ש-80-90% חופף, ההבדל הוא בגישה ובעומק.",
+     "שאלות טכניות מעמיקות מצד יניב: LangGraph, וקטורים, סטייטים, גארדריילס, security, scale, API.",
+     "רז עונה ביושר: מאשר עומק טכני אבל לא מתחייב לספריות ספציפיות.",
+     "דאגת ה'חוליה החלשה': יניב חושש שכיתה הטרוגנית תאט אותו.",
+     "תשובה חכמה של רז: הסבר על מבנה התרגולים שמטפל בכך.",
+     "הצעת מסלול ביניים אסטרטגי: להתחיל במהנדסי AI עם דלת מעבר למפתחי AI.",
+     "שאלות לוגיסטיקה: תאריכים, ימים, שעות, פרונטלי/אונליין.",
+     "שאלת מחיר ובונוס 'בוגר אוניברסיטה': יניב חושף שהוא בוגר העברית, רז מציע 'מחיר מלגה'.",
+     "שאלות איכות: מי המרצים, מה גודל הכיתה, אינטראקציה.",
+     "שמירת מקום אקטיבית: רז שומר מקום פעיל בקורס המהנדסים.",
+     "קביעת מעקב מדויק: שיחה חוזרת מחר ב-10:30."
+    ]
+   },
+   {
+    "num": 5,
+    "title": "שאלות הליד",
+    "items": [
+     "יניב היה ה-power asker של כל השיחות עד כה. שאל שאלות בכמה רמות:",
+     "רמה אסטרטגית: מה ההבדל בין שני הקורסים? מי הקהל? מה העומק?",
+     "רמה טכנית מתקדמת: עד כמה יורדים לקוד? עובדים עם LangGraph/LangChain? וקטורים, סטייטים, גארדריילס? Security considerations? Scale? API?",
+     "רמת איכות: מי המרצים? מה גודל הכיתה?",
+     "רמת חוויה: האם המרצה נותן מקום לשאלות-תשובות? האם זה בקצב מהיר?",
+     "רמת תכנון: מה לוחות הזמנים? עד מתי המחיר?",
+     "רמת ערך: האם יש הנחה לבוגר העברית?"
+    ]
+   },
+   {
+    "num": 6,
+    "title": "שאלות ותשובות נפוצות (Top 10)",
+    "items": [
+     "\"Question\": \"מה ההבדל בין קורס מהנדסי AI לבין מפתחי AI?\"",
+     "\"answer\": \"80-90% מהתוכן זהה, ההבדל הוא בגישה. מהנדסי AI מיועד למתכנתים פעילים או בעבר — עם יותר התעסקות 'מאחורי הקלעים' ובברזלים. מפתחי AI מתאים לבעלי אוריינטציה טכנולוגית בלי דרישת תכנות. בשני הקורסים: 35 מפגשים, פרויקט גמר אפליקציית web.\"",
+     "\"Question\": \"כמה עמוק יורדים? לרמת API, scale, security, LangGraph?\"",
+     "\"answer\": \"מתעמקים מאוד. בוגרים יוצאים ועובדים כמייסמי AI ומטמיעי AI. הקורס לא 'מקביל יוטיוב'. עובדים עם Cursor ו-Claude Code שכותבים את הקוד, אבל גם יורדים לרמת קוד עם Python ו-SQL. ספריות ספציפיות (LangGraph וכו') יכולות להשתנות, לא רוצה להתחייב.\"",
+     "\"Question\": \"מה לגבי 'החוליה החלשה' בכיתה הטרוגנית? איך לא יגררו אחורה את המתקדמים?\"",
+     "\"answer\": \"מבנה הקורס מטפל בזה: 2 מפגשים בשבוע + 2 תרגולים בשבוע נוספים. בשיעורים המתקדמים מתקדם בקצב, ומי שצריך יותר עזרה משלים בתרגולים. אדם חזק כמוך אולי לא יצטרך תרגולים, או רק 1 בשבוע.\"",
+     "\"Question\": \"מה לוחות הזמנים?\"",
+     "\"answer\": \"מהנדסי AI: מתחיל 29/4 (מכינת פייטון 4-5 ימים), ימי 2 ורביעי 17:30–21:30. מפתחי AI: מתחיל 17/5, ימי ראשון ושלישי 17:30–21:30.\"",
+     "\"Question\": \"כמה עולה הקורס?\"",
+     "\"answer\": \"מחיר זהה לשני הקורסים. מחיר מלא 15,050 ש\"ח + מע\"מ. הרשמה מוקדמת 9,850 ש\"ח + מע\"מ, אפשר לחלק ל-10 תשלומים ללא ריבית. עם מע\"מ זה 11,623 ש\"ח.\"",
+     "\"Question\": \"אני בוגר האוניברסיטה העברית — יש הנחה?\"",
+     "\"answer\": \"כן, יש 'מחיר מלגה לבוגר האוניברסיטה העברית' — זהה להרשמה מוקדמת (9,850 ש\"ח + מע\"מ), תקף גם אחרי שהמחיר המוקדם נסגר.\"",
+     "\"Question\": \"האם זה זום או פרונטלי?\"",
+     "\"answer\": \"35 מפגשים, רובם בזום שידור חי. 5 מפגשים היברידיים בתל אביב/רמת גן (אפשר זום או פיזי). הכל מוקלט, אין חובת נוכחות.\"",
+     "\"Question\": \"מי המרצים?\"",
+     "\"answer\": \"רז יציע לשלוח רשימת מרצים מסודרת בנפרד.\"",
+     "\"Question\": \"מה גודל הכיתה?\"",
+     "\"answer\": \"מקסימום 60 איש בקורס. רז הסביר שמדובר במחזור ה-10-12 של הקורסים האלה, אז 'הכל מאוד מאוד מחודד' ויודעים איך לטפל בכיתה.\"",
+     "\"Question\": \"אם אבחר במהנדסי AI ויהיה לי קשה — אפשר לעבור למפתחי AI?\"",
+     "\"answer\": \"כן! תתחיל במכינת פייטון + 2 מפגשים ראשונים של מהנדסי AI. אם תרגיש שזה לא בשבילך — אעביר אותך למחזור הבא של מפתחי AI. Worst case scenario: אם הקורס מלא, יש מחזור חדש כל חודש וחצי.\""
+    ]
+   },
+   {
+    "num": 7,
+    "title": "התנגדויות ותגובות",
+    "items": [
+     "\"Resistance\": \"אני לא רוצה לעשות קורס שאני יכול ללמוד ביוטיוב לבד — הפרומפט engineering פשוט מדי בשבילי, וגם אני כבר בונה אפליקציות עם Cogol Studio ו-OpenAI Codex\"",
+     "\"What did the representative answer\": \"רז ענה מצוין: 'אם זה היה לימוד שיוטיוב מספק, לא היה זכות קיום לקורס'. הציג שמדברים על פרומפטים רק חצי שעה, והשאר זה Python, SQL, פיתוח פרקטי של אג'נטים, רשתות סוכנים, Machine Learning, מודלים מקומיים. דגש על 'אנחנו יורדים לרמה של הקוד'.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה חזקה, אבל אפשר לחזק עוד: להציג סיפור הצלחה ספציפי של יזם/מנהל מוצר שעבר קורס: 'יש לנו בוגר שהיה מנהל מוצר ב-X, אחרי הקורס הקים סטארטאפ AI ועכשיו נמצא בסבב גיוס'. בנוסף, להציע גישה לפרויקט גמר של בוגר ברמה גבוהה כדי להמחיש מיד את ההפרש בין 'יוטיוב' לבין מה שיניב יוכל לבנות בקורס. הצעה ספציפית: 'בא לי לשלוח לך עכשיו פרויקט גמר של בוגר ברמת פרודקשן — תוכל לראות בעצמך'.\"",
+     "\"Resistance\": \"'החולייה החלשה' תגרור את הכיתה אחורה — אני מנהל מנכ\"לים שלא נגעו בקוד וזה תוך 2 שיעורים אתה מאבד את הקצב\"",
+     "\"What did the representative answer\": \"רז הגיב באמת מקצועית: הכיר בחשש, הסביר שזה לא קורה כי המבנה מטפל בכך (2 מפגשים + 2 תרגולים בשבוע), והדגיש שמתקדם מהיר יוכל לוותר על תרגולים. גם הציג חצי שקיפות: 'תפקידי לוודא שלכולם יש אוריינטציה טכנולוגית מובהקת'.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה מצוינת. אפשר לחזק עוד: להציע 'אני אתן לך את המייל של בוגר ברמה דומה לשלך — תדבר איתו 10 דקות, תקבל את חוויית הקצב מ-first hand'. בנוסף, להציג נתון ספציפי: 'בכיתה האחרונה, X אחוז מהבוגרים סיימו בציון מעולה, ו-Y אחוז עברו למשרות AI'. נתון קונקרטי נותן ביטחון.\"",
+     "\"Resistance\": \"60 איש בכיתה זה הרבה, קשה להאמין שיש מקום לכולם\"",
+     "\"What did the representative answer\": \"רז ענה בביטחון: 'מאז קורונה עשינו סדר גודל של 1000 קורסים, אנחנו במחזור 10-12 של הקורסים האלה, היינו ראשונים במדינה, הכל מחודד ומדויק'. אם זה לא הספיק, הסביר את האיזון בין שאלות לקצב.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה טובה. הוכחה חיצונית עוד יותר חזקה: 'תיכנס לאתר Reviews/אלמא מטר לראות ביקורות בוגרים על הקצב והאינטראקטיביות'. בנוסף, להציע: 'בא לי לחבר אותך לבוגר מקורס אחרון כדי שתוכל לשמוע ישירות איך זה התרגיש'. עדות ראייה תמיד עובדת טוב יותר מנתונים סטטיסטיים.\"",
+     "\"Resistance\": \"אנחנו אנשים פרטיים, לא מזדקקים מהר על מה — תן לי יום לחשוב\"",
+     "\"What did the representative answer\": \"רז הגיב מצוין: 'בוא נראה אם יש לי שיחה ב-10:30 מחר, יופי, אז אני משריון לך את המקום, רק שנייה'. שמירת מקום אקטיבית עם קביעת שיחה מדויקת.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה מעולה — שילוב של שמירת מקום (יוצר התחייבות פסיכולוגית) + מועד מעקב מדויק. החלטה זו לבדה הופכת את השיחה לפי כמה יעילה יותר מהשיחות הקודמות. אפשר לחזק עוד: 'מעולה, אני שולח לך את הסילבוס המלא, רשימת המרצים, פרויקט גמר של בוגר. עד מחר תהיה מצויד לקבלת החלטה מושכלת'.\""
+    ]
+   },
+   {
+    "num": 8,
+    "title": "נקודות נוספות",
+    "items": [
+     "ליד באיכות יוצאת מן הכלל: יניב הוא יזם הייטק, מנהל מוצר, בוגר העברית, מבין טכנית עד רמת LangGraph וגארדריילס. זהו ליד שמתאים לקורס המתקדם יותר.",
+     "גילוי מצוין של 'בוגר העברית': יניב חשף שהוא בוגר העברית באמצע השיחה, ורז הגיב מיד עם הנחת בוגר ('מחיר מלגה'). זה היה מהלך חכם — אבל חבל שזה עלה רק כי יניב שאל. הבוט/הסקרינינג היה צריך לתפוס את זה מראש.",
+     "שמירת מקום אקטיבית — מהלך מצוין: רז שומר מקום בקורס המהנדסים בזמן השיחה. זה יוצר התחייבות פסיכולוגית גם מבלי לסלוק תשלום. זו אחת הטכניקות החזקות בשיחה הזו.",
+     "שקיפות לגבי ספריות ספציפיות: רז סירב להבטיח LangGraph ספציפית כי 'ספריות יכולות להשתנות'. כנות זו בונה אמון רב יותר עם ליד מתוחכם כמו יניב.",
+     "מסלול ביניים מבריק: ההצעה לעשות את מכינת פייטון + 2 מפגשים ראשונים של מהנדסי AI, ואז להחליט — היא מהלך מכירה אסטרטגי מעולה. זה מקטין את ה-risk perception של הליד ומאפשר מעבר ללא לחץ.",
+     "שיבוש תמלול: המייל של יניב מופיע כ'יניבL76G מלכון' — כנראה 'yanivL76G@gmail.com' או דומה. שיבושי תמלול נוספים: 'עדמון' (כנראה 'מ-' משהו), 'תבגולים' (תרגולים), 'מסתכים' (מפתחים).",
+     "השיחה עברה את ה-15 דקות: ארוכה אבל יעילה — שני הצדדים עבדו והייתה התקדמות אמיתית."
+    ]
+   },
+   {
+    "num": 9,
+    "title": "סיום שיחה",
+    "items": [
+     "השיחה הסתיימה בצורה אסטרטגית עם שמירת מקום פעילה ומועד מעקב מדויק:",
+     "רז שומר ליניב מקום פעיל בקורס מהנדסי AI.",
+     "מועד שיחה חוזרת: מחר ב-10:30.",
+     "רז ישלח: סילבוס מפורט, רשימת מרצים, חומרי מידע נוספים.",
+     "יניב מבקש 'תציף, אני צריך את ההתרשמות הזאת לקחת את ההחלטה הנכונה' — כלומר נפתח להחלטה.",
+     "לא בוצעה סגירה פיננסית בשיחה הזו, אבל היה התקדמות משמעותית."
+    ]
+   },
+   {
+    "num": 10,
+    "title": "תובנות לשיפור השיחה",
+    "items": [
+     "זו השיחה האיכותית ביותר עד כה — רז ביצע discovery חכם, התאמת מוצר אסטרטגית, ויצירת התחייבות עם שמירת מקום. עם זאת, יש עוד מקום לשיפור:",
+     "חסר סיפור הצלחה רלוונטי לפרופיל היזם — לליד שהקים חברת הייטק ומנהל מוצר, היה צריך להזכיר בוגר בעל פרופיל דומה: 'יזם שעשה את הקורס ואחר כך הקים חברה ב-X'. סיפורים ספציפיים פועלים פי 10 מהצהרות כלליות.",
+     "חסרה הצעה לדבר עם בוגר — יניב הוא ליד שמעריך נתונים ראשוניים. להציע 'אני אחבר אותך לבוגר מקצועי דומה' היה מעלה משמעותית את האמון.",
+     "תשובה חלקית לגבי ספריות וטכנולוגיות — רז סירב להבטיח LangGraph, וזה הוגן. אבל יניב היה מצפה לרשימה גנרית של 'אזורים שנוגעים בהם' (Vector DBs, Agent frameworks, Embedding models). היה אפשר לאמר: 'אני לא יכול להבטיח ספרייה ספציפית, אבל אני יכול להגיד שעוסקים במספר vector databases פופולריים, frameworks של agents, ופלטפורמות deployment כמו AWS/Azure'.",
+     "חסר 'why now' — למה דווקא עכשיו ולא בעוד 3 חודשים? לליד יזם עם רקע מוצר, יש מקום לדבר על speed-to-market של AI ולמה דחיית 4 חודשים בקורס שווה הרבה.",
+     "אזכור פרויקט גמר מותאם — היה אפשר להגיד: 'יניב, מתוך הניסיון שלך כיזם, פרויקט הגמר שלך יכול להיות סטארטאפ AI אמיתי — והמרצים שלנו ישמחו ללוות אותך כיועצים'. זה היה הופך את הקורס לעסקה אסטרטגית במקום ללימודים."
+    ]
+   },
+   {
+    "num": 11,
+    "title": "תובנות לשיפור הצ'אט בוט",
+    "items": [
+     "הבוט לא איתר שיניב הוא בוגר העברית — מידע קריטי ל-pricing וגם ל-pitch. זה עלה רק כי יניב שאל. הבוט צריך לשאול ישירות: 'האם למדת בעבר באוניברסיטה העברית?'.",
+     "הבוט לא איתר את ניסיון היזמות והפיתוח — מידע חיוני לסיווג הקורס הנכון. הבוט צריך לשאול שאלות מסדרות: 'תפקיד נוכחי?', 'ניסיון תכנותי בעבר?', 'האם הקמת מוצר/חברה?'.",
+     "הבוט לא איתר את רמת הניסיון הנוכחית עם AI — יניב כבר משתמש ב-Cogol Studio + Codex של OpenAI. זה ליד שכבר עמוק. הבוט יכול לזהות זאת: 'באילו כלי AI אתה משתמש כיום?'.",
+     "הבוט יכול לסווג ל'קורס מתקדם' — לפני שיחה, ליד עם פרופיל יזם/CTO/מנהל מוצר צריך להגיע ישירות לדיון על המהנדסים, לא הצורך בהשוואה.",
+     "הבוט יכול לשלוח השוואת קורסים מובנית — טבלת השוואה ברורה בין 2 הקורסים הייתה חוסכת 5 דקות בשיחה. כדאי לבנות אותה כקובץ PDF סטנדרטי.",
+     "הבוט יכול להפנות לפרויקט גמר של בוגר — לידים בפרופיל גבוה יראו פרויקט תכל'ס בעיניהם, לפני שיחה.",
+     "הבוט יכול לתפוס את הצורך ב'דיבור עם בוגר' — להציע אוטומטית 'רוצה לדבר עם בוגר?' — מהלך משמעותי בבניית אמון.",
+     "הבוט יכול לזהות 'חשש מחוליה חלשה' — לידים בכיר/יזם תמיד שואלים את זה. הבוט יכול להציע מראש תשובה."
+    ]
+   },
+   {
+    "num": 12,
+    "title": "דירוג השיחה (Sales Pitch Rating)",
+    "items": [
+     "ציון: 8.5/10",
+     "זוהי השיחה הכי איכותית עד כה. רז הפגין רמת מקצועיות גבוהה: discovery מהיר ומדויק, התאמת מוצר אסטרטגית (הצעת מסלול ביניים), שקיפות אינטלקטואלית (לא מתחייב לספריות), שמירת מקום פעילה ומועד מעקב מדויק. הליד יצא עם תחושה של 'אכפת לי מההצלחה שלך' ולא 'אני רוצה למכור לך'. למה לא 9-10? כי השיחה החמיצה כמה הזדמנויות: סיפורי הצלחה ספציפיים לפרופיל יזם, הצעה לדבר עם בוגר, ו-soft commitment כספי (לא הוצעה אופציית דמי רישום למרות שמירת המקום). עם זאת — קביעת מועד מעקב מדויק (24 שעות) ושמירת מקום פעילה הם נכסים משמעותיים שצריך לתת להם משקל גבוה. אם הליד יסגור מחר ב-10:30, השיחה הזו הייתה גאונית."
+    ]
+   },
+   {
+    "num": 13,
+    "title": "5 תובנות מפתח לשיפור (5 Key Insights)",
+    "items": [
+     "1. שמירת מקום אקטיבית בזמן השיחה — הטכניקה החזקה ביותר שראינו בשיחות עד כה. ברגע ששומרים מקום בזמן השיחה ('רק שנייה, אני משריון לך את המקום'), הליד מרגיש מחויבות פסיכולוגית גם מבלי לשלם. כל הנציגים צריכים לאמץ את זה.",
+     "2. הצעת מסלול ביניים — Risk Reduction — במקום לבחור בין שתי אפשרויות (A או B), להציע מסלול שמתחיל ב-A עם דלת ל-B אם צריך. זה מקטין את ה-perceived risk של הליד ומגדיל את הסיכוי לסגירה. אסטרטגיה מבריקה למצבי התלבטות.",
+     "3. סיפור הצלחה מותאם לפרופיל הליד — לליד יזם/CTO/מנהל מוצר, חובה להחזיק סיפור הצלחה של בוגר בפרופיל דומה. רז החמיץ את זה. כל נציג צריך להחזיק 5-6 סיפורי הצלחה מסוגי לידים נפוצים (יזם, איש פיננסים, אדריכל, איש חינוך, וכו').",
+     "4. הצעה אוטומטית לדבר עם בוגר — ללידים בפרופיל גבוה (תקציב +10K, רקע מקצועי בכיר), כדאי להציע: 'בא לי לחבר אותך עם בוגר מקצועי דומה לדבר 10 דקות'. זה משמעותי במיוחד עבור לידים שמעריכים ראיות מ-first hand.",
+     "5. הסקרינינג של הבוט חייב לתפוס את 'בוגר העברית' — זו הנחה משמעותית (5,200 ש\"ח חיסכון) שהליד לא תמיד יודע לבקש. הבוט חייב לשאול: 'האם למדת בעבר באוניברסיטה העברית?'. זה צריך להופיע גם בכל פתיחת שיחה של נציג כסעיף שגרתי בסקריפט."
+    ]
+   }
+  ]
+ },
+ "1": {
+  "id": 1,
+  "title": "ניתוח שיחת מכירה — שרון (לא נרשם)",
+  "header": "קורס מפתחי AI — האוניברסיטה העברית",
+  "score": 6.0,
+  "sections": [
+   {
+    "num": 1,
+    "title": "רקע כללי על התמלול",
+    "items": [
+     "שיחת מכירה יוצאת (Outbound) של נציג מהאוניברסיטה העברית בשם רון אל ליד בשם שרון, בעקבות התכתבות מוקדמת של שרון עם בוט. השיחה נקבעה מראש לשעה 15:00 והנציג הקדים אותה בתיאום עם הלקוחה. מטרת השיחה: הצגת קורס מפתחי AI, בירור צרכים והתאמת מחזור לימוד. השיחה מתאפיינת באווירה נעימה, מקצועית ובדיקת התאמה מעמיקה מצד הלקוחה, שבסופה ביקשה לקבל סילבוס ומועדים ולחזור בהמשך אחרי שתבחן את החומרים."
+    ]
+   },
+   {
+    "num": 2,
+    "title": "זיהוי הדוברים",
+    "items": [
+     "שם הנציג: רון (מאוניברסיטה העברית)",
+     "שם הלקוח/הליד: שרון"
+    ]
+   },
+   {
+    "num": 3,
+    "title": "הקורס המבוקש",
+    "items": [
+     "קורס מפתחי AI של האוניברסיטה העברית — קורס במתכונת היברידית, פעמיים בשבוע בזום ומפגש פרונטלי אחת לחודש. אורך הקורס: 4 חודשים, 35 מפגשים, כל מפגש 4 שעות רצופות. דגשים תוכניים: עבודה עם אג'נטים ואוטומציות, מאגרי נתונים (SQL ל-LLM), פיתוח אפליקציות AI כולל backend, frontend ו-deployment."
+    ]
+   },
+   {
+    "num": 4,
+    "title": "מבנה השיחה",
+    "items": [
+     "פתיחה ו-Small Talk: הצגת הנציג, אישור זמינות, אזכור התכתבות עם הבוט.",
+     "בירור צרכים ראשוני: שרון מובילה עם שאלות לוגיסטיות (סילבוס, עלויות, מתכונת, מועדים).",
+     "התאמת מסלול: דיון מעמיק על מסלול בוקר מול ערב לאור מצבה התעסוקתי המשתנה.",
+     "גילוי צרכים מעמיק (Discovery): הנציג שואל על הרקע המקצועי של שרון (16 שנה באינטל, עולמות מדיקה, מנהלת מצוינות טיפולית).",
+     "טיפול בהתנגדות מרכזית: שאלת הבידול מול שוק רווי קורסים.",
+     "הצגת ערך מוסף: תעודת האוניברסיטה העברית, פרויקט גמר, סבב פיתוח קריירה עם HR מגוגל/Skillset.",
+     "סגירה רכה: שליחת סילבוס ומחזורים לוואטסאפ, סיכום של 'חוזרת אליכם'."
+    ]
+   },
+   {
+    "num": 5,
+    "title": "שאלות הליד",
+    "items": [
+     "הליד הציגה שאלות מובנות ומקצועיות בכמה צירים מרכזיים:",
+     "לוגיסטיקה ומתכונת: מתכונת היברידית, שעות בוקר/ערב, ימי הלימוד, אורך מפגשים, הפסקות.",
+     "גמישות: אפשרות מעבר ממחזור בוקר לערב באמצע הקורס.",
+     "תוכן ורמה: ניסיון נדרש, תמהיל המשתתפים.",
+     "בידול ויתרון תחרותי: מה היתרון של הקורס מול שוק רווי קורסים.",
+     "תעודה ופרויקט גמר: איך מקבלים תעודה, האם הפרויקט אינדיבידואלי או קבוצתי.",
+     "משך כולל ומיקום: אורך הקורס, מיקום המפגשים הפרונטליים."
+    ]
+   },
+   {
+    "num": 6,
+    "title": "שאלות ותשובות נפוצות (Top 10)",
+    "items": [
+     "\"Question\": \"אפשר לקבל את הסילבוס המלא כולל עלויות?\"",
+     "\"answer\": \"הנציג השיב בחיוב והבטיח לשלוח בוואטסאפ סילבוס מלא וכל המחזורים הקרובים כולל עלויות.\"",
+     "\"Question\": \"הקורס הוא היברידי, נכון?\"",
+     "\"answer\": \"נכון, פעמיים בשבוע בזום ואחת לחודש מפגש פרונטלי (שגם עובר בזום).\"",
+     "\"Question\": \"אפשר לבחור בין מסלול בוקר לערב?\"",
+     "\"answer\": \"כן, אפשר לבחור. בוקר: 9:00–13:00, ערב: 17:30–21:30.\"",
+     "\"Question\": \"אם אתחיל בבוקר ואצטרך לעבור לערב באמצע הקורס, זה אפשרי?\"",
+     "\"answer\": \"במידה ויש מקומות במחזור הערב, זה אפשרי — אבל תלוי במקומות פנויים.\"",
+     "\"Question\": \"כמה שעות כל מפגש ויש הפסקות?\"",
+     "\"answer\": \"כל מפגש הוא 4 שעות רצופות.\"",
+     "\"Question\": \"מה הניסיון הקודם הנדרש ומהו תמהיל המשתתפים?\"",
+     "\"answer\": \"הקורס מתאים גם למי שמגיע ללא רקע מקדים בפיתוח. התמהיל מגוון מאוד — מחיילים משוחררים עד פנסיונרים, דרך עורכי דין, רואי חשבון, ולעיתים גם אנשי הייטק שמחפשים כלים נוספים בעולם ה-AI.\"",
+     "\"Question\": \"מה היתרון של הקורס שלכם מול שאר הקורסים בשוק?\"",
+     "\"answer\": \"תעודה מוכרת של האוניברסיטה העברית, רמה גבוהה של צוות אקדמי וניהולי, מעטפת תמיכה עם מתרגלים, פרויקט גמר מוחשי, וסבב פיתוח קריירה עם HR מגוגל או חברת Skillset.\"",
+     "\"Question\": \"מה מזכה בתעודה — הגשת הפרויקט?\"",
+     "\"answer\": \"כן, הגשת פרויקט הגמר היא שמזכה בתעודה.\"",
+     "\"Question\": \"פרויקט הגמר אינדיבידואלי או קבוצתי?\"",
+     "\"answer\": \"בעיקרון אינדיבידואלי, אך אם נוצרת שותפות טבעית במהלך הקורס ויש יוזמה משותפת — אפשרי גם בזוגות.\"",
+     "\"Question\": \"מה אורך הקורס הכולל ואיפה מתקיימים המפגשים הפרונטליים?\"",
+     "\"answer\": \"4 חודשים, 35 מפגשים סה\"כ. המפגשים הפרונטליים מתקיימים באזור המרכז — תל אביב או רמת גן (משתנה בין מחזורים).\""
+    ]
+   },
+   {
+    "num": 7,
+    "title": "התנגדויות ותגובות",
+    "items": [
+     "\"Resistance\": \"אני לא יודעת אם אצליח לעמוד ב-4 שעות לימוד רצופות ללא הפסקה\"",
+     "\"What did the representative answer\": \"הנציג ענה שזה לחלוטין אפשרי, וציין שיש הקלטות של כל המפגשים (לייב, לא מוקלט מראש), כך שאם חסר משהו אפשר להשלים בקלות.\"",
+     "\"The best solution to the objection\": \"כדאי לחדד שיש בפועל הפסקות קצרות בתוך המפגש (גם אם לא מובנות), לתת נתון על שיעור הסיום של תלמידים, ולהזכיר שההקלטות זמינות מיידית לאחר השיעור. כדאי גם להציע התנסות במפגש אחד לדוגמה לפני התחייבות.\"",
+     "\"Resistance\": \"השוק מוצף בקורסי AI דומים — מה היתרון הספציפי שלכם?\"",
+     "\"What did the representative answer\": \"הנציג הציג שלושה צירי בידול: (1) תעודה של האוניברסיטה העברית שמוכרת בשוק העבודה, (2) צוות אקדמי וניהולי ברמה גבוהה כולל מתרגלים, (3) סבב פיתוח קריירה עם HR מגוגל וחברת Skillset. הוא נמנע מלהשמיץ מתחרים והדגיש שהיא מוזמנת לבדוק במקומות אחרים.\"",
+     "\"The best solution to the objection\": \"להחזיק נתונים קונקרטיים מוכנים: אחוזי השמה בעבודה, שכר ממוצע של בוגרים, שמות חברות שקלטו בוגרים, מספר בוגרים עד היום, ביקורות והמלצות של בוגרים. כדאי גם להציג השוואה מסודרת מול קורסים פרטיים (לא בשם, אלא לפי קטגוריה) — תוכן, היקף, מעטפת, תעודה, ליווי קריירה. שילוב של סיפור הצלחה אחד או שניים של בוגרים מרקע דומה לשרון (נשים בשנות ה-40+ עם רקע מקצועי שעברו ל-AI) יחזק את האפקט.\"",
+     "\"Resistance\": \"אני לא עובדת כרגע אבל אני מניחה שבחודשיים-שלושה הקרובים זה ישתנה — אני צריכה גמישות במעבר בין מסלולים\"",
+     "\"What did the representative answer\": \"הנציג השיב שמעבר אפשרי בכפוף למקומות פנויים במחזור הערב, והמליץ להתחיל ישירות במחזור ערב כדי למנוע סיכון.\"",
+     "\"The best solution to the objection\": \"להציע התחייבות מסוימת בכתב לגבי אפשרות מעבר, או הסבר על מספר המקרים שבהם תלמידים אכן הצליחו לעבור בעבר. בנוסף, להציג את ההקלטות כפתרון משלים — גם אם לא מצליחה להגיע למפגש מסוים מסיבות עבודה, ניתן להשלים את החומר. הצגת לוח זמנים שבועי קונקרטי תעזור לה להעריך התאמה למצב התעסוקתי המשתנה.\"",
+     "\"Resistance\": \"לא הוצגה התנגדות מפורשת לגבי המחיר, אך הליד ביקשה לראות עלויות לפני קבלת החלטה\"",
+     "\"What did the representative answer\": \"הנציג הסכים לשלוח בוואטסאפ את כל פרטי העלות יחד עם הסילבוס.\"",
+     "\"The best solution to the objection\": \"במקום לדחות לוואטסאפ — מומלץ לתת טווח מחירים כללי בשיחה, להציג מסלולי תשלום, אפשרות מימון, מלגות אם קיימות, וערך מול עלות (השמה, שכר צפוי). דחיית המחיר לאחר השיחה מאפשרת ללקוחה להחליט לבד ללא ליווי הנציג.\""
+    ]
+   },
+   {
+    "num": 8,
+    "title": "נקודות נוספות",
+    "items": [
+     "פרופיל לקוח חזק במיוחד: שרון היא מנהלת מצוינות טיפולית, 16 שנה באינטל ושנים נוספות בעולם המדיקה. זהו ליד באיכות גבוהה במיוחד עם כושר רכישה ומוטיבציה ברורה.",
+     "כוונה ברורה: שרון אמרה במפורש שהיא רוצה להכניס AI ככלי לעולמות שלה לשיפור תהליכים — זו כוונה תעסוקתית/ניהולית ולא בהכרח שינוי קריירה.",
+     "מיקום גיאוגרפי תומך: היא גרה בכפר סבא (אמרה 'מחזור סבא' — כנראה שיבוש תמלול של 'כפר סבא'), מה שתואם את מיקום המפגשים הפרונטליים בתל אביב/רמת גן.",
+     "שפת הסילבוס: הנציג ציין שהסילבוס באנגלית בלבד — שרון אישרה שזה לא מהווה בעיה.",
+     "שיבושי תמלול: קיימים כמה שיבושים בתמלול (למשל 'פיגיטלי' במקום 'דיגיטלי', 'סמכות' במקום 'מוסדות', 'מחזור סבא') — לא פוגעים בהבנת השיחה אך כדאי להיות מודעים."
+    ]
+   },
+   {
+    "num": 9,
+    "title": "סיום שיחה",
+    "items": [
+     "השיחה הסתיימה בצורה ידידותית אך ללא סגירה וללא שליחת לינק תשלום. הסיכום:",
+     "הנציג שלח/התחיל שיחת וואטסאפ עם הליד כדי לשלוח סילבוס מלא ופרטי כל המחזורים הרלוונטיים (בוקר, ערב, יוני, יולי) כולל עלויות.",
+     "שרון אמרה שתעיין בחומר ו'תחזור אליכם'.",
+     "לא נקבע מועד למעקב (Follow-up) — לא נקבעה שיחה חוזרת, לא הוסכם תאריך החלטה, ולא הוצגה אופציית קביעת זמן ספציפי לסגירה."
+    ]
+   },
+   {
+    "num": 10,
+    "title": "תובנות לשיפור השיחה",
+    "items": [
+     "הנציג ניהל שיחה מקצועית, נעימה ומכבדת — נתן ללקוחה מקום, שאל שאלות discovery, נמנע מהשמצת מתחרים והציג ערך אמיתי. עם זאת, השיחה הסתיימה ב'לחזור אליכם' קלאסי ללא סגירת לולאה. שיפורים מומלצים:",
+     "קביעת מועד מעקב ספציפי: במקום להסתפק ב'אחזור אליכם', הנציג היה צריך לומר 'מתי נוח לך שנדבר שוב? יום שני בשעה 14:00?' וליצור התחייבות לוח שנה.",
+     "שאלות סגירה רכות במהלך השיחה: 'מה הציר המרכזי שתבחני כשתקבלי את החומר?' כדי לצפות התנגדויות עתידיות.",
+     "הצגת מחיר בשיחה: דחיית המחיר ל-WhatsApp פוגעת בשליטת הנציג בתהליך ההחלטה.",
+     "שיתוף סיפורי הצלחה רלוונטיים: בוגרת ברקע דומה לשרון היה משכנע פי כמה מתיאור כללי של תמהיל המשתתפים.",
+     "יצירת תחושת דחיפות עדינה: אזכור שמחזור הערב נסגר בקרוב או שיש מספר מצומצם של מקומות יכול לזרז החלטה."
+    ]
+   },
+   {
+    "num": 11,
+    "title": "תובנות לשיפור הצ'אט בוט",
+    "items": [
+     "הליד הגיעה לשיחה אחרי התכתבות עם הבוט, אך עדיין נדרשה לשאול שאלות בסיסיות רבות בשיחה. זה מצביע על פערים שניתן לסגור:",
+     "הבוט לא העביר מידע על מתכונת היברידית, ימי לימוד ושעות — הבוט צריך לאסוף את ההעדפה (בוקר/ערב) ולשלוח לוח זמנים של מחזורים פתוחים עוד לפני השיחה.",
+     "הבוט לא איתר את מצבה התעסוקתי המשתנה — שאלה חשובה ביותר להתאמת מסלול. הבוט צריך לשאול 'האם המצב התעסוקתי שלך צפוי להשתנות בחודשים הקרובים?'",
+     "הבוט לא העביר מידע על עלויות — זה גרם לליד לבקש את זה כשאלה ראשונה. כדאי שהבוט ישלח טווחי מחיר וסילבוס באופן אוטומטי לפני השיחה.",
+     "הבוט לא איתר רקע מקצועי — הנציג נאלץ לעשות discovery בשיחה. הבוט יכול לשאול שאלות פרופיל (תפקיד, ניסיון, סיבת התעניינות) ולספק לנציג סיכום מוכן.",
+     "הבוט לא טיפל בסוגיית הבידול — שאלה כל כך נפוצה ראויה לתשובה מוכנה מראש (FAQ) שתשלח אוטומטית או תוצג בעת התעניינות.",
+     "שיפור הזיהוי האישי — הבוט יכול לזהות לידים איכותיים (כמו שרון, עם רקע אינטל וניהול) ולסמן אותם לעדיפות גבוהה לנציג."
+    ]
+   },
+   {
+    "num": 12,
+    "title": "דירוג השיחה (Sales Pitch Rating)",
+    "items": [
+     "ציון: 6/10",
+     "השיחה הייתה מקצועית, נעימה ובנתה אמון. הנציג עשה discovery טוב, הציג ערך אמיתי וטיפל בהתנגדות הבידול בצורה אלגנטית. עם זאת, השיחה הסתיימה ללא התחייבות, ללא קביעת מועד מעקב, ללא לינק תשלום וללא יצירת דחיפות. הליד יצאה עם מידע אך ללא מחויבות — מה שמשאיר את כדור ההחלטה כולו אצלה ולוקח מהנציג את היכולת לסגור. עבור ליד באיכות גבוהה כל כך (אינטל, מדיקה, ניסיון ניהולי, מוטיבציה ברורה), זו הזדמנות שלא נוצלה במלואה."
+    ]
+   },
+   {
+    "num": 13,
+    "title": "5 תובנות מפתח לשיפור (5 Key Insights)",
+    "items": [
+     "1. סגירת לולאה עם מועד מעקב מוגדר — במקום 'תחזרי אליי', לקבוע יחד תאריך ושעה לשיחה חוזרת. 'מתי תוכלי לעיין בחומר? אחזור אליך מחר בשעה 11:00 לראות מה דעתך.' זה מעביר את השליטה לנציג.",
+     "2. הצגת מחיר בשיחה ולא לדחות לוואטסאפ — לתת טווח מחירים, להציג מסלולי תשלום ולמסגר את העלות מול הערך (השמה, תעודה, שכר צפוי). זה מאפשר טיפול מיידי בהתנגדות מחיר במקום לאבד את ההזדמנות.",
+     "3. שיתוף סיפורי הצלחה ספציפיים לפרופיל הליד — לבוגרת ברקע דומה (אישה בשנות ה-40+, רקע ניהולי בהייטק, עברה ל-AI) יש כוח שכנוע אדיר. במקום לדבר על תמהיל מגוון, לספר על 'רותי, מנהלת באינטל לשעבר, שעברה בקורס שלנו ועכשיו...'",
+     "4. יצירת דחיפות עדינה אך אמיתית — לציין כמה מקומות נשארו במחזור הערב הקרוב, מתי מסתיימת ההרשמה, או הטבת הרשמה מוקדמת. זה מזרז החלטה מבלי להפעיל לחץ מלאכותי.",
+     "5. הצגת נתוני השמה והוכחה חברתית — אחוז בוגרים שמשתלבים בתעשייה, שמות חברות מובילות שקלטו בוגרים, מספר בוגרים עד היום, ביקורות בוגרים. נתונים קשים מנטרלים את ההתנגדות 'השוק רווי' באופן מיידי וברור."
+    ]
+   }
+  ]
+ },
+ "3": {
+  "id": 3,
+  "title": "ניתוח שיחת מכירה — גל (לא נרשם 3)",
+  "header": "קורס מפתחי AI — האוניברסיטה העברית | נציג: רז",
+  "score": 7.5,
+  "sections": [
+   {
+    "num": 1,
+    "title": "רקע כללי על התמלול",
+    "items": [
+     "שיחת מכירה יוצאת של רז מהאוניברסיטה העברית אל ליד בשם גל, לגבי קורס מפתחי AI. מדובר בשיחה ארוכה במיוחד (כ-27 דקות) עם איכות מכירה גבוהה יחסית לקודמות. גל הוא בוגר תכנית 'תלפיות' של צה\"ל ויחידה 8200, עם רקע במתמטיקה/פיזיקה/מדמ\"ח, שעבר במשך 10-11 שנים האחרונות לעולם המוזיקה ועכשיו נמצא ב'פרשת דרכים' ומחפש כיוון מקצועי חדש. השיחה כללה discovery מעמיק, הצגת תוכן מותאמת, סיפורי הצלחה רלוונטיים, וטיפול מתוחכם בחשש של גל לגבי קצב הלמידה — כולל הצעת חלופה (קורס מהנדסי AI). הסתיימה ללא סגירה אך עם מועד מעקב מוגדר."
+    ]
+   },
+   {
+    "num": 2,
+    "title": "זיהוי הדוברים",
+    "items": [
+     "שם הנציג: רז (מהאוניברסיטה העברית)",
+     "שם הלקוח/הליד: גל"
+    ]
+   },
+   {
+    "num": 3,
+    "title": "הקורס המבוקש",
+    "items": [
+     "קורס מפתחי AI של האוניברסיטה העברית — 4 חודשים, 35 מפגשים, ימי ראשון ושלישי 17:30–21:30, תחילת המחזור 17/5. 30 מפגשים בזום בלייב + 5 היברידיים בתל אביב/רמת גן. תוכן: Python, SQL, הנדסת פרומפטים, Cursor/Claude Code, אוטומציות, צ'אטבוטים, אג'נטים, Machine Learning, מודלים מקומיים (Ollama), פיתוח אפליקציות web Full-Stack. תעודה וסדנת השמה. נציין שגם קורס מהנדסי AI הוזכר כחלופה אפשרית (לרמה גבוהה יותר)."
+    ]
+   },
+   {
+    "num": 4,
+    "title": "מבנה השיחה",
+    "items": [
+     "פתיחה ובדיקת קישוריות טכנית: דיון קצר על בעיה בטלפון.",
+     "גילוי צרכים מעמיק: שאלות על רקע (תלפיות), שפות תכנות, מטרת הלמידה, מצב מקצועי נוכחי.",
+     "שיקוף אישי וחיבור רגשי: רז מבטא הבנה למצב של 'פרשת דרכים'.",
+     "הצגת הקורס: מבנה מסודר — יסודות, פרויקטים, פרויקט גמר.",
+     "סיפורי הצלחה ספציפיים: עורך דין נזיקין, איש קרן גידור.",
+     "שאלות הליד: לגבי משחקים, מבנה כיתה, יחס אוניברסיטה.",
+     "הצגת מחיר ומעטפת תמיכה: כולל חלוקה לתשלומים.",
+     "טיפול בחשש מרכזי: גל חושש מקצב איטי בכיתה גדולה.",
+     "הצעת חלופה אסטרטגית: אפשרות מעבר לקורס 'מהנדסי AI' אם הקצב יהיה איטי מדי.",
+     "סגירה רכה עם מועד מעקב: יום שלישי."
+    ]
+   },
+   {
+    "num": 5,
+    "title": "שאלות הליד",
+    "items": [
+     "הליד שאל שאלות מעמיקות ואיכותיות שמעידות על רצינות:",
+     "רלוונטיות תעסוקתית: האם הקורס מוביל לתפקיד אמיתי של 'מפתח AI' במשרות hi-tech?",
+     "גמישות בפרויקטים: האם אפשר לבנות משחק או דברים שלא עסקיים?",
+     "תוכן ומחיר: מתי מתחיל, כמה עולה, מה צריך להכין?",
+     "סדנת השמה: האם זה בחינם או חלק מהקורס?",
+     "מנגנון השמה: האם יש ליווי בחיפוש עבודה אחרי הקורס?",
+     "רמת המשתתפים: מי הקהל, האם יש סינון, איך הרמה מתחלקת?",
+     "מבנה כיתה: איך מטפלים בשאלות בכיתה של 40 איש?",
+     "יחס אוניברסיטה: מה הקשר בין הקורס לאוניברסיטה העברית הרשמית?",
+     "תוקף ההנחה: עד מתי המחיר המוקדם תקף?"
+    ]
+   },
+   {
+    "num": 6,
+    "title": "שאלות ותשובות נפוצות (Top 10)",
+    "items": [
+     "\"Question\": \"האם הקורס מוביל לתפקיד אמיתי של 'מפתח AI', בדומה למפתחים שכבר עובדים עם AI בהייטק?\"",
+     "\"answer\": \"גם וגם — הקורס מוכוון להטמעת AI ויישום בפועל, גם בהייטק וגם בלואו-טק. ברגע שאתה מרגיש בנוח בסביבת קוד ויודע להשתמש ב-AI — אתה יכול להיות חלק מחברות שמטמיעות AI.\"",
+     "\"Question\": \"האם אפשר לבנות משחקים או דברים שאינם עסקיים בפרויקטים?\"",
+     "\"answer\": \"כן, אתה תוכל לעשות את זה. הפוקוס הוא עסקי אבל הפרויקטים גמישים. ברגע שאתה טוב בעבודה עם AI — זה לא מגביל.\"",
+     "\"Question\": \"מתי מתחיל הקורס, כמה עולה ומה צריך להכין?\"",
+     "\"answer\": \"מתחיל ב-17/5, ימי ראשון ושלישי 17:30–21:30. מחיר רגיל 15,050 ש\"ח + מע\"מ, הרשמה מוקדמת 9,850 ש\"ח + מע\"מ, אפשר לחלק ל-10 תשלומים בלי ריבית.\"",
+     "\"Question\": \"סדנת ההסמה חינם או חלק מהקורס?\"",
+     "\"answer\": \"חלק מהקורס. לומדים מאנשי HR בכירים בתעשייה, מבינים איך הם חושבים, איך לגרום למגייסים ליצור איתך קשר, ואיך לפנות לחברות. דגש על לינקדאין.\"",
+     "\"Question\": \"מה הרמה של החבר'ה שמגיעים לקורס? יש סינון?\"",
+     "\"answer\": \"כן, יש סינון — חצי מתפקיד הנציג זה לוודא מי מתאים. הקהל מגוון אבל לכולם אוריינטציה טכנולוגית מובהקת. החלוקה: טופ 20% (כמו גל — תלפיות/8200, מנהלי מוצר, אנשי שיווק דיגיטלי), אמצע (מנדלן ביטוח, מהנדסים צעירים), תחתון 20% (מבוגרים יותר אבל עם גישה ובסיס AI).\"",
+     "\"Question\": \"איך מטפלים בשאלות בכיתה של 40 איש?\"",
+     "\"answer\": \"אין מצב שמתקדמים בלי שהבנת. נשאלות אותן שאלות — או שמישהו אחר ישאל את מה שחשבת, או שייתנו לך לשאול. בנוסף יש פעמיים בשבוע תרגול קבוצתי מצומצם יותר ב-Q&A, ויש מתרגלים שאפשר לתאם איתם 1 על 1.\"",
+     "\"Question\": \"מה הקשר בין הקורס לאוניברסיטה העברית?\"",
+     "\"answer\": \"הקורסים תחת הפקולטה למינהל עסקים של האוניברסיטה העברית. אלה הכשרות מקצועיות, לא חלק מתואר. חלק מהמרצים מהעברית, חלק מהתעשייה — וגם מרצי העברית משולבים בתעשייה. התעודה היא של האוניברסיטה העברית.\"",
+     "\"Question\": \"מבחינת ליווי בחיפוש עבודה — אתה לבד או יש מנגנון?\"",
+     "\"answer\": \"יש סדנת השמה, אבל אתה פועל בעצמך — מקבל בלו-פרינט ברור ומוכח שמתעדכן כל הזמן. זה המחזור ה-10 או ה-11 של הקורס, אז זה תהליך מוכח.\"",
+     "\"Question\": \"מה תוקף ההנחה? כמה זמן אפשר להחזיק את התשובה?\"",
+     "\"answer\": \"ההנחה דואגת — העניין זה כמות המקומות הפנויות. נשלח הודעת מעקב ביום שלישי להתעדכן.\"",
+     "\"Question\": \"אם הקצב בכיתה יהיה איטי לי מדי — יש פתרון?\"",
+     "\"answer\": \"יש קורס נוסף בשם 'מהנדסי AI' למתכנתים שעובדים בתחום ביום-יום. אם תתחיל במפתחי AI ותרגיש שהקצב איטי לך — דבר איתי, אני אדאג שתעבור למהנדסי AI. הקורסים דומים, פשוט הקהל וההעמקה שונים.\""
+    ]
+   },
+   {
+    "num": 7,
+    "title": "התנגדויות ותגובות",
+    "items": [
+     "\"Resistance\": \"אני יכול להיות מהיר תפיסה ולהשתעמם בכיתה גדולה של 40 איש, עם שאלות 'שצוועקת' של אנשים אחרים — זה משגע אותי וגרם לי לפרוש מקורסים בעבר\"",
+     "\"What did the representative answer\": \"רז הגיב מצוין בכמה רבדים: (1) הכיר בחשש והודה שיש לקצב התחלתי 'מאתגר' למתחילים, (2) הציע פתרון מיידי — אם תגלה שהקצב איטי לך, אעביר אותך לקורס מהנדסי AI שמיועד למתכנתים פעילים, (3) הוסיף ביטחון: 'אני אדאג לך, אל תדאג', (4) הסביר שזה חלק מהשירות וזה לא יעלה כסף נוסף.\"",
+     "\"The best solution to the objection\": \"התגובה של רז כאן הייתה כמעט מושלמת — אבל אפשר עוד לחזק. כדאי להוסיף נתון ספציפי: 'מתוך 10 מחזורים שהעברנו, X אחוז מהבוגרים דירגו את הקצב כמתאים להם'. או 'הקורס מתחיל גם בהיכרות אישית עם המרצה והוא מתאים את הקצב לרמת הכיתה'. גם כדאי להציע לגל להאזין למפגש 1 לדוגמה (free trial) כדי שהוא ירגיש את הקצב באופן ישיר לפני התחייבות. הצגת ביקורות של בוגרים מרקע דומה (תלפיות/8200) תסגור את העניין סופית.\"",
+     "\"Resistance\": \"המחיר של הקורס דומה למחיר של שנת לימודים אקדמית, אבל בכמות שעות הרבה יותר נמוכה — איך זה מסתדר עם זה שזו אוניברסיטה?\"",
+     "\"What did the representative answer\": \"רז הסביר שהסטנדרט הוא של העברית — כל פרט ברמה גבוהה. הקורסים עולים לאוניברסיטה הרבה בגלל המרצים שיקרים בעולם האמיתי. בנוסף, היחס שמקבלים בקורס הוא לא נורמלי — בפועל אפשר ללמוד 5 פעמים בשבוע (2 מפגשים + 2 תרגולים + 1 על 1).\"",
+     "\"The best solution to the objection\": \"התשובה הייתה סבירה אבל החמיצה את הנקודה המרכזית של גל — השוואת ערך. מה שגל באמת שאל: 'למה הקורס יקר כל כך יחסית לשעות?'. התשובה הטובה היא: (1) פירוט שווי שעות הוראה לפי מחיר שעה של מרצה בתעשייה (300-500 ש\"ח שעה × 140 שעות לימוד = 42-70 אלף ש\"ח), (2) הוספת ערך המתרגלים, התוכן, ההסמה, התעודה והקהילה כפריטים נפרדים שמסתכמים יחד, (3) השוואה לבוטקאמפים פרטיים שעולים פי 2-3 בלי הגיבוי האקדמי, (4) הצגת ROI — בוגרי הקורס משתלבים במשרות AI עם שכר X, אז הקורס מחזיר עצמו ב-Y חודשים.\"",
+     "\"Resistance\": \"אני מתלבט, יש סיכוי טוב שאני אגיד כן אבל זו לא התשובה הסופית שלי\"",
+     "\"What did the representative answer\": \"רז הגיב מצוין: 'בסדר גמור, תעבור על הדברים, תקבל החלטה מושכלת, ונתעדכן ביום שלישי'. לא לחץ, נתן כבוד, וקבע מועד מעקב מוגדר.\"",
+     "\"The best solution to the objection\": \"התגובה כאן נקייה ומקצועית — לחץ נוסף היה הורס את האמון שנבנה. אפשר אולי להוסיף משפט מחזק: 'גל, חשוב לי שהבחירה תהיה נכונה לך — אם אחרי יום שלישי תרצה עוד זמן או יש לך עוד שאלות, אני זמין'. בנוסף, אפשר לבקש התחייבות רכה: 'מה אומר לך 'כן' ב-100%? איזה פיסת מידע נוספת תעזור לך להחליט?' — זה מאפשר לרז לטפל במה שעוד חסר.\""
+    ]
+   },
+   {
+    "num": 8,
+    "title": "נקודות נוספות",
+    "items": [
+     "ליד באיכות יוצאת דופן: גל הוא בוגר תלפיות (תכנית עילית של צה\"ל) ויחידה 8200, עם רקע מתמטי-מדעי חזק. רז עצמו אמר 'אתם לא באותו לבל' כשהשווה אותו ל-20% התחתון של הקורס. זה ליד שראוי להשקעת זמן ומאמץ.",
+     "מצב רגשי של 'פרשת דרכים': גל בא ממקום של חיפוש, אחרי 10-11 שנים במוזיקה. זה גם הזדמנות (פתיחות לשינוי) וגם סיכון (חוסר ודאות, לא יודע מה הוא רוצה בדיוק). רז זיהה את זה והגיב באמפתיה.",
+     "סיפורי הצלחה ספציפיים — נקודה חזקה במיוחד: רז סיפר שני סיפורים קונקרטיים (עורך דין נזיקין, איש קרן גידור) במקום הצגה גנרית. זה הופך את הקורס למוחשי. הצעה לשיפור: סיפור של בוגר תלפיות/8200 שעבר לתפקיד AI היה משכנע יותר עבור גל.",
+     "שיבוש בתמלול: התמלול מקלקל חלק מהמילים ('געל' במקום 'גל', 'רזמה' במקום 'רז מהאוניברסיטה', 'תפילה בוס' במקום 'פיילוט'/'דוגמה'). לא פוגע בהבנה.",
+     "טכניקת ה'דלת הפתוחה' של רז (מעבר לקורס מהנדסי AI): מהלך מכירה מעולה. במקום ללחוץ או להגן, רז הציע אופציה גמישה שהורידה לחץ והגבירה אמון.",
+     "גל ביקש 'פרומפט מקסימלי' של מידע: 'תן לי כמה שיותר מידע, אבל מעל threshold מסוים שזה כבר לא ספאם'. זה רמז שהוא חושב כמו tech-person ומעריך עומק, לא רק תקצירים."
+    ]
+   },
+   {
+    "num": 9,
+    "title": "סיום שיחה",
+    "items": [
+     "השיחה הסתיימה בצורה מסודרת אך ללא סגירה וללא לינק תשלום:",
+     "רז ישלח ב-WhatsApp: סילבוס מפורט, סרטון של בוגר עם הדגמת פרויקט גמר, רשימת מרצים, פוסט הלינקדאין של איש קרן הגידור.",
+     "נקבע מועד מעקב ספציפי: יום שלישי — רז ישלח הודעה.",
+     "גל אמר במפורש: 'יש סיכוי טוב שאני אגיד כן, אבל זו לא התשובה הסופית שלי' — מצב של 'חם אך לא בשל'.",
+     "הוסכם שהמחיר המוקדם תקף, אבל המגבלה האמיתית היא מספר מקומות שהולך ומתמלא."
+    ]
+   },
+   {
+    "num": 10,
+    "title": "תובנות לשיפור השיחה",
+    "items": [
+     "זו הייתה השיחה הכי טובה מבין השלוש שניתחנו עד כה. רז הציג רמה גבוהה של ניהול שיחה: discovery מעמיק, שיקוף רגשי, הצגת סיפורי הצלחה רלוונטיים, וטיפול יצירתי בחששות. עם זאת, יש מה לשפר:",
+     "חיבור הניסיון של גל (תלפיות/8200) למסלול הקורס — היה אפשר להגיד 'בדיוק חבר'ה כמוך, מתלפיות ו-8200, הם הבוגרים שמשתלבים הכי מהר במשרות AI. יש לי דוגמה ספציפית של X'. זה היה ממקם את גל באופן מיידי בקבוצת ההצלחה.",
+     "חיבור המוזיקה של גל לקורס — היה אפשר להציע לו פרויקט גמר ספציפי בעולם המוזיקה (AI שמייצר מוזיקה, אוטומציה לעריכה, וכו') — זה היה מחבר את העבר שלו לעתיד באופן רגשי.",
+     "טיפול חלש בהתנגדות המחיר vs שעות לימוד אקדמיות — רז ענה תשובה כללית במקום לפרק את הערך לרכיבים מספריים.",
+     "לא הוצעה התחייבות רכה — היה אפשר להציע 'הרשמה עם החזר תוך 14 יום' או 'שמירת מקום ב-1,000 ש\"ח ולחזור בעוד שבוע'.",
+     "לא נשאלה שאלת הסיום הקריטית — 'גל, מה צריך לקרות כדי שיגידו כן ביום שלישי?'. זה היה מבהיר מה החסם האחרון."
+    ]
+   },
+   {
+    "num": 11,
+    "title": "תובנות לשיפור הצ'אט בוט",
+    "items": [
+     "הבוט תיעד היטב את הרקע האקדמי (תלפיות, מתמטיקה/פיזיקה/מדמ\"ח) — נקודה חיובית! רז קיבל סיכום מהבוט וזה איפשר לו לפתוח בדיוק עם המידע הנכון. כדאי לחזק את הפרקטיקה הזו.",
+     "הבוט לא איתר את המעבר הקריירתי (מוזיקה ל-10 שנים) — מידע קריטי שעלה רק ב-discovery. כדאי שהבוט ישאל 'מה עשית בשנים האחרונות?' כדי לתת לנציג picture שלם.",
+     "הבוט לא איתר את מטרת הלמידה ('שיוביל לעבודה') — שאלה חשובה לסיווג ליד. כדאי שהבוט ישאל 'האם המטרה שלך מהקורס היא: (א) הסבת קריירה (ב) שדרוג בתפקיד נוכחי (ג) יזמות עצמאית (ד) סקרנות'.",
+     "הבוט לא איתר חששות מקדימים — גל הביא חששות אמיתיים (קצב, רמת הכיתה) שעלו רק בסוף השיחה. הבוט יכול לשאול 'מה הכי מטריד אותך בקורסים שכאלה?'.",
+     "הבוט יכול להציע סרטון בוגר/דוגמת פרויקט אוטומטית — גל ביקש את זה במפורש. אם הבוט מזהה ליד עם רקע טכני, יכול להציע מיד 'רוצה לראות דוגמת פרויקט גמר של בוגר?' — חוסך זמן בשיחה.",
+     "הבוט יכול להציג השוואה מפתחי AI vs מהנדסי AI — לאור הרקע של גל, אופציית מהנדסי AI הייתה רלוונטית. הבוט יכול להציע השוואה כדי לחסוך את ההסבר בשיחה."
+    ]
+   },
+   {
+    "num": 12,
+    "title": "דירוג השיחה (Sales Pitch Rating)",
+    "items": [
+     "ציון: 7.5/10",
+     "זוהי שיחה איכותית במיוחד שמדגימה רמת מכירה גבוהה. רז עשה discovery טוב, חיבר רגשית, סיפר סיפורים רלוונטיים, וטיפל בחששות בצורה יצירתית (קורס מהנדסי AI כדלת חלופית). הליד יצא עם אמון גבוה והבטחה כנה לשקול ברצינות. למה לא 9-10? כי השיחה הסתיימה ללא סגירה — גל אמר 'סיכוי טוב שאגיד כן' אבל לא נסגרה התחייבות כלשהי (לא קיבל הנחה נוספת בתמורה להחלטה מהירה, לא הוצעה שמירת מקום עם דמי רישום, לא הוצעו תנאי החזר). עבור ליד באיכות כזו, רז יכול היה לקחת צעד נוסף קדימה. בנוסף, ההתנגדות המחירית לא טופלה בצורה אופטימלית. עם זאת — קביעת מועד מעקב מוגדר (יום שלישי) היא נכס משמעותי שמשפר את סיכויי הסגירה."
+    ]
+   },
+   {
+    "num": 13,
+    "title": "5 תובנות מפתח לשיפור (5 Key Insights)",
+    "items": [
+     "1. שאלת הסיום הקריטית — כשליד אומר 'סיכוי טוב שאגיד כן, אבל לא 100%', זו ההזדמנות לשאול 'מה החלק הקטן שעוד חסר לך להחלטה?'. זה מאפשר לטפל בחסם הקונקרטי במקום לתת לליד 'להבשיל' לבד עם הספקות שלו.",
+     "2. חיבור אישי לפרויקט הגמר — לליד עם רקע מובהק (כמו גל המוזיקאי או מוטי המגשר מהשיחה הקודמת), חובה להציע פרויקט גמר ספציפי לעולמו. 'בקורס שלנו יצא לי לראות בוגר שעבר ממוזיקה — הוא בנה AI שמלווה הפקה מוזיקלית'. זה הופך את הקורס לאישי ולא לגנרי.",
+     "3. פירוק הערך לרכיבים מספריים בהתנגדות מחיר — במקום 'המרצים שווים כסף', להגיד: 'מרצה בתעשייה עולה 400 ש\"ח לשעה × 140 שעות לימוד = 56,000 ש\"ח. + 8 מפגשי 1 על 1 × 500 ש\"ח = 4,000 ש\"ח. + סדנת השמה ששווה 2,500 ש\"ח. סה\"כ ערך של 62,500 ש\"ח — אתה משלם 10,000'.",
+     "4. הצעת התחייבות רכה במקום סגירה מלאה או הנחה — לליד שאינו מוכן לחתום מיד, להציע ביניים: 'שמור את מקומך עם 500 ש\"ח דמי רישום מוחזרים תוך 7 ימים, ככה תקנה לעצמך זמן בלי לאבד את ההנחה ואת המקום'. זה ממיר התלבטות ל-mini commitment.",
+     "5. שילוב נתונים והוכחה חברתית רלוונטית לפרופיל — לליד מבוגרי תלפיות/8200, חובה להחזיק כמה נתונים מוכנים מראש: כמה בוגרים מהיחידות האלה היו בקורס, אחוז הצלחה שלהם, שמות חברות שקלטו אותם. רז דיבר על 'טופ 20%' באופן כללי — נתון ספציפי היה הופך את זה לוודאי."
+    ]
+   }
+  ]
+ },
+ "8": {
+  "id": 8,
+  "title": "ניתוח שיחת מכירה — רועי (שיחה 2)",
+  "header": "קורס מפתחי AI — האוניברסיטה העברית | נציג: רז",
+  "score": 7.5,
+  "sections": [
+   {
+    "num": 1,
+    "title": "רקע כללי על התמלול",
+    "items": [
+     "שיחת מכירה יוצאת של הנציג רז מהאוניברסיטה העברית אל ליד בשם רועי, איש שיווק דיגיטלי בין עבודות, לגבי קורס מפתחי AI. השיחה ארוכה (כ-20 דקות) ועניינית, רועי מציין שהוא כבר באמצע קורס AI אקדמי אחר (יסודות הבינה המלאכותית, 30 שעות) ובונה כבר דברים ב-Vibe Coding. במהלך השיחה רועי מעלה שני חששות מרכזיים: (1) רוב הלימודים בזום ולא פרונטלי — הוא מעדיף פרונטלי, (2) שעות הלימוד (17:30) מוקדמות מדי למישהו שמתחיל עבודה חדשה. השיחה הסתיימה בקביעת שיחת המשך בעוד מספר שעות (סביבות 15:00) או לכל המאוחר מחר בבוקר. הליד הזכיר במפורש שהוא רוצה להתייעץ עם אשתו ושהמחיר מקובל ('טיפה פחות מ-15 שחשבתי'). הוא הביע התעניינות חזקה במחזור הבוקר של 29/7 (ימי רביעי ערב + שישי בוקר) — אופציה שצצה רק בסוף השיחה."
+    ]
+   },
+   {
+    "num": 2,
+    "title": "זיהוי הדוברים",
+    "items": [
+     "שם הנציג: רז (מהאוניברסיטה העברית). בפתיחה נשמע 'איי רועי מדבר' — כנראה שיבוש של 'היי רועי, רז מדבר'.",
+     "שם הלקוח/הליד: רועי. פרופיל: איש שיווק דיגיטלי, בין עבודות, אבא לילדים, נשוי, אין רקע טכני, כבר עושה קורס AI אקדמי אחר ובונה אפליקציות ב-Vibe Coding."
+    ]
+   },
+   {
+    "num": 3,
+    "title": "הקורס המבוקש",
+    "items": [
+     "שני קורסים נדונו במקביל: (1) קורס מפתחי AI במחזור 17/5 — ראשון ושלישי 17:30–21:30, 4 חודשים עד 9/5 (סוף ספטמבר), 35 מפגשים, 5 פרונטליים בתל אביב/רמת גן (הראשון והאחרון בוודאות), השאר זום. (2) קורס מפתחי AI במחזור 29/7 — רביעי בערב (17:30–21:30) ושישי בבוקר (9:30) — אופציה משלבת שעלתה רק בסוף ועוררה התלהבות אצל הליד. תוכן: Python מ-0 (9 מפגשים בקורס מפתחי AI), הנדסת פרומפטים, SQL, Cursor ו-Claude Code, אוטומציות, צ'אטבוטים, אג'נטים ורשתות סוכנים, Machine Learning, אימון מודלים מקומיים וענן, פרויקט גמר Full-Stack, סדנת השמה, תעודת אוניברסיטה."
+    ]
+   },
+   {
+    "num": 4,
+    "title": "מבנה השיחה",
+    "items": [
+     "פתיחה ובדיקת זמינות: נציג מהיר.",
+     "גילוי צרכים בעזרת נתוני בוט: רז יודע מראש שרועי בשיווק דיגיטלי.",
+     "רועי מציג את עצמו ברקע מקצועי: בין עבודות, לומד עצמאית, באמצע קורס AI אחר.",
+     "שאלת הליד הראשונה — אין רקע טכני: חשש מהותי.",
+     "בלבול בין הקורסים: רועי ראה פרסום של 'מהנדסי AI' בפייסבוק וחשב שזה הקורס.",
+     "הסבר ההבדל בין שני הקורסים: מהנדסים למתכנתים פעילים, מפתחים לכל השאר.",
+     "שאלות שוק עבודה: הקורס מתאים גם לאנשי שיווק/מנהלים שיגיעו לשם?",
+     "הצגת מבנה הקורס: יסודות, פייתון, SQL, פרויקטים.",
+     "שאלות לוגיסטיקה: כמה תלמידים, כמה מפגשים, פרונטלי/אונליין.",
+     "התנגדות מרכזית #1 — 'וואו זה מבאס אותי, אני מעדיף פרונטלי': רגע קריטי.",
+     "שאלת ליווי השמה: האם עוזרים למצוא עבודה.",
+     "שאלות מתקדמות: תוכן הפרויקטים, גודל ממוצע של כיתה לפי גילים.",
+     "שאלות תמיכה: מתי תרגולים, איפה הכיתה הפרונטלית.",
+     "שאלת שפה: האם הקורס בעברית.",
+     "שאלת מחיר: 9,850 ש\"ח + מע\"מ.",
+     "שאלת מדיניות ביטולים: מה אם אצטרך לבטל באמצע.",
+     "שאלת מחזור הבא: רועי מבקש לדעת אם יש מחזור מאוחר יותר.",
+     "גילוי מחזור 29/7 (ערב + בוקר שישי): רועי מתלהב מהאופציה.",
+     "התנגדות מרכזית #2 — שעות 17:30 מוקדם מדי לעבודה חדשה: התנגדות שלא נפתרה.",
+     "קביעת מועד מעקב: סביבות 15:00 או מחר בבוקר."
+    ]
+   },
+   {
+    "num": 5,
+    "title": "שאלות הליד",
+    "items": [
+     "רועי שאל מעל 15 שאלות בעומק טוב — אבל בעיקר ב'מצב לוגיסטי':",
+     "רקע נדרש: האם זה בעיה שאין לי רקע טכני?",
+     "בידול מקורסים אחרים: מה ההבדל בין מפתחי AI למהנדסי AI?",
+     "מקומות עבודה: איזה תפקידים מחפשים אותי בסוף?",
+     "משך הקורס: כמה זמן? מתי מסתיים?",
+     "גודל כיתה: כמה תלמידים? אם המקסימום 60?",
+     "מתכונת: האם כולם פרונטליים? כמה מפגשים זום מול פרונטלי?",
+     "ליווי השמה: האם יש סדנת השמה אמיתית?",
+     "גילי המשתתפים: מה הטווח הגילי?",
+     "תמיכה: האם אפשר לשלוח הודעות, אילו תרגולים יש?",
+     "לוז תרגולים: מתי הם, באילו שעות?",
+     "מיקום פרונטלי: איפה הכיתה?",
+     "שפה: האם הקורס בעברית?",
+     "מחיר וביטולים: כמה, האם אפשר לבטל באמצע?",
+     "מחזורים עתידיים: מתי המחזור הבא? באילו שעות?",
+     "חגים: מה לגבי הפסקות בחגים?"
+    ]
+   },
+   {
+    "num": 6,
+    "title": "שאלות ותשובות נפוצות (Top 10)",
+    "items": [
+     "\"Question\": \"אין לי שום רקע או חשק לתכנות קלאסי — האם זה בעיה?\"",
+     "\"answer\": \"לא בעיה. יש לנו 2 קורסים — מהנדסי AI למתכנתים פעילים, ומפתחי AI שמיועד לאנשים בלי רקע תכנותי. מתחילים מהיסודות, לומדים פייטון מ-0, מגיעים לרמה טובה. אין כוונה להפוך אותך למתכנת קלאסי.\"",
+     "\"Question\": \"אם מנכ\"ל אחר רואה את הקורס שלי בקורות חיים, מה הוא יעדיף — בוגר מהנדסי AI או מפתחי AI?\"",
+     "\"answer\": \"הם לא הולכים לאותה נישה. מהנדסי AI = מתכנתים שלומדים לשמר את מקומם או לעבוד בצוותי פיתוח של מודלי AI (כמו Gemini, ChatGPT). מפתחי AI = בניית אתרים, Vibe Coding, אוטומציות, אג'נטים, יישומי AI בארגונים.\"",
+     "\"Question\": \"כמה תלמידים בכיתה?\"",
+     "\"answer\": \"המקסימום נרשמים זה 60. בכל זמן נתון מצופים כ-40 תלמידים מחוברים בלייב (השאר לומדים מהקלטות).\"",
+     "\"Question\": \"כמה מהמפגשים פרונטליים מול זום?\"",
+     "\"answer\": \"35 מפגשים סה\"כ. 30 בזום בלבד, 5 היברידיים — פרונטלי בתל אביב/רמת גן. הראשון והאחרון תמיד פרונטליים. הכל מוקלט.\"",
+     "\"Question\": \"האם יש ליווי השמה לעבודה?\"",
+     "\"answer\": \"כן, סדנת השמה בסוף הקורס. לא מוצאים לך עבודה ישירות, אלא מעניקים בלו-פרינט: עזרה בקורות חיים, פרופיל לינקדאין, איך לגשת לראיונות, איך מגייסים חושבים. הסדנה מועברת על ידי מגייסים בכירים בתעשייה.\"",
+     "\"Question\": \"אם אצטרך לבטל את הקורס באמצע — מה המדיניות?\"",
+     "\"answer\": \"ביטול עד שבועיים לפני הקורס — החזר מלא. בתוך השבועיים — 40% מהסכום נשאר אצל האוניברסיטה. אחרי תחילת הקורס — אין ביטול. אבל בפועל, יש גמישות מלאה למעבר למחזור עתידי אם יש סיבה מוצדקת (100% מהמקרים שדיברתי עם סטודנטים — קיבלו מענה חיובי).\"",
+     "\"Question\": \"מתי המחזור הבא?\"",
+     "\"answer\": \"מחזור 29/7 — ימי רביעי בערב (17:30–21:30) ושישי בבוקר (9:30). הקורס מתחיל בסוף יולי ומסתיים בערך בסוף ספטמבר (4 חודשים).\"",
+     "\"Question\": \"כמה עולה הקורס?\"",
+     "\"answer\": \"מחיר רגיל 15,050 ש\"ח + מע\"מ. הרשמה מוקדמת (שמסתיימת היום) — 9,850 ש\"ח + מע\"מ = 11,623 ש\"ח כולל מע\"מ. אפשר לחלק ל-10 תשלומים ללא ריבית.\"",
+     "\"Question\": \"האם הקורס בעברית?\"",
+     "\"answer\": \"כן, הקורס מועבר בעברית. משתמשים באנגלית בקוד ובחומרים טכניים, אבל ההוראה עצמה בעברית.\"",
+     "\"Question\": \"האם יש הפסקות בחגים?\"",
+     "\"answer\": \"כן, יש הפסקות בחגים. הקורס בנוי כך שזה נופל מסביב לחגים בצורה מסודרת.\""
+    ]
+   },
+   {
+    "num": 7,
+    "title": "התנגדויות ותגובות",
+    "items": [
+     "\"Resistance\": \"וואו, פה אתה נותן לי וואו — רוב הלימודים בזום, אני מעדיף פרונטלי במאה אחוז, יש לי קשיים בקשב ובהתמדה בלימודים ארוכים בזום מהבית עם ילדים בסביבה\"",
+     "\"What did the representative answer\": \"רז הגיב באמת מקצועי: 'אני לא רוצה להתווכח על זה, כל אדם מכיר את עצמו'. הוסיף נתון חזק — 10,000 סטודנטים מאז קורונה למדו במתכונת זאת, הסביר שהזום מאפשר סטנדרט מרצים גבוה ברמה עולמית. הזכיר שזה המחזור ה-11 והכל מאוד מחודד.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה מנומסת אבל החמיצה את הצורך האמיתי. רועי לא רק שואל על איכות — הוא מסביר שזה ידוע לו שבזום הוא לא מתמיד. הפתרון הטוב יותר: (1) לא ללחוץ על זום, אלא להציע אקטיבית 'בוא נתחיל מאזכור שאפשר להגיע פיזית ל-5 המפגשים, ויש גם תרגול קבוצתי שאתה יכול להגיע אליו פיזית במקרים מסוימים'. (2) לתת כלים פרקטיים להתמדה: 'תרצה לבוא לשני המפגשים הראשונים פיזית, גם אם אינם פרונטליים מבחינת הסטטוס שלהם — כדי לקבל את האנרגיה של הקבוצה?' (3) להציע מנטור 1 על 1 שיהיה צמוד אליו בחודש הראשון. (4) להציע נקודת ביקורת אחרי 2 שבועות: 'אם אתה מרגיש שזה לא מתאים — נמצא פתרון'.\"",
+     "\"Resistance\": \"שעות 17:30 מוקדמות מדי בשבילי. אני חוזר עכשיו לעבודה, ולהגיד למעסיק 'אני יוצא מוקדם פעמיים בשבוע' זה בעייתי\"",
+     "\"What did the representative answer\": \"רז הגיב בכנות והבנה: 'אני ממש מבין את מה שאתה אומר, שאתה בא להתקבל לעבודה ושם מגבלות'. רועי הגיב שהוא חוזר על עצמו: הוא כבר מתחיל לחשוב על להיות עצמאי או לעבוד במקום שמסדר את זה. לא היה טיפול מעמיק בהתנגדות.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה רכה אך לא הציעה פתרונות. הפתרון הטוב יותר: (1) להציע מיד את אופציית מחזור 29/7 (רביעי בערב + שישי בבוקר) — מה שרז עשה בסוף השיחה אבל מאוחר מדי. אם זה היה מוצע מוקדם יותר, ההתנגדות הייתה מתפוגגת. (2) להציע 'בוא ננסה לחשוב יחד — איזה מעסיקים בתחום שיווק דיגיטלי מקבלים גמישות לעובד שעובר הסבה ל-AI? מתוך הניסיון שלי, X חברות. אני יכול אפילו לחבר אותך לבוגר שעבר תהליך זהה'. (3) להציע הקלטה מיידית עם זמן השלמה גמיש: 'אם אתה מאחר בשעה למפגש — אין בעיה, כי ההקלטה זמינה כעבור 5 דקות'.\"",
+     "\"Resistance\": \"אני צריך להתייעץ עם אשתי לפני שאני מחליט\"",
+     "\"What did the representative answer\": \"רז הגיב מצוין — קבע מועד מעקב מדויק לאותו יום (סביבות 15:00) או מחר בבוקר, ושלח הודעה בוואטסאפ אישית עם הכרזה שכבר לא בוט.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה טובה. אפשר לחזק עוד: (1) להציע 'בא לך לשלוח לי הודעה בוואטסאפ אחרי שדיברת עם אשתך עם השאלה הספציפית שעלתה — אני אענה תוך שעה כדי שתוכלו לקבל החלטה יחד'. (2) להציע שיחת זום עם 2 הזוג: 'אם זה יעזור — אני זמין גם לשיחה של 10 דקות עם שניכם, שאלות מהירות, החלטה משותפת'. (3) להציע מסמך מסודר שמסביר את הקורס לבני זוג: 'אני שולח לך מסמך 'מה זה אומר עבור המשפחה' — לוז שבועי, התחייבות זמן, השפעה על עבודה, ROI'. ככה הליד יחזור עם אשתו ב-knowledge מסודר ולא בזיכרון של 20 דקות שיחה.\"",
+     "\"Resistance\": \"פספסתי את ההרשמה המוקדמת ובאמת אני צריך להירשם ביום ראשון (כלומר בעוד יומיים) — אני לא יודע אם זה ריאלי\"",
+     "\"What did the representative answer\": \"רז הציע באופן ספונטני להאריך את ההנחה: 'איכשהו אתה צריך להיות די ספונטני, אז למתיק את זה'. הציע את המחיר המוקדם.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה אדיבה. אבל יש כאן הזדמנות לחזק את ההצעה: 'רועי, אני מאריך לך אישית את ההנחה עד מחר בבוקר. אבל הסיבה היחידה שזה אפשרי — הקורס עוד לא התחיל. ברגע שהוא יתחיל ביום ראשון, אין שום אפשרות להירשם אליו עוד. אז המגבלה היא לא המחיר — המגבלה היא הזמן'. זה הופך את הדחיפות לאמיתית.\""
+    ]
+   },
+   {
+    "num": 8,
+    "title": "נקודות נוספות",
+    "items": [
+     "ליד עם מומנטום חיובי: רועי כבר באמצע קורס AI אחר (יסודות הבינה המלאכותית, 30 שעות), כבר בונה אפליקציות, כבר מבין את הפוטנציאל. זה ליד חם במיוחד.",
+     "רק עכשיו צריך עבודה: רועי בין עבודות, מחפש לחזור לשוק. זה מצב שיכול להאיץ סגירה (רוצה להוסיף לקורות חיים מהר) או לדחות (זוק תזרים).",
+     "מצב משפחתי: אבא לילדים, נשוי, צריך לאשר עם אשתו. כדאי לתת לו 'חבילה למשפחה' כדי לחזור איתה ב-knowledge מסודר.",
+     "מחזור 29/7 — הזדמנות זהובה: רביעי בערב + שישי בבוקר הוא בדיוק מה שרועי צריך כיוון שהוא מתחיל עבודה חדשה. הוא ענה 'אה וואו!' כששמע על זה. אבל רז גילה את זה רק בסוף השיחה.",
+     "רועי שיבח את רז: 'היית ממש אינפורמטיבי, ידידותי, לא מכירתי, לא מעיק'. זה מעיד על שיחה איכותית מצד הנציג.",
+     "רועי הזכיר חברה שכבר לומדת בקורס: 'יש לי חברה שלומדת את הקורס שלהם' — נכס שלא נוצל. אפשר היה לבקש את שמה ולחבר אותם.",
+     "שפת הלימוד — שאלה חשובה: רועי שאל אם הקורס בעברית. ההצהרה ש'הקורס בעברית' היא נקודה חיובית עבור ליד שאינו דובר אנגלית שוטף.",
+     "שיבושי תמלול נרחבים: 'ביביעו אקדמי' (כנראה Visual Academy), 'סידאבו' (סילבוס), 'מינה סטארמי' (כנראה Mid-Season), 'בנייני התאומים' (כנראה נכון לכיתה ברמת גן). כדאי לאמת."
+    ]
+   },
+   {
+    "num": 9,
+    "title": "סיום שיחה",
+    "items": [
+     "השיחה הסתיימה בצורה חמה ומקצועית עם 2 מועדי מעקב פוטנציאליים:",
+     "מעקב ראשון: סביבות 15:00 היום (אחרי שרועי מדבר עם אשתו).",
+     "מעקב שני (Backup): מחר בבוקר באותה שעה.",
+     "רז שלח הודעה אישית בוואטסאפ עם זיהוי שלו (הזכיר שעכשיו כבר לא בוט).",
+     "רועי הצהיר: 'אני מאוד מעוניין, אני מאוד מאוד רוצה. הסכום זה סבבה, מבחינתי זה מה שחשבתי, אפילו טיפה פחות'.",
+     "לא בוצעה שמירת מקום אקטיבית — בניגוד לשיחה של יניב, רז לא הציע: 'בא לי להחזיק לך מקום עד שנדבר ב-15:00'. זו החמצה משמעותית.",
+     "לא הוצע לינק תשלום, לא הוצע התחייבות רכה."
+    ]
+   },
+   {
+    "num": 10,
+    "title": "תובנות לשיפור השיחה",
+    "items": [
+     "זוהי שיחה איכותית ברמה גבוהה — רז מצליח לקרב את רועי באישיותו וביושר שלו (רועי עצמו אמר 'אתה לא מכירתי כמו סוחר מכוניות'). עם זאת, יש 5 שיפורים קריטיים:",
+     "גילוי מחזור 29/7 חייב להגיע מוקדם בשיחה — זה היה הפתרון לכל ההתנגדויות של רועי (זום, שעות 17:30, עבודה חדשה). רז חשף את זה רק אחרי 16 דקות, אחרי שהליד כבר היה מותש. אם זה היה עולה ב-3 דקות הראשונות — סיכויי הסגירה היו עולים ב-50%.",
+     "חסרה שמירת מקום אקטיבית — אחרי שראינו את הטכניקה הזו בשיחת יניב, ברור שזו הטכניקה הכי חזקה. רז לא הציע 'בא לי להחזיק לך מקום עד 15:00'.",
+     "טיפול חלש בהתנגדות הזום — רועי הסביר במפורש שזה ידוע לו שזום קשה לו, ורז לא הציע פתרונות פרקטיים אלא רק נימוקים מדוע זום זה הסטנדרט.",
+     "חסרה הצעת חבילה לבני זוג — רועי הולך להתייעץ עם אשתו. רצוי לתת לו כלים לדיון איתה (מסמך מסודר, אופציית שיחה ב-3, סרטון הסבר).",
+     "לא ניצלה התודה של הליד — רועי שיבח את רז ('היית ממש ידידותי') — זה היה הרגע המושלם להציע soft commitment: 'תודה רועי, אני מתחבר ללליד כמוך. בא לי להציע — אני אחזיק לך מקום עד 15:00, ובוא נדבר על מחזור 29/7 — נראה לי הכי מתאים לך'. זה היה ממיר את הרגע הרגשי לפעולה."
+    ]
+   },
+   {
+    "num": 11,
+    "title": "תובנות לשיפור הצ'אט בוט",
+    "items": [
+     "הבוט תיעד טוב את הרקע (שיווק דיגיטלי) — נקודה חיובית.",
+     "הבוט לא איתר את המצב התעסוקתי הנוכחי — 'בין עבודות' זה מידע קריטי. הבוט יכול לשאול: 'מה המצב התעסוקתי הנוכחי שלך — עובד/מובטל/בין עבודות/עצמאי?'.",
+     "הבוט לא איתר התקדמות בלמידה עצמאית — רועי כבר באמצע קורס אקדמי ובונה אפליקציות. זה ליד 'חם' שצריך pitch אחר.",
+     "הבוט לא איתר העדפת מתכונת (פרונטלי vs זום) — שאלה זו הייתה חוסכת את כל ההתנגדות שעלתה אחרי 8 דקות שיחה. כדאי לשאול: 'האם אתה מעדיף לימודים פרונטליים, היברידיים, או זום בלבד?'.",
+     "הבוט לא איתר אילוצי שעות — שעות 17:30 לא מתאימות. אילו הבוט היה יודע, הוא היה מציע ישירות את מחזור 29/7.",
+     "הבוט לא איתר מצב משפחתי — נשוי + ילדים = השפעה על החלטה. כדאי לשאול בעדינות: 'האם תקבל החלטה לבד או יש מישהו שתתייעץ איתו?'.",
+     "הבוט לא חיבר עם בוגרים מתחום השיווק הדיגיטלי — היה רלוונטי לרועי. הבוט יכול לזהות זאת ולהציע: 'רוצה לדבר עם בוגר מתחום השיווק הדיגיטלי שעבר את הקורס?'.",
+     "הבוט יכול להציג טבלת השוואת מחזורים — אם הליד חוששת משעות, הבוט יכול להציג: 'יש 2 מחזורים — אחד ערב, אחד ערב+בוקר שישי — איזה מתאים לך?'."
+    ]
+   },
+   {
+    "num": 12,
+    "title": "דירוג השיחה (Sales Pitch Rating)",
+    "items": [
+     "ציון: 7.5/10",
+     "זוהי שיחה איכותית מאוד עם הליד הכי 'חם' שראינו בכמה זמן — רועי כבר באמצע קורס AI אחר, כבר בונה דברים, מבטא 'אני מאוד מאוד רוצה' בסוף השיחה. רז ניהל את השיחה בסבלנות, יושר ומקצועיות, וקיבל ממנו מחמאות אישיות מפורשות. למה לא 8.5-9? כי השיחה החמיצה הזדמנות זהב: מחזור 29/7 שצץ רק בדקה ה-16 היה הפתרון לכל ההתנגדויות. אם רז היה שואל בתחילת השיחה 'איזה לוז שבועי מתאים לך?' — היו חוסכים 12 דקות של התנגדויות. בנוסף, אין שמירת מקום אקטיבית כפי שראינו בשיחת יניב. עם זאת — שיחה זו היא בעלת פוטנציאל סגירה הגבוה ביותר מכל השיחות שלא נסגרו. רועי מאוד קרוב — אם השיחה ב-15:00 תהיה איכותית, יש סיכוי ממשי לסגירה."
+    ]
+   },
+   {
+    "num": 13,
+    "title": "5 תובנות מפתח לשיפור (5 Key Insights)",
+    "items": [
+     "1. שאלת הלוז בתחילת השיחה — לפני שמתחילים pitch תוכן, יש לוודא שהלוז מתאים: 'רועי, יש לי 2 מחזורים — מחזור 17/5 בערב, ומחזור 29/7 ערב + שישי בבוקר. איזה לוז מתאים יותר לאורח החיים שלך?'. זה היה חוסך 12 דקות של התנגדויות מיותרות.",
+     "2. שמירת מקום אקטיבית בכל שיחה — אחרי שראינו את הטכניקה הזו בשיחת יניב, ברור שזה ה-game-changer. כל נציג צריך לאמץ את הפרקטיקה: בכל שיחה שמסתיימת בלי סגירה, להציע 'בא לי להחזיק לך מקום עד X' — זה מוריד את הרף הפסיכולוגי לפעולה.",
+     "3. חבילת מידע לבני זוג — לליד שצריך להתייעץ עם בן/בת זוג, להציע: (א) מסמך PDF 'מה זה אומר עבור המשפחה' (לוז שבועי, השפעה כלכלית, ROI), (ב) אופציה לשיחת זום ב-3, (ג) סרטון של 5 דקות שמסביר את הקורס למישהו שלא היה בשיחה. הליד יחזור עם בן/בת הזוג ב-knowledge מסודר ולא בזיכרון של שיחת טלפון.",
+     "4. ניצול מחמאות הליד — כשהליד אומר 'אתה לא מכירתי כמו סוחר מכוניות' — זה הרגע להציע soft commitment. הליד נמצא ב-peak רגשי חיובי, רגע אידיאלי להציע 'תודה, באמת בא לי להחזיק לך מקום ולחכות לך עד 15:00'.",
+     "5. טיפול בהתנגדות הזום עם פתרונות פרקטיים — במקום להגן על הזום, להציע אקטיבית: (א) הגעה ל-2-3 מפגשי תרגול פיזיים, (ב) מנטור צמוד 1 על 1 בחודש הראשון, (ג) נקודת ביקורת אחרי שבועיים. ככה הזום לא נראה כפסיכאומטית, אלא כחלק מ-ecosystem שכולל גם פרונטליות."
+    ]
+   }
+  ]
+ },
+ "9": {
+  "id": 9,
+  "title": "ניתוח שיחת סגירה — יניב (שיחה 2)",
+  "header": "קורס מפתחי AI — האוניברסיטה העברית | נציג: רז | נסגר עם תשלום מלא",
+  "score": 9.5,
+  "sections": [
+   {
+    "num": 1,
+    "title": "רקע כללי על התמלול",
+    "items": [
+     "זוהי שיחת ההמשך של יניב מהשיחה הקודמת (תמלול 7), כעבור 24 שעות. רז מתקשר ליניב כפי שסוכם, ויניב כבר עשה את העבודה — הוא שקל, התלבט בין הקורסים, ובסופו של דבר בחר לעבור למפתחי AI במקום מהנדסי AI (חרף הסיכום הראשוני). השיחה נמשכת כ-22 דקות וכוללת התלבטות אסטרטגית, שאלות טכניות מעמיקות, ובסופה — סגירת עסקה מלאה עם תשלום באשראי (4 תשלומים), חתימה על טופס רישום וקבלת תעודת חשבונית. זוהי השיחה הראשונה שראינו שמסתיימת בסגירה מלאה כתוצאה ישירה מהפיץ' של רז (להבדיל משלומית שיחה 4, שהייתה שיחת אדמיניסטרציה לאחר החלטה קודמת)."
+    ]
+   },
+   {
+    "num": 2,
+    "title": "זיהוי הדוברים",
+    "items": [
+     "שם הנציג: רז / רל (Speaker 1) — בסוף השיחה רז אמר 'קוראים לי רל' שזה ככל הנראה שיבוש של 'רז'. טלפון אישי: 054-3456-230.",
+     "שם הלקוח/הליד: יניב (Speaker 2) — מייל yanivl76@gmail.com, ת\"ז 033158494. פרופיל: איש כספים 20 שנה ומנכ\"ל לשעבר של חברת הייטק, שנתיים בפיתוח תוכנה, מנהל כספים פנימי וחיצוני, משתמש כיום ב-Claude Code, Google Studio, OpenAI Codex."
+    ]
+   },
+   {
+    "num": 3,
+    "title": "הקורס המבוקש",
+    "items": [
+     "קורס מפתחי AI במחזור 17/5 — ימי ראשון ושלישי 17:30–21:30, פתיחה ב-17/5. (במקור התעניין במהנדסי AI 29/4 אך החליט בשיחה הזו לעבור למפתחי AI)."
+    ]
+   },
+   {
+    "num": 4,
+    "title": "מבנה השיחה",
+    "items": [
+     "פתיחת מעקב: רז ממשיך מהשיחה הקודמת, 'חוזר אליך להתעדכן'.",
+     "יניב פותח עם החלטה: מקבל את הצעת רז: התחלה במהנדסי AI עם דלת מעבר.",
+     "בירור התשלום: וודא שאותו תשלום ושאין הפתעות.",
+     "שאלת השוואת פייתון: האם יש הבדל בקורסי הפייתון בין הקורסים.",
+     "חששות לגבי המהנדסים: יניב מציין שהסילבוס 'כבד נורא, טכני ברמות'.",
+     "גילוי מקצועי קריטי: יניב חושף שהוא איש כספים 20 שנה.",
+     "רז משנה כיוון מיד: 'כשאני שומע אותך מדבר ככה, ברור לי לאן אנחנו הולכים'.",
+     "חששות לגבי המפתחים: חשש מ'רמה ממוחה של קהל שגוררת את הקורס למטה'.",
+     "תשובה מבנית של רז: הסבר על הסטרקטור של הקורס.",
+     "שאלות עומק טכני: Security, Guard Rails, באג ב-Claude Code, AWS deployment.",
+     "שאלות עדכון תוכן: איך מתעדכנים עם פיצ'רים חדשים של Anthropic.",
+     "החלטה סופית: מעבר למפתחי AI: 'טוב, אני אומר, בוא נלך לרקחת חיים'.",
+     "שיחת תהליך: יניב משתף את ניסיונו עם Claude Code ל-Stripe analytics.",
+     "טיפים מקצועיים מרז: להכין רעיון לפרויקט גמר מראש.",
+     "שאלת אפליקציה רצינית: האם אפשר לבנות תוכנה ברמת פרודקשן.",
+     "בקשה להירשם: 'איך אנחנו נרשמים?'.",
+     "תהליך תשלום אקטיבי: שליחת טופס, מילוי פרטים, בעיית UI ('המודרן לא נמצא').",
+     "סליקה מוצלחת: 4 תשלומים באשראי, חשבונית הוצאה.",
+     "דרכי תקשורת: מתן מספר אישי ופרטי קשר.",
+     "סיום חיובי: שמירת מקום, ברכת הצלחה."
+    ]
+   },
+   {
+    "num": 5,
+    "title": "שאלות הליד",
+    "items": [
+     "יניב המשיך בסגנון ה-power asker שלו ושאל שאלות איכותיות ומעמיקות:",
+     "השוואת תוכן: האם פייתון זהה בין הקורסים?",
+     "רמה טכנית: עד כמה יורדים לקוד, ל-API, ל-Security, ל-Guard Rails?",
+     "עדכון תוכן: איך הקורס מתעדכן עם הפיצ'רים החדשים של Anthropic?",
+     "חולית חלשה: איך לא יגררו את הכיתה אחורה?",
+     "פרויקט גמר: האם אפשר לבנות תוכנה ברמת פרודקשן?",
+     "שיקולים טכניים: Scale, Security, AWS deployment, code review.",
+     "מרצים: מי המרצה הראשי? מה התפקיד של ד\"ר יונתן זוהרי?",
+     "תהליך: איך נרשמים? כמה תשלומים?",
+     "הנחה: האם יש הנחה לתשלום מזומן?",
+     "דרכי קשר: איך הכי טוב ליצור איתך קשר?"
+    ]
+   },
+   {
+    "num": 6,
+    "title": "שאלות ותשובות נפוצות (Top 10)",
+    "items": [
+     "\"Question\": \"האם הקורס בא עם תוספות או הפתעות במחיר אחרי הרישום?\"",
+     "\"answer\": \"לא, אנחנו לא עושים את זה. השיחה מוקלטת, אני לא יכול להגיד מה שבא לי. אותו תשלום מההצעה הראשונה.\"",
+     "\"Question\": \"האם פייתון זהה בין שני הקורסים?\"",
+     "\"answer\": \"בשניהם יש פייתון. במהנדסים זה רץ יותר מהר — 4 מפגשי מכינת פייתון. במפתחים זה יותר עמוק — כ-8-9 מפגשים. אפשר לקבל מכינת פייתון מקוונת לפני תחילת הקורס.\"",
+     "\"Question\": \"האם הקורס יורד עמוק לקוד, או נשאר ברמת פרומפטים?\"",
+     "\"answer\": \"מגיעים לרמת 'עובד בפייתון'. יש דיונים על Security, Guard Rails, איך מתמודדים כש-AI לא לגמרי מספק את הסחורה. המטרה היא שייצאו בעלי מקצוע שמפתחים דברים — לא קורס תחביב.\"",
+     "\"Question\": \"איך הקורס מתעדכן עם פיצ'רים חדשים של Claude/Anthropic?\"",
+     "\"answer\": \"כל הזמן מתעדכן, ואם צריך — גם במהלך הקורס עצמו. זו חובה.\"",
+     "\"Question\": \"האם 'החולייה החלשה' תגרור את הכיתה אחורה?\"",
+     "\"answer\": \"לא. הקורס בנוי כך שאנחנו חייבים להגיע ליעדים. כל פרויקט חייב לקרות. מי שיתקשה — יבחר אם להשקיע יותר זמן לבד, זה לא יעכב את שאר הכיתה. בנוסף, חצי מתפקיד הנציג זה לוודא שכולם מתאימים.\"",
+     "\"Question\": \"האם אפשר לבנות תוכנה רצינית ברמת פרודקשן בסיום?\"",
+     "\"answer\": \"כן, זה בדיוק מה שעושים בפרויקט גמר. רוב הסטודנטים בונים אפליקציית web ברמת פרודקשן עם Backend, Frontend, UI/UX. כן לוקחים בחשבון Scale, Security, ו-AWS Deployment.\"",
+     "\"Question\": \"מי המרצה הראשי? מה התפקיד של ד\"ר יונתן זוהרי?\"",
+     "\"answer\": \"כל המרצים הם 'ראשיים' — 3 מרצים + מרצים אורחים. ד\"ר יונתן זוהרי הוא גם אחד המנהלים האקדמיים של הקורס. הוא עושה את ה-heavy lifting ויש עליו ביקורות מצוינות.\"",
+     "\"Question\": \"האם יש הנחה לתשלום מזומן/העברה בנקאית?\"",
+     "\"answer\": \"לא, אין הנחה למזומן. אפשר העברה בנקאית בתשלום אחד, או אשראי עד 10 תשלומים בלי ריבית.\"",
+     "\"Question\": \"איך מתבצע הרישום?\"",
+     "\"answer\": \"טופס רישום קצר (2 דקות), פרטים אישיים. תשלום באשראי או בהעברה בנקאית. 7 ימים לפני תחילת הקורס מקבלים מייל עם כל הפרטים: לינקים, קבוצת ווטסאפ, לוז.\"",
+     "\"Question\": \"איך הכי טוב ליצור קשר?\"",
+     "\"answer\": \"וואטסאפ הוא הדרך הטובה ביותר — מגיע ישירות ומיידית. אפשר גם להתקשר, אבל הטלפון מגיע למחשב ויש סבירות שיתפספס. לוואטסאפ המספר: 054-3456-230.\""
+    ]
+   },
+   {
+    "num": 7,
+    "title": "התנגדויות ותגובות",
+    "items": [
+     "\"Resistance\": \"אני נורא מתלבט. הסילבוס של המהנדסים לא בדיוק מדבר אליי. הוא כבד נורא, טכני ברמות. לא בטוח שזה הכיוון של המשתתפים עם כל הידע שלי בטכנולוגיה במקצוע — אני איש כספים 20 שנה\"",
+     "\"What did the representative answer\": \"רז זיהה מיידית את ההזדמנות וביצע pivot מקצועי: 'כשאני שומע אותך מדבר ככה, מאוד ברור לי לאן אנחנו הולכים'. הסביר שלא הבין קודם שיניב הוא איש כספים, והמליץ באופן ברור לעבור למפתחי AI. הוסיף ש'במפתחי AI יש יותר פוקוס על הפרקטיקה' — בדיוק מה שאיש כספים צריך.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה מצוינת. רז עשה בדיוק את הדבר הנכון — pivot מקצועי בלי גאווה, על בסיס מידע חדש שעלה. ניתן לחזק עוד: להוסיף מקרה תקדים: 'יניב, היה לי בוגר שהיה סמנכ\"ל כספים בחברת הייטק — עבר את הקורס מפתחי AI ועכשיו הוא מנהל את כל ה-Automation Finance בארגון. אני יכול לקשר אתכם'. סיפור הצלחה ספציפי לתחום הכספים היה מבטל את ההתלבטות לגמרי.\"",
+     "\"Resistance\": \"אני באמת חושש שמה שלא יהיה, כבר בחנתי קורסים אחרים וראיתי רמה מאוד ממוחה של קהל. הם גוררים את הקורס למטה, וזה נורא מפחיד אותי במפתחים\"",
+     "\"What did the representative answer\": \"רז הגיב באופן מצוין: הסביר שהקורס בנוי בצורה Structured עם יעדים שחייבים לקרות. הסביר שיש גם 'סופרסטרים' וגם אנשים מאתגרים, אבל זה לא מעכב את הכיתה. הסביר שחצי מתפקיד הנציג זה הסינון. הוסיף שאדם כיניב יכול לבחור בין 'להיות זה שהכי מאתגר לו במהנדסים' או 'מהאלה שיותר נוח להם במפתחים'.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה מעולה. אפשר לחזק עוד: לתת נתונים קונקרטיים — 'במחזור האחרון של מפתחי AI, X אחוז מהבוגרים סיימו עם פרויקט גמר ברמת פרודקשן, ו-Y אחוז ציינו בסקר שהקצב היה מתאים או מהיר'. נתון מדויק מנטרל את הפחד יותר מטיעון אינטואיטיבי.\"",
+     "\"Resistance\": \"האם יש הנחה לתשלום מזומן?\"",
+     "\"What did the representative answer\": \"רז ענה ישירות וכנה: 'לא, אין הנחה למזומן'. הציע מיד את האפשרויות החלופיות: העברה בנקאית או אשראי עד 10 תשלומים.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה הוגנת ומקצועית. אפשר לחזק את הערך של אי-ההנחה: 'אין הנחה למזומן, אבל יש לך 10 תשלומים ללא ריבית — שזה בעצם הנחה כיוון שהריבית הריאלית של הכסף שלך עומדת על X% בשנה'. הצגת המהלך כיתרון.\"",
+     "\"Resistance\": \"בעיית UI בתהליך הסליקה — 'המודרן המבוקש לא נמצא'\"",
+     "\"What did the representative answer\": \"רז הגיב מקצועית: 'זה האירוע המפורסם, רגע אני בודק בצד שלי, אוקיי עוד רגע, יעבירו לי את זה מהנהלה'. השיג מספר אישור ידני והמשיך בתהליך הסליקה בלי לאבד את המומנטום.\"",
+     "\"The best solution to the objection\": \"התגובה הייתה מצוינת בנסיבות. אבל זה מצביע על בעיה מערכתית — אם 'זה האירוע המפורסם', זה אומר שזה קורה הרבה. בעיית UI ברגע סליקה היא אסון מכירתי. כדאי לטפל בבעיה הטכנית עם צוות הפיתוח, או להכין מסלול גיבוי מהיר. בנוסף, רז יכל ליצור hump בחוויה: 'יניב, אני מתנצל על העיכוב הקצר — אני סולק אותך ידנית כדי שלא תאבד מקום במחזור'.\""
+    ]
+   },
+   {
+    "num": 8,
+    "title": "נקודות נוספות",
+    "items": [
+     "שיחת המשך מצוינת — Closing Call! זוהי הדגמה אמיתית של איך שיחת מעקב מובילה לסגירה. רז הגיע מוכן עם הזיכרון מהשיחה הקודמת.",
+     "גילוי מקצועי מאוחר — איש כספים 20 שנה: זה היה מידע קריטי שלא עלה בשיחה הראשונה. עוד הוכחה שהבוט/הסקרינינג צריך לתפוס נתונים מקצועיים מראש.",
+     "רז שינה כיוון בלי גאווה: ברגע שיניב חשף שהוא איש כספים, רז זיהה מיד והפנה אותו לקורס הנכון (מפתחים במקום מהנדסים). זה מהלך מקצועי מעולה.",
+     "יניב כבר משתמש ב-Claude Code ב-Stripe לתחזיות: זה ליד עמוק טכנית, רמה לא רגילה. השאלה היחידה היא איך לעשות את זה formal יותר ולקוד-רוויו.",
+     "קבוצת תשלומים מעניינת: יניב התנדנד בין 6 תשלומים, 5 תשלומים, ובסוף בחר ב-4 תשלומים. זה מעיד על אדם שמחשב כלכלית.",
+     "טכניקת התובנה הקדם-לימודית של רז: הציע ליניב להתחיל לחשוב על פרויקט גמר עוד לפני תחילת הקורס. זה מהלך מצוין שמקבע את ההחלטה ויוצר Anticipation.",
+     "רז ביקש להישאר בקשר לאחר הקורס: 'מעניין אותי לדבר איתך אחרי הקורס, אני אשים את הטלפון שלך בצד' — מהלך מצוין ל-NPS ולתיק מקרים עתידי.",
+     "בעיית UI בסליקה — אירוע מפורסם: רז כינה את הבעיה 'האירוע המפורסם' — סימן שזו תקלה שחוזרת על עצמה. בעיה מערכתית שדורשת תיקון.",
+     "המייל yanivl76@gmail.com: זהה לזה שצוין בשיחה הקודמת — תאם. יניב הוא בוגר האוניברסיטה העברית (מהשיחה הקודמת), אז קיבל את 'מחיר המלגה'.",
+     "שיבושי תמלול: 'רל' במקום 'רז' בכמה מקומות, 'המודרן' (modal), 'תאיוון' (פייתון), שמות חדרים וטכנולוגיות."
+    ]
+   },
+   {
+    "num": 9,
+    "title": "סיום שיחה",
+    "items": [
+     "השיחה הסתיימה בצורה מצוינת עם סגירה מלאה:",
+     "תשלום מלא של 9,850 ש\"ח + מע\"מ ב-4 תשלומים באשראי.",
+     "חשבונית הוצאה על שם יניב באופן אישי.",
+     "ת\"ז: 033158494, מייל: yanivl76@gmail.com.",
+     "רז שלח מספר אישי (054-3456-230) ופתח קשר וואטסאפ ישיר.",
+     "הוסבר שלאיש קשר ב-7 ימים לפני הקורס: מייל עם לינקים, קבוצת וואטסאפ, ולוז.",
+     "הוצע גם PDF של לוח זמנים.",
+     "רז ביקש להישאר בקשר לאחר הקורס.",
+     "המעבר מקורס מהנדסי AI לקורס מפתחי AI נעשה ללא בעיה (חרף הבעיה ב-UI)."
+    ]
+   },
+   {
+    "num": 10,
+    "title": "תובנות לשיפור השיחה",
+    "items": [
+     "זוהי שיחת מכירה ברמה גבוהה במיוחד שמסתיימת בסגירה אמיתית. רז הציג כמה מהלכים מצוינים: Pivot מקצועי בלי גאווה, שמירת מקום אקטיבית מהשיחה הקודמת, טיפ פרואקטיבי לפרויקט גמר, יצירת חיבור אישי. עם זאת, יש מה לשפר:",
+     "בעיית UI בסליקה — בעיה מערכתית — 'האירוע המפורסם' הוא alarming. צריך לטפל בזה ברמת הפיתוח כדי שלא יקרה לידים פחות מחויבים מיניב.",
+     "חוסר בסיפורי הצלחה ספציפיים — יניב הוא איש כספים שעובד עם Stripe analytics ו-Claude Code. סיפור על בוגר מקצוע דומה (סמנכ\"ל כספים שעבר את הקורס) היה מחזק את ההחלטה.",
+     "בקשת הקשר לאחר הקורס מצוינת — אבל בלי מבנה — רז אמר 'אני אשים את הטלפון שלך בצד'. זה לא דבר מובנה. ראוי להציע פוקוס ספציפי: 'יניב, אני אבקש ממך אחרי הקורס 30 דקות לראיון בוגרים — זה יעזור גם לי וגם לך לבנות סיפור הצלחה'. זה ממיר את הקשר העתידי למשהו אקטיבי.",
+     "חוסר בהצעה ל-onboarding לפני תחילת הקורס — יניב נרשם ב-19/5 והקורס מתחיל ב-17/5 — בעוד פחות מיום. רז יכל להציע מיד 'אחרי שתסיים את הסליקה, תקבל לינק לקבוצת וואטסאפ הפרטית של הקורס, ובא לי להזמין אותך גם לסשן זום של 15 דקות אישי איתי לפני המפגש הראשון — להכיר אותך עם הצוות'. זה היה הופך את המעבר מ-Lead ל-Customer לחוויה אישית.",
+     "לא הוצעה הנחה לקבל המלצות — איש כספים עם רשת קשרים נרחבת = פוטנציאל הפניות גבוה. ראוי להציע: 'יניב, אם תרצה להמליץ על מישהו מהרשת שלך, יש לנו בונוס המלצות — או הנחה לחבר, או דמי הפניה'. זה משאיר את הליד עם כלי שיווק לטובת החברה."
+    ]
+   },
+   {
+    "num": 11,
+    "title": "תובנות לשיפור הצ'אט בוט",
+    "items": [
+     "הבוט לא איתר את מקצוע הכספים של יניב! זה היה המידע הקריטי שעלה רק ב-3 דקות בשיחה. הבוט חייב לשאול 'מה התפקיד הנוכחי שלך?' ולתעד את זה ב-CRM.",
+     "הבוט יכול לזהות לידים שצריכים pivot — אם הליד נרשם למהנדסי AI אבל הפרופיל מצביע על מתאים יותר למפתחי AI (תפקיד לא תכנותי), הבוט יכול לפזר ולסמן את זה לנציג.",
+     "הבוט לא תיעד שיניב משתמש ב-Claude Code פעיל ב-Stripe — זה מידע קריטי שעלה רק בשיחה ה-22-דקות. הבוט יכול לשאול: 'באילו כלי AI אתה משתמש כיום?'.",
+     "הבוט יכול לסייע ברישום עצמאי — לידים שכבר הביעו כוונה לסגור (כמו יניב) יכולים לקבל מהבוט לינק רישום ישיר ולסיים סליקה לבד תוך 5 דקות. זה היה חוסך 22 דקות של זמן נציג.",
+     "הבעיה ב-UI של הטופס — הבוט/הפיתוח חייב לתפוס 'המודרן לא נמצא' כתקלה רגולרית ולפתור אותה. כל ליד שמגיע לרגע הסליקה אבל לא משלים — הולך לאיבוד.",
+     "הבוט יכול לתעד אילוצי תשלום — יניב שאל על תשלום במזומן/העברה. הבוט יכול לאסוף מראש: 'האם יש לך העדפה לתשלום באשראי, העברה בנקאית, או צורך בחשבונית על שם חברה?'.",
+     "הבוט יכול להציע onboarding אוטומטי — מיד לאחר סליקה, הודעת ברוכים הבאים אוטומטית עם: לינק לקבוצת וואטסאפ, סרטון מבוא, פרטי קשר נציג, הקלטה של מפגש לדוגמה. זה מקטין חוסר ודאות לפני הקורס."
+    ]
+   },
+   {
+    "num": 12,
+    "title": "דירוג השיחה (Sales Pitch Rating)",
+    "items": [
+     "ציון: 9.5/10",
+     "זוהי השיחה האיכותית ביותר עד כה — שיחת סגירה מושלמת. רז ביצע: (1) שמירת מקום אקטיבית מהשיחה הקודמת, (2) Pivot מקצועי בלי גאווה כשנודע מקצוע הליד, (3) טיפול מצוין בכל ההתנגדויות הטכניות והרגשיות, (4) טיפ פרואקטיבי לפרויקט גמר, (5) סגירה מקצועית עם תשלום אשראי 4 תשלומים. למה לא 10? כי הבעיה ב-UI ('האירוע המפורסם') הייתה יכולה לאבד עסקה בנסיבות פחות אידיאליות — וזו בעיה מערכתית שצריך לתקן. בנוסף, חסר היה onboarding מובנה לאחר הסליקה — ההזדמנות להפוך את החוויה ל-WOW לא נוצלה. עם זאת — זוהי סגירה אמיתית של עסקה ב-9,850 ש\"ח + מע\"מ, וזה התוצאה הסופית שמעניינת. השיחה הזו צריכה להפוך לתבנית הזהב לאימון נציגים חדשים."
+    ]
+   },
+   {
+    "num": 13,
+    "title": "5 תובנות מפתח לשיפור (5 Key Insights)",
+    "items": [
+     "1. Pivot מקצועי בלי גאווה = סוד הסגירה — ברגע שיניב חשף שהוא איש כספים, רז שינה כיוון מיד וביעוץ מקצועי הוביל אותו לקורס הנכון יותר. זה דרש ענווה והקשבה. כל נציג צריך להפנים: גם אם הליד נרשם לקורס A, אם הפרופיל שלו מתאים יותר לקורס B — אומרים את האמת. זה בונה אמון ארוך טווח, ובסופו של דבר — מוביל לסגירה.",
+     "2. בעיית UI ברגע סליקה = אסון מערכתי — 'האירוע המפורסם' של 'המודרן לא נמצא' הוא בעיה שצריך לפתור מיידית. כל ליד שמגיע לרגע הסליקה הוא ליד שכבר השקיע 20+ דקות בשיחה. לאבד אותו ברגע האחרון בגלל UI הוא הפסד אסטרטגי. דרושה משוב מהיר לצוות הפיתוח + מסלול גיבוי ידני.",
+     "3. טיפ פרואקטיבי לפרויקט גמר = יצירת Anticipation — רז הציע ליניב להתחיל לחשוב על פרויקט הגמר לפני תחילת הקורס. זה מהלך פסיכולוגי מצוין שעושה שני דברים: (א) מקבע את ההחלטה (הליד כבר משקיע מנטלית בקורס), (ב) יוצר Anticipation שמקטין חרטה. כל נציג צריך לאמץ את הטכניקה.",
+     "4. בקשת קשר לאחר הקורס = יצירת תיק מקרים — רז ביקש להישאר בקשר עם יניב לאחר הקורס. זה מהלך גאוני שמשיג 2 דברים: (א) הליד מרגיש שאכפת ממנו ולא רק מהכסף, (ב) בעוד 4 חודשים — סיפור הצלחה חדש לתיק. כדאי לעשות זאת באופן מובנה: 'תסכים ל-30 דקות ראיון בוגרים בעוד 4 חודשים?'.",
+     "5. Onboarding מובנה לאחר סליקה = הזדמנות מבוזבזת — יניב סיים סליקה והשיחה הסתיימה. הזדמנות אדירה: מיד לאחר הסליקה, להציע: (א) לינק ישיר לקבוצת ווטסאפ של הקורס, (ב) סשן זום אישי של 15 דקות לפני המפגש הראשון, (ג) חבילת ברוכים הבאים עם סרטון של המרצה הראשי. זה היה הופך את החוויה מ'קניתי קורס' ל'הצטרפתי לקהילה' — צעד שמשפיע על שביעות רצון, שימור, והפניות."
+    ]
+   }
+  ]
+ }
+};
+
+</script>
+<script>
+/* רינדור הדשבורד מתוך REPORT (data.js) */
+(function () {
+  "use strict";
+  const $ = (s, r = document) => r.querySelector(s);
+  const el = (tag, cls, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  };
+
+  const scoreColor = (s) =>
+    s >= 9 ? "#2e8b57" : s >= 7.5 ? "#5a9b3e" : s >= 6.5 ? "#c89b3c" : "#c0392b";
+
+  const outcomeClass = (o) =>
+    o === "נסגר" ? "win" : o === "לא נסגר" ? "lose" : "mid";
+
+  /* ---- Hero + summary ---- */
+  $("#hero-title").textContent = REPORT.meta.title;
+  $("#hero-sub").textContent = REPORT.meta.subtitle;
+  $("#hero-tag").textContent = REPORT.meta.tagline;
+  $("#summary").textContent = REPORT.meta.summary;
+  $("#conclusion").textContent = REPORT.meta.conclusion;
+
+  /* ---- Tabs ---- */
+  const TABS = [
+    ["overview", "תקציר"],
+    ["calls", "10 השיחות"],
+    ["winning", "מה עובד"],
+    ["weaknesses", "מה לא עובד"],
+    ["objections", "התנגדויות"],
+    ["reps", "הנציגים"],
+    ["chatbot", "הצ'אטבוט"],
+    ["plan", "תוכנית פעולה"],
+  ];
+  const tabsNav = $("#tabs");
+  TABS.forEach(([key, label], i) => {
+    const b = el("button", "tab" + (i === 0 ? " active" : ""), label);
+    b.dataset.target = key;
+    b.addEventListener("click", () => activate(key));
+    tabsNav.appendChild(b);
+  });
+  function activate(key) {
+    document.querySelectorAll(".tab").forEach((t) =>
+      t.classList.toggle("active", t.dataset.target === key)
+    );
+    document.querySelectorAll(".panel").forEach((p) =>
+      p.classList.toggle("hidden", p.dataset.panel !== key)
+    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  /* ---- KPIs ---- */
+  const kg = $("#kpi-grid");
+  REPORT.kpis.forEach((k) => {
+    kg.appendChild(
+      el(
+        "div",
+        "kpi",
+        `<div class="kpi-icon">${k.icon}</div>
+         <div class="kpi-value">${k.value}</div>
+         <div class="kpi-label">${k.label}</div>`
+      )
+    );
+  });
+
+  /* ---- Score bar chart ---- */
+  const sc = $("#score-chart");
+  REPORT.calls.forEach((c) => {
+    const row = el("div", "bar-row");
+    row.appendChild(el("div", "bar-label", `${c.id}. ${c.lead}`));
+    const track = el("div", "bar-track");
+    const fill = el("div", "bar-fill", `${c.score}`);
+    fill.style.background = scoreColor(c.score);
+    fill.style.width = "0%";
+    track.appendChild(fill);
+    row.appendChild(track);
+    sc.appendChild(row);
+    requestAnimationFrame(() => {
+      setTimeout(() => (fill.style.width = (c.score / 10) * 100 + "%"), 60);
+    });
+  });
+
+  /* ---- Conversion donut ---- */
+  const closed = REPORT.calls.filter((c) => c.outcome === "נסגר").length;
+  const total = REPORT.calls.length;
+  const pct = Math.round((closed / total) * 100);
+  $("#conv-pct").textContent = pct + "%";
+  const donut = $("#donut");
+  const R = 50,
+    C = 2 * Math.PI * R;
+  const ns = "http://www.w3.org/2000/svg";
+  const mkCircle = (color, dash, offset, w) => {
+    const c = document.createElementNS(ns, "circle");
+    c.setAttribute("cx", 60);
+    c.setAttribute("cy", 60);
+    c.setAttribute("r", R);
+    c.setAttribute("fill", "none");
+    c.setAttribute("stroke", color);
+    c.setAttribute("stroke-width", w);
+    if (dash != null) {
+      c.setAttribute("stroke-dasharray", `${dash} ${C - dash}`);
+      c.setAttribute("stroke-dashoffset", offset);
+    }
+    return c;
+  };
+  donut.appendChild(mkCircle("#e3e7ef", null, 0, 18));
+  const seg = mkCircle("#2e8b57", 0, 0, 18);
+  donut.appendChild(seg);
+  setTimeout(() => {
+    seg.style.transition = "stroke-dasharray 1s ease";
+    seg.setAttribute("stroke-dasharray", `${(pct / 100) * C} ${C}`);
+  }, 200);
+
+  /* ---- Calls table ---- */
+  const body = $("#calls-body");
+  let sortKey = "id",
+    sortAsc = true,
+    repFilter = "all",
+    outFilter = "all";
+
+  function renderCalls() {
+    body.innerHTML = "";
+    let rows = REPORT.calls.filter(
+      (c) =>
+        (repFilter === "all" || c.rep === repFilter) &&
+        (outFilter === "all" ||
+          (outFilter === "closed"
+            ? c.outcome === "נסגר"
+            : c.outcome !== "נסגר"))
+    );
+    rows.sort((a, b) => {
+      let x = a[sortKey],
+        y = b[sortKey];
+      if (typeof x === "string") return sortAsc ? x.localeCompare(y, "he") : y.localeCompare(x, "he");
+      return sortAsc ? x - y : y - x;
+    });
+    rows.forEach((c) => {
+      const hasDetail = typeof CALLS_DETAIL !== "undefined" && CALLS_DETAIL[c.id];
+      const tr = el(
+        "tr",
+        (c.outcome === "נסגר" ? "closed " : "") + (hasDetail ? "has-detail" : "")
+      );
+      const pill = `<span class="score-pill" style="background:${scoreColor(
+        c.score
+      )}">${c.score}</span>`;
+      tr.innerHTML = `
+        <td>${c.id}</td>
+        <td>${c.lead}</td>
+        <td>${c.rep}</td>
+        <td>${pill}</td>
+        <td><span class="outcome-tag ${outcomeClass(c.outcome)}">${c.outcome}</span></td>
+        <td>${c.note}</td>`;
+      if (hasDetail) tr.addEventListener("click", () => openCall(c.id));
+      body.appendChild(tr);
+    });
+  }
+
+  document.querySelectorAll("#calls-table th[data-sort]").forEach((th) => {
+    th.addEventListener("click", () => {
+      const k = th.dataset.sort;
+      if (sortKey === k) sortAsc = !sortAsc;
+      else {
+        sortKey = k;
+        sortAsc = true;
+      }
+      renderCalls();
+    });
+  });
+
+  const cf = $("#call-filters");
+  const filterDefs = [
+    { group: "out", val: "all", label: "כל התוצאות" },
+    { group: "out", val: "closed", label: "✅ נסגרו" },
+    { group: "out", val: "open", label: "פתוחות" },
+    { group: "rep", val: "all", label: "כל הנציגים" },
+    { group: "rep", val: "רז", label: "רז" },
+    { group: "rep", val: "שחר", label: "שחר" },
+    { group: "rep", val: "רון", label: "רון" },
+  ];
+  filterDefs.forEach((f) => {
+    const isActive =
+      (f.group === "out" && f.val === outFilter) ||
+      (f.group === "rep" && f.val === repFilter);
+    const chip = el("button", "chip" + (isActive ? " active" : ""), f.label);
+    chip.dataset.group = f.group;
+    chip.dataset.val = f.val;
+    chip.addEventListener("click", () => {
+      if (f.group === "out") outFilter = f.val;
+      else repFilter = f.val;
+      cf.querySelectorAll(`.chip[data-group="${f.group}"]`).forEach((c) =>
+        c.classList.toggle("active", c.dataset.val === f.val)
+      );
+      renderCalls();
+    });
+    cf.appendChild(chip);
+  });
+  const hint = el(
+    "div",
+    "detail-hint",
+    "💡 לחצו על שיחה כדי לפתוח את הניתוח המלא — 13 מקטעים: מבנה השיחה, שאלות, התנגדויות, דירוג ותובנות."
+  );
+  cf.parentNode.insertBefore(hint, cf.nextSibling);
+  renderCalls();
+
+  /* ---- Winning techniques ---- */
+  const wg = $("#winning-grid");
+  REPORT.winning.forEach((t) => {
+    wg.appendChild(
+      el(
+        "div",
+        "tech-card",
+        `<h3><span class="medal">${t.medal}</span>${t.title}</h3>
+         <p>${t.body}</p>
+         <div class="action-box"><strong>✅ פעולה מומלצת:</strong> ${t.action}</div>`
+      )
+    );
+  });
+
+  /* ---- Weaknesses ---- */
+  const wkg = $("#weak-grid");
+  REPORT.weaknesses.forEach((w, i) => {
+    wkg.appendChild(
+      el(
+        "div",
+        "tech-card weak" + (w.urgent ? " urgent" : ""),
+        `<h3>❌ ${i + 1}. ${w.title}${
+          w.urgent ? '<span class="urgent-badge">דחוף</span>' : ""
+        }</h3>
+         <p>${w.body}</p>`
+      )
+    );
+  });
+
+  /* ---- Objections accordion ---- */
+  const acc = $("#obj-accordion");
+  REPORT.objections.forEach((o) => {
+    const item = el("div", "acc-item");
+    const head = el(
+      "button",
+      "acc-head",
+      `<span class="acc-num">${o.n}</span>
+       <span class="acc-title">${o.title}</span>
+       <span class="acc-arrow">▼</span>`
+    );
+    const bd = el(
+      "div",
+      "acc-body",
+      `<div class="calls-meta">הופיעה בשיחות: ${o.calls}</div>
+       <div class="fix">${o.fix}</div>`
+    );
+    head.addEventListener("click", () => item.classList.toggle("open"));
+    item.appendChild(head);
+    item.appendChild(bd);
+    acc.appendChild(item);
+  });
+
+  /* ---- Reps ---- */
+  const rg = $("#reps-grid");
+  REPORT.reps.forEach((r) => {
+    rg.appendChild(
+      el(
+        "div",
+        "rep-card",
+        `<div class="rep-head"><span class="rank">${r.rank}</span><h3>${r.name}</h3></div>
+         <div class="rep-stats">
+           <div class="rep-stat"><b>${r.calls}</b><span>שיחות</span></div>
+           <div class="rep-stat"><b>${r.closes}</b><span>סגירות</span></div>
+           <div class="rep-stat"><b>${r.avg}</b><span>ציון ממוצע</span></div>
+         </div>
+         <div class="pro"><b>💪 חזק:</b> ${r.strong}</div>
+         <div class="con"><b>⚠️ חולשות:</b> ${r.weak}</div>
+         <div class="rep-note">${r.note}</div>`
+      )
+    );
+  });
+
+  /* ---- Chatbot ---- */
+  const cl = $("#chatbot-list");
+  REPORT.chatbot.forEach((u) => {
+    cl.appendChild(
+      el(
+        "div",
+        "upgrade",
+        `<div class="un">${u.n}</div>
+         <div><h4>${u.title}</h4><p>${u.body}</p></div>`
+      )
+    );
+  });
+
+  /* ---- Plan timeline ---- */
+  const tl = $("#plan-timeline");
+  REPORT.plan.forEach((p) => {
+    const block = el("div", "phase");
+    block.appendChild(
+      el("div", "phase-head", `<span>${p.icon}</span><span>${p.phase}</span>`)
+    );
+    const items = el("div", "phase-items");
+    p.items.forEach((it) => {
+      items.appendChild(
+        el(
+          "div",
+          "step",
+          `<div class="sn">${it.n}</div><h4>${it.t}</h4><p>${it.d}</p>`
+        )
+      );
+    });
+    block.appendChild(items);
+    tl.appendChild(block);
+  });
+
+  /* ---- Golden lines ---- */
+  const gl = $("#golden-lines");
+  REPORT.goldenLines.forEach((line) => gl.appendChild(el("li", null, line)));
+
+  /* ---- Call detail modal ---- */
+  const esc = (s) =>
+    String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const colonVal = (s) => {
+    const i = s.indexOf(":");
+    return s.slice(i + 1).trim().replace(/^"+/, "").replace(/"+$/, "");
+  };
+
+  function renderSection(sec) {
+    const wrap = el("div", "sec");
+    wrap.id = "sec-" + sec.num;
+    wrap.appendChild(
+      el(
+        "div",
+        "sec-head",
+        `<span class="sec-num">${sec.num}</span><h3>${esc(sec.title)}</h3>`
+      )
+    );
+    const items = sec.items || [];
+
+    if (sec.num === 6) {
+      // שאלות ותשובות — זוגות
+      let pair = null;
+      items.forEach((it) => {
+        if (/^"?Question"?\s*:/i.test(it)) {
+          pair = el("div", "qa");
+          pair.appendChild(el("div", "q", "❓ " + esc(colonVal(it))));
+          wrap.appendChild(pair);
+        } else if (/^"?answer"?\s*:/i.test(it)) {
+          if (!pair) {
+            pair = el("div", "qa");
+            wrap.appendChild(pair);
+          }
+          pair.appendChild(el("div", "a", esc(colonVal(it))));
+          pair = null;
+        } else {
+          wrap.appendChild(el("p", null, esc(it)));
+        }
+      });
+      return wrap;
+    }
+
+    if (sec.num === 7) {
+      // התנגדויות — שלשות
+      let card = null;
+      items.forEach((it) => {
+        if (/Resistance/i.test(it) && it.indexOf(":") > -1) {
+          card = el("div", "obj");
+          card.appendChild(el("div", "r", "🚧 " + esc(colonVal(it))));
+          wrap.appendChild(card);
+        } else if (/representative answer|What did/i.test(it)) {
+          if (!card) { card = el("div", "obj"); wrap.appendChild(card); }
+          card.appendChild(el("div", "lbl", "תגובת הנציג"));
+          card.appendChild(el("div", "txt", esc(colonVal(it))));
+        } else if (/best solution/i.test(it)) {
+          if (!card) { card = el("div", "obj"); wrap.appendChild(card); }
+          card.appendChild(el("div", "lbl", "הפתרון המומלץ"));
+          card.appendChild(el("div", "txt sol", esc(colonVal(it))));
+        } else {
+          wrap.appendChild(el("p", null, esc(it)));
+        }
+      });
+      return wrap;
+    }
+
+    if (sec.num === 12) {
+      items.forEach((it) => {
+        const m = it.match(/ציון:\s*([\d.]+)\s*\/?\s*10/);
+        if (m) {
+          wrap.appendChild(
+            el(
+              "div",
+              "score-hero",
+              `<b>${m[1]}</b><span>ציון איכות השיחה (מתוך 10)</span>`
+            )
+          );
+        } else {
+          wrap.appendChild(el("p", null, esc(it)));
+        }
+      });
+      return wrap;
+    }
+
+    if (sec.num === 13) {
+      const ol = el("ol", "insights");
+      items.forEach((it) => {
+        const clean = it.replace(/^\d+\.\s*/, "");
+        const dash = clean.indexOf("—");
+        let html;
+        if (dash > -1) {
+          html =
+            "<b>" +
+            esc(clean.slice(0, dash).trim()) +
+            "</b> — " +
+            esc(clean.slice(dash + 1).trim());
+        } else {
+          html = esc(clean);
+        }
+        ol.appendChild(el("li", null, html));
+      });
+      wrap.appendChild(ol);
+      return wrap;
+    }
+
+    // ברירת מחדל — פסקאות / זוגות תווית:ערך
+    items.forEach((it) => {
+      const m = it.match(/^([^:"]{2,46}):\s+(.+)$/);
+      if (m) {
+        wrap.appendChild(
+          el("div", "kv", `<b>${esc(m[1])}:</b> ${esc(m[2])}`)
+        );
+      } else {
+        wrap.appendChild(el("p", null, esc(it)));
+      }
+    });
+    return wrap;
+  }
+
+  const modal = $("#modal");
+  const modalBody = $("#modal-body");
+  const modalNav = $("#modal-nav");
+
+  function openCall(id) {
+    const d = CALLS_DETAIL[id];
+    if (!d) return;
+    const c = REPORT.calls.find((x) => x.id === id);
+    $("#modal-title").textContent = d.title;
+    $("#modal-sub").textContent = d.header;
+    $("#modal-score").textContent = "ציון " + (d.score != null ? d.score : c.score) + "/10";
+    modalNav.innerHTML = "";
+    modalBody.innerHTML = "";
+    d.sections.forEach((sec) => {
+      const b = el("button", null, sec.num + ". " + sec.title);
+      b.addEventListener("click", () => {
+        const t = $("#sec-" + sec.num);
+        if (t) modalBody.scrollTo({ top: t.offsetTop - 12, behavior: "smooth" });
+      });
+      modalNav.appendChild(b);
+      modalBody.appendChild(renderSection(sec));
+    });
+    modalBody.scrollTop = 0;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+  $("#modal-close").addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+  });
+})();
+
+</script>
+</body>
+</html>
