@@ -114,7 +114,25 @@
     <p>סוף הדוח · מבוסס על ניתוח 10 שיחות מכירה ייחודיות · האוניברסיטה העברית — קורסי AI</p>
   </footer>
 
+  <div class="modal-overlay" id="modal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <header class="modal-head">
+        <div>
+          <h2 id="modal-title"></h2>
+          <p id="modal-sub"></p>
+        </div>
+        <div class="modal-head-side">
+          <div class="modal-score" id="modal-score"></div>
+          <button class="modal-close" id="modal-close" aria-label="סגור">✕</button>
+        </div>
+      </header>
+      <nav class="modal-nav" id="modal-nav"></nav>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
   <script src="data.js"></script>
+  <script src="calls-detail.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -136,7 +136,11 @@
       return sortAsc ? x - y : y - x;
     });
     rows.forEach((c) => {
-      const tr = el("tr", c.outcome === "נסגר" ? "closed" : "");
+      const hasDetail = typeof CALLS_DETAIL !== "undefined" && CALLS_DETAIL[c.id];
+      const tr = el(
+        "tr",
+        (c.outcome === "נסגר" ? "closed " : "") + (hasDetail ? "has-detail" : "")
+      );
       const pill = `<span class="score-pill" style="background:${scoreColor(
         c.score
       )}">${c.score}</span>`;
@@ -147,6 +151,7 @@
         <td>${pill}</td>
         <td><span class="outcome-tag ${outcomeClass(c.outcome)}">${c.outcome}</span></td>
         <td>${c.note}</td>`;
+      if (hasDetail) tr.addEventListener("click", () => openCall(c.id));
       body.appendChild(tr);
     });
   }
@@ -190,6 +195,12 @@
     });
     cf.appendChild(chip);
   });
+  const hint = el(
+    "div",
+    "detail-hint",
+    "💡 לחצו על שיחה כדי לפתוח את הניתוח המלא — 13 מקטעים: מבנה השיחה, שאלות, התנגדויות, דירוג ותובנות."
+  );
+  cf.parentNode.insertBefore(hint, cf.nextSibling);
   renderCalls();
 
   /* ---- Winning techniques ---- */
@@ -301,4 +312,163 @@
   /* ---- Golden lines ---- */
   const gl = $("#golden-lines");
   REPORT.goldenLines.forEach((line) => gl.appendChild(el("li", null, line)));
+
+  /* ---- Call detail modal ---- */
+  const esc = (s) =>
+    String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const colonVal = (s) => {
+    const i = s.indexOf(":");
+    return s.slice(i + 1).trim().replace(/^"+/, "").replace(/"+$/, "");
+  };
+
+  function renderSection(sec) {
+    const wrap = el("div", "sec");
+    wrap.id = "sec-" + sec.num;
+    wrap.appendChild(
+      el(
+        "div",
+        "sec-head",
+        `<span class="sec-num">${sec.num}</span><h3>${esc(sec.title)}</h3>`
+      )
+    );
+    const items = sec.items || [];
+
+    if (sec.num === 6) {
+      // שאלות ותשובות — זוגות
+      let pair = null;
+      items.forEach((it) => {
+        if (/^"?Question"?\s*:/i.test(it)) {
+          pair = el("div", "qa");
+          pair.appendChild(el("div", "q", "❓ " + esc(colonVal(it))));
+          wrap.appendChild(pair);
+        } else if (/^"?answer"?\s*:/i.test(it)) {
+          if (!pair) {
+            pair = el("div", "qa");
+            wrap.appendChild(pair);
+          }
+          pair.appendChild(el("div", "a", esc(colonVal(it))));
+          pair = null;
+        } else {
+          wrap.appendChild(el("p", null, esc(it)));
+        }
+      });
+      return wrap;
+    }
+
+    if (sec.num === 7) {
+      // התנגדויות — שלשות
+      let card = null;
+      items.forEach((it) => {
+        if (/Resistance/i.test(it) && it.indexOf(":") > -1) {
+          card = el("div", "obj");
+          card.appendChild(el("div", "r", "🚧 " + esc(colonVal(it))));
+          wrap.appendChild(card);
+        } else if (/representative answer|What did/i.test(it)) {
+          if (!card) { card = el("div", "obj"); wrap.appendChild(card); }
+          card.appendChild(el("div", "lbl", "תגובת הנציג"));
+          card.appendChild(el("div", "txt", esc(colonVal(it))));
+        } else if (/best solution/i.test(it)) {
+          if (!card) { card = el("div", "obj"); wrap.appendChild(card); }
+          card.appendChild(el("div", "lbl", "הפתרון המומלץ"));
+          card.appendChild(el("div", "txt sol", esc(colonVal(it))));
+        } else {
+          wrap.appendChild(el("p", null, esc(it)));
+        }
+      });
+      return wrap;
+    }
+
+    if (sec.num === 12) {
+      items.forEach((it) => {
+        const m = it.match(/ציון:\s*([\d.]+)\s*\/?\s*10/);
+        if (m) {
+          wrap.appendChild(
+            el(
+              "div",
+              "score-hero",
+              `<b>${m[1]}</b><span>ציון איכות השיחה (מתוך 10)</span>`
+            )
+          );
+        } else {
+          wrap.appendChild(el("p", null, esc(it)));
+        }
+      });
+      return wrap;
+    }
+
+    if (sec.num === 13) {
+      const ol = el("ol", "insights");
+      items.forEach((it) => {
+        const clean = it.replace(/^\d+\.\s*/, "");
+        const dash = clean.indexOf("—");
+        let html;
+        if (dash > -1) {
+          html =
+            "<b>" +
+            esc(clean.slice(0, dash).trim()) +
+            "</b> — " +
+            esc(clean.slice(dash + 1).trim());
+        } else {
+          html = esc(clean);
+        }
+        ol.appendChild(el("li", null, html));
+      });
+      wrap.appendChild(ol);
+      return wrap;
+    }
+
+    // ברירת מחדל — פסקאות / זוגות תווית:ערך
+    items.forEach((it) => {
+      const m = it.match(/^([^:"]{2,46}):\s+(.+)$/);
+      if (m) {
+        wrap.appendChild(
+          el("div", "kv", `<b>${esc(m[1])}:</b> ${esc(m[2])}`)
+        );
+      } else {
+        wrap.appendChild(el("p", null, esc(it)));
+      }
+    });
+    return wrap;
+  }
+
+  const modal = $("#modal");
+  const modalBody = $("#modal-body");
+  const modalNav = $("#modal-nav");
+
+  function openCall(id) {
+    const d = CALLS_DETAIL[id];
+    if (!d) return;
+    const c = REPORT.calls.find((x) => x.id === id);
+    $("#modal-title").textContent = d.title;
+    $("#modal-sub").textContent = d.header;
+    $("#modal-score").textContent = "ציון " + (d.score != null ? d.score : c.score) + "/10";
+    modalNav.innerHTML = "";
+    modalBody.innerHTML = "";
+    d.sections.forEach((sec) => {
+      const b = el("button", null, sec.num + ". " + sec.title);
+      b.addEventListener("click", () => {
+        const t = $("#sec-" + sec.num);
+        if (t) modalBody.scrollTo({ top: t.offsetTop - 12, behavior: "smooth" });
+      });
+      modalNav.appendChild(b);
+      modalBody.appendChild(renderSection(sec));
+    });
+    modalBody.scrollTop = 0;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+  $("#modal-close").addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+  });
 })();
